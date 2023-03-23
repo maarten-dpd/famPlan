@@ -11,6 +11,18 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'cookbook',
+    loadChildren: () => import('./cookbook/cookbook.module').then( m => m.CookbookPageModule)
+  },
+  {
+    path: 'family-settings',
+    loadChildren: () => import('./family-settings/family-settings.module').then( m => m.FamilySettingsPageModule)
+  },
+  {
+    path: 'labels',
+    loadChildren: () => import('./labels/labels.module').then( m => m.LabelsPageModule)
+  },
 ];
 
 @NgModule({
