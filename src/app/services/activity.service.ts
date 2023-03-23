@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ToDo} from '../../datatypes/toDo';
-import {activityFilter, toDoFilter} from '../../datatypes/filter';
+import {activityFilter} from '../../datatypes/filter';
 import {Label} from '../../datatypes/label';
 import {Activity} from '../../datatypes/activity';
 
@@ -54,25 +53,25 @@ export class ActivityService {
     Object.assign(activity, updatedActivity);
   }
 
-  getActivity(id: number): ToDo | undefined {
-    return this.#toDoList.find(t => t.id === id);
+  getActivity(id: number): Activity | undefined {
+    return this.#activityList.find(a => a.id === id);
   }
 
-  getFilteredToDos(filter: toDoFilter): ToDo[] {
-    return this.getAllToDos()
-      .filter(t => ToDoService.toDoMatchesFilter(t, filter));
+  getFilteredActivities(filter: activityFilter): Activity[] {
+    return this.getAllToActivities()
+      .filter(a => ActivityService.activityMatchesFilter(a, filter));
   }
 
-  getNumberOfToDos(): number {
-    return this.#toDoList.length;
+  getNumberOfActivities(): number {
+    return this.#activityList.length;
   }
 
-  deleteLabelFromToDo(labelId: number) {
+  deleteLabelFromActivity(labelId: number) {
 
-    this.#toDoList.forEach(t => t.labels = t.labels.filter(l => l.id !== labelId));
+    this.#activityList.forEach(a => a.labels = a.labels.filter(l => l.id !== labelId));
   }
 
-  getToDosByLabel(labelId: number) {
-    return this.#toDoList.filter(t => t.labels.some(l => l.id === labelId));
+  getToActivitiesByLabel(labelId: number) {
+    return this.#activityList.filter(a => a.labels.some(l => l.id === labelId));
   }
 }

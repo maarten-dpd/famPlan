@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Color, Label} from '../../datatypes/label';
 import {ToDoService} from './to-do.service';
 import {RecepyService} from './recepy.service';
-import {ToDo} from '../../datatypes/toDo';
+import {ActivityService} from './activity.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class LabelService {
   #labels: Label[] = [];
   #id = 0;
 
-  constructor(private toDoService: ToDoService, private recepyService: RecepyService) {
+  constructor(private toDoService: ToDoService, private recepyService: RecepyService, private activityService: ActivityService) {
     this.#labels.push({name: 'Dringend', color: Color.danger, id: 0});
     this.#labels.push({name: 'Studies', color: Color.primary, id: 1});
     this.#labels.push({name: 'Werk', color: Color.secondary, id: 2});
@@ -32,6 +32,7 @@ export class LabelService {
     this.#labels = this.#labels.filter(l => l.id !== id);
     this.toDoService.deleteLabelFromToDo(id);
     this.recepyService.deleteLabelFromRecepy(id);
+    this.activityService.deleteLabelFromActivity(id);
   }
 
   createLabel(name: string, color: Color): void {
