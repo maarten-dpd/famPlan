@@ -1,18 +1,64 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>dayMenu</ion-title>
+    <ion-title>
+      {{familyName}} - {{date}}
+    </ion-title>
+    <ion-buttons slot='start'>
+      <ion-menu-button menuId='side-menu'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons [collapse]="true" slot="end">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-day menu
-  <ion-list>
-    <div>cards per maaltijd</div>
-    <li>naam van gerecht</li>
-    <li>eventueel foto van gerecht</li>
-    <li>ingredienten (moet open geklikt kunnen worden)</li>
-    <li>voorbereidingstijd</li>
-    <li>kook tijd</li>
-    <li>stap per stap uitvoering</li>
-  </ion-list>
+<ion-content [fullscreen]="true">
+  <ion-item *ngIf="menu">
+   <ion-title>{{menu.name}}</ion-title>
+  </ion-item>
+  <ion-accordion-group #accordionGroup>
+    <ion-accordion value="first">
+      <ion-item slot="header" color="light">
+        <ion-label>Timing</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-list>
+          <li>Preparation time : {{menu.prepTime}}</li>
+          <li>Cooking time : {{menu.cookingTime}}</li>
+        </ion-list>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header" color="light">
+        <ion-label>Ingredients</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-list>
+          <li *ngFor="let i of menu.ingredients">
+            {{ingredient.quantity}}*{{numberOfPersons}} : {{ingredient.name}}
+          </li>
+        </ion-list>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="third">
+      <ion-item slot="header" color="light">
+        <ion-label>Steps</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-list>
+          <li *ngFor="let i of menu.steps">
+            {{step.description}}
+          </li>
+        </ion-list>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <ion-item *ngIf="!menu">
+    <div>
+      <h3>No Menu chosen</h3>
+      <br>
+      <h4 [routerLink]="['/home','day-menu']">Click here to add a menu</h4>
+    </div>
+  </ion-item>
 </ion-content>

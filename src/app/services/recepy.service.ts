@@ -19,6 +19,8 @@ export class RecepyService {
   getAllRecepies(): Recepy[] {
     return this.#recepyList ;
   }
+
+  //get recepyBy methodes zijn voor in de toekomst een filter op recepten te bouwen
   getRecepyById(id: number): Recepy | undefined {
     return this.#recepyList.find(r => r.id === id);
   }
@@ -28,22 +30,22 @@ export class RecepyService {
   getRecepyByTotalDuration(duration: number): Recepy | undefined {
     return this.#recepyList.find(r => r.prepTime + r.cookingTime === duration);
   }
-  /* methode toevoegen om recepten te filteren op label*/
+  getRecepyByLabel(labelId: number) {
+    return this.#recepyList.filter(r => r.labels.some(l => l.id === labelId));
+  }
 
   deleteLabelFromRecepy(labelId: number) {
     this.#recepyList.forEach(r => r.labels = r.labels.filter(l => l.id !== labelId));
   }
-  getRecepiesByLabel(labelId: number) {
-    return this.#recepyList.filter(r => r.labels.some(l => l.id === labelId));
-  }
-  newRecepy(name: string, ingredients: string[],prepTime: number, cookingTime: number,steps:string[], description: string, labels: Label[] = []): void {
+
+  newRecepy(name: string, ingredients: string[],prepTime: number, cookingTime: number,instructions:string[], description: string, labels: Label[] = []): void {
     this.#recepyList.push({
       name,
       id: this.#id,
       ingredients,
       prepTime,
       cookingTime,
-      steps,
+      instructions,
       description,
       labels
     });
@@ -58,8 +60,12 @@ export class RecepyService {
 
     Object.assign(recepy, updatedRecepy);
   }
+  //denk niet dat ik recepten wil laten verwijderen, maar ge weet nooit
   deleteRecepy(id: number): void {
     this.#recepyList = this.#recepyList.filter(r => r.id !== id);
   }
 
+  getNumberOfRecepies() {
+    return this.#recepyList.length;
+  }
 }

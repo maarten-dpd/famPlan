@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {activityFilter} from '../../datatypes/filter';
 import {Label} from '../../datatypes/label';
 import {Activity} from '../../datatypes/activity';
+import {FamilyMember} from '../../datatypes/familyMember';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class ActivityService {
     this.#activityList = this.#activityList.filter(a => a.id !== id);
   }
 
-  newActivity(name: string,  participants:string[] = [], labels: Label[] = [],description?: string, location?: string): void {
+  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description?: string, location?: string): void {
     this.#activityList.push({
       name,
       id: this.#id,

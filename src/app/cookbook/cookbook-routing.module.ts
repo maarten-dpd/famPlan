@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: CookbookPage
+  },
+  {
+    path: 'recepy',
+    loadChildren: () => import('./recepy/recepy.module').then( m => m.RecepyPageModule)
   }
 ];
 

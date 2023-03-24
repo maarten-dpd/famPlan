@@ -6,7 +6,7 @@ export interface IRecepy{
   ingredients: string[];
   prepTime: number;
   cookingTime: number;
-  steps: string[];
+  instructions: string[];
   description: string;
   labels: Label[];
 
@@ -19,7 +19,7 @@ export class Recepy{
   ingredients!: string[];
   prepTime!: number;
   cookingTime!: number;
-  steps!: string[];
+  instructions!: string[];
   description!: string;
   labels:Label[]=[]
 

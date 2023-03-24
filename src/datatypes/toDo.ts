@@ -5,7 +5,8 @@ export interface IToDo {
   id: number;
   done: boolean;
   description?: string;
-  deadline?: string;
+  showFrom:string;
+  deadline: string;
   labels: Label[];
 }
 
@@ -15,7 +16,8 @@ export class ToDo {
   id!: number;
   name!: string;
   description?: string;
-  deadline?: string;
+
+  deadline!: string;
   labels: Label[]=[];
 
   constructor(obj: Task) {

@@ -1,11 +1,34 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>activitiesList</ion-title>
+    <ion-title>
+      {{date}}
+    </ion-title>
+    <ion-buttons slot='start'>
+      <ion-menu-button menuId='side-menu'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons [collapse]="true" slot="end">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-hier komt een lijstje van activiteiten
-  doorklikken kan
-  <ion-button [routerLink]="['/home','activities-list', 'activity']">hier</ion-button>
+<ion-content [fullscreen]="true">
+  <ion-item *ngIf="activityList.length>0">
+    <ion-list lines = 'full' *ngFor="let activity of activityList">
+      <ion-item>
+        <ion-label [routerLink]="['/home','activities-list','activity.id']">
+          {{activity.name}}
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <h4 [routerLink]="['/home','activities-list','activity']">Click here to add an activity</h4>
+  </ion-item>
+  <ion-item *ngIf="activityList.length===0">
+    <div>
+      <h3>No activities planned</h3>
+      <h4>Have a lazy day</h4>
+      <br>
+      <h4 [routerLink]="['/home','activities-list','activity']">Click here to create an activity</h4>
+    </div>
+  </ion-item>
 </ion-content>

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { LabelsPageRoutingModule } from './labels-routing.module';
 
 import { LabelsPage } from './labels.page';
+import {NewLabelModalComponent} from './new-label-modal/new-label-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { LabelsPage } from './labels.page';
     IonicModule,
     LabelsPageRoutingModule
   ],
-  declarations: [LabelsPage]
+  declarations: [LabelsPage, NewLabelModalComponent]
 })
 export class LabelsPageModule {}

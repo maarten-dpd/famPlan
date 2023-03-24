@@ -6,8 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./activities-list.page.scss'],
 })
 export class ActivitiesListPage implements OnInit {
+  familyName: string;
+  date: string;
+  activityList: any[] = [];
 
-  constructor() { }
+  constructor() {
+    this.familyName = 'family name';
+    this.date='2023-01-01';
+  }
 
   ngOnInit() {
   }

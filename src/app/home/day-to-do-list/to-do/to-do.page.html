@@ -1,9 +1,67 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>ToDo</ion-title>
+    <ion-title *ngIf="id; else new">Edit Task</ion-title>
+    <ng-template #new>
+      <ion-title>New Task</ion-title>
+    </ng-template>
+    <ion-buttons slot='start'>
+      <ion-menu-button menuId='side-menu'></ion-menu-button>
+    </ion-buttons>
+       <ion-buttons slot="end">
+      <ion-button (click)="handleCreateAndUpdate()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-hier komen de details van de todo
+<ion-content [fullscreen]="true">
+
+  <ion-item lines="full">
+
+    <ion-label position="floating">Task name</ion-label>
+    <ion-input type="text" class="ion-margin-top"
+               [(ngModel)]='toDoName'></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="floating">Description</ion-label>
+    <ion-textarea cols="20" rows="4" [autoGrow]="true"
+                  [(ngModel)]='description'>
+    </ion-textarea>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-label>start date</ion-label>
+  </ion-item>
+
+  <div class="ion-align-items-center">
+    <ion-datetime firstDayOfWeek="1" [yearValues]="yearValues"
+                  [(ngModel)]='showFrom' presentation="date-time">
+    </ion-datetime>
+  </div>
+
+  <ion-item-divider></ion-item-divider>
+  <ion-item lines="none">
+    <ion-label>Deadline</ion-label>
+  </ion-item>
+
+  <div class="ion-align-items-center">
+    <ion-datetime firstDayOfWeek="1" [yearValues]="yearValues"
+                  [(ngModel)]='deadline' presentation="date-time">
+    </ion-datetime>
+  </div>
+
+  <ion-item-divider></ion-item-divider>
+
+  <ion-list lines="none" *ngIf="labels.length > 0">
+    <ion-list-header>
+      Labels
+    </ion-list-header>
+
+    <ion-item *ngFor='let label of labels; let i = index'>
+      <ion-checkbox slot='start' [color]='label.color' [(ngModel)]='selectedLabels[i]'></ion-checkbox>
+      <ion-label [color]='label.color'>{{label.name}}</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

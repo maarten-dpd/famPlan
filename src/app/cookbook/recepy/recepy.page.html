@@ -1,0 +1,80 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title *ngIf="id; else new">Edit Recepy</ion-title>
+    <ng-template #new>
+      <ion-title>New Recepy</ion-title>
+    </ng-template>
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="handleCreateAndUpdate()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-item lines="full">
+
+    <ion-label position="floating">Recepy name</ion-label>
+    <ion-input type="text" class="ion-margin-top"
+               [(ngModel)]='recepyName'></ion-input>
+  </ion-item>
+  <ion-item lines="full">
+
+    <ion-label position="floating">Preparation time</ion-label>
+    <ion-input type="text" class="ion-margin-top"
+               [(ngModel)]='prepTime'></ion-input>
+  </ion-item>
+  <ion-item lines="full">
+
+    <ion-label position="floating">Cooking Time</ion-label>
+    <ion-input type="text" class="ion-margin-top"
+               [(ngModel)]='cookingTime'></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="floating">Description</ion-label>
+    <ion-textarea cols="20" rows="4" [autoGrow]="true"
+                  [(ngModel)]='description'>
+    </ion-textarea>
+  </ion-item>
+
+  <ion-item-divider></ion-item-divider>
+
+  <ion-list lines="none" *ngIf="labels.length > 0">
+    <ion-list-header>
+      Labels
+    </ion-list-header>
+
+    <ion-item *ngFor='let label of labels; let i = index'>
+      <ion-checkbox slot='start' [color]='label.color' [(ngModel)]='selectedLabels[i]'></ion-checkbox>
+      <ion-label [color]='label.color'>{{label.name}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list lines="none" *ngIf="ingredients.length > 0">
+    <ion-list-header>
+      Labels
+    </ion-list-header>
+
+    <ion-item *ngFor='let ingredient of ingredients; let i = index'>
+      <ion-label>{{ingredient}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list lines="none" *ngIf="instructions.length > 0">
+    <ion-list-header>
+      Labels
+    </ion-list-header>
+
+    <ion-item *ngFor='let instruction of instructions; let i = index'>
+      <ion-label>{{instruction}}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

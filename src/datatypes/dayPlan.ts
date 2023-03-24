@@ -8,7 +8,7 @@ export interface IDayPlan {
   date: Date;
   toDos: ToDo[];
   activities: Activity[];
-  Menu: Recepy;
+  menu: Recepy;
 
 }
 

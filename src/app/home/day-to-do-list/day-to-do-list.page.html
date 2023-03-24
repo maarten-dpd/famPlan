@@ -1,17 +1,37 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>dayToDoList</ion-title>
+    <ion-title>
+      {{date}}
+    </ion-title>
+    <ion-buttons slot='start'>
+      <ion-menu-button menuId='side-menu'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons [collapse]="true" slot="end">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-day to do list
-  <ion-list>
-    <li>lijstje van taken</li>
-    <li>beetje copy van oefening uit de les</li>
-    <li>opsomming van to-do's</li>
-    <li>knop om to-do's toe te voegen enzo</li>
-    <li>enfin 't gaat er goed uit zien</li>
-    <li [routerLink]="['/home','day-to-do-list', 'to-do']"> met klikken voor detail van todo</li>
-  </ion-list>
+<ion-content [fullscreen]="true">
+  <ion-item *ngIf="toDoList.length>0">
+    <ion-list lines = 'full' *ngFor="let toDo of toDoList">
+      <ion-item>
+        <ion-label [routerLink]="['/home','day-to-do-list', 'to-do.id']">
+          {{toDo.name}}
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button [routerLink]="['/home','day-to-do-list', 'to-do']">Click here to add a To Do</ion-button>
+  </ion-item>
+  <ion-item *ngIf="toDoList.length===0">
+    <div>
+      <h3>Nothing To-Do</h3>
+      <h4>Have a lazy day</h4>
+      <br>
+      <ion-button [routerLink]="['/home','day-to-do-list', 'to-do']">Click here to add a To-Do</ion-button>
+    </div>
+  </ion-item>
 </ion-content>
+
+
+

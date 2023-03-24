@@ -6,6 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./day-menu.page.scss'],
 })
 export class DayMenuPage implements OnInit {
+  familyName: any;
+  date: any;
+  menu: any = null;
+  ingredient: any;
+  numberOfPersons: any;
+  step: any;
 
   constructor() { }
 

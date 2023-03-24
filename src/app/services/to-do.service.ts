@@ -39,7 +39,7 @@ export class ToDoService {
       toDo.done = !toDo.done;
     }
   }
-  newToDo(name: string, description: string, deadline?: string, labels: Label[] = []): void {
+  newToDo(name: string, description: string, deadline: string, labels: Label[] = []): void {
     this.#toDoList.push({
       name,
       id: this.#id,

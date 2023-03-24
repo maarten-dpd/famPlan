@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./day-to-do-list.page.scss'],
 })
 export class DayToDoListPage implements OnInit {
+  date: any;
+  toDoList: any;
 
   constructor() { }
 
