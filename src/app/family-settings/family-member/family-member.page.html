@@ -1,9 +1,30 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>familyMember</ion-title>
+    <ion-title >Create a new family member</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="handleCreate()">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
 
+  <ion-item lines="full">
+    <ion-label position="floating">Firstname</ion-label>
+    <ion-input type="text" class="ion-margin-top"
+               [(ngModel)]='firstName'></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="floating">Lastname</ion-label>
+    <ion-textarea cols="20" rows="4" [autoGrow]="true"
+                  [(ngModel)]='lastName'>
+    </ion-textarea>
+  </ion-item>
 </ion-content>

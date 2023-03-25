@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'to-do',
-    loadChildren: () => import('../day-To-Do-List/to-do/to-do.module').then( m => m.ToDoPageModule)
+    loadChildren: () => import('./to-do/to-do.module').then( m => m.ToDoPageModule)
   }
 ];
 

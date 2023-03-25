@@ -16,10 +16,25 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Family Settings</ion-title>
-      <ion-buttons [collapse]="true" slot="end">
+      <ion-buttons slot="end">
         <ion-back-button defaultHref="/"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
+  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
+
+    <ion-fab-button [routerLink]="['/family-settings','family-member']">
+      <ion-icon name='add' ></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-item lines="full">
+
+    <ion-label position="floating">Family Name</ion-label>
+    <ion-input type="text" class="ion-margin-top"
+               [(ngModel)]='familyName'></ion-input>
+  </ion-item>
+  <ion-item *ngFor='let fm of familyMembers; let i = index'>
+    <ion-label>{{fm.firstName}} {{fm.lastName}}</ion-label>
+  </ion-item>
 
 </ion-content>

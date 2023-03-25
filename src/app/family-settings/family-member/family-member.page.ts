@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FamilyService} from '../../services/family.service';
 
 @Component({
   selector: 'app-family-member',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./family-member.page.scss'],
 })
 export class FamilyMemberPage implements OnInit {
+  firstName: string = '';
+  lastName: string = this.familySettingsService.getFamilyName();
 
-  constructor() { }
+  constructor(public familySettingsService: FamilyService) { }
 
   ngOnInit() {
   }
 
+  handleCreate() {
+    this.familySettingsService.addFamilyMember(this.firstName, this.lastName);
+  }
 }

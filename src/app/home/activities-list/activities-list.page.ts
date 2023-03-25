@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {DayPlanService} from '../../services/day-plan.service';
+import {Activity} from '../../../datatypes/activity';
+import {ActivityService} from '../../services/activity.service';
+import {DayPlan} from '../../../datatypes/dayPlan';
 
 @Component({
   selector: 'app-activities-list',
@@ -6,16 +10,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./activities-list.page.scss'],
 })
 export class ActivitiesListPage implements OnInit {
-  familyName: string;
-  date: string;
-  activityList: any[] = [];
+  date: any;
+  activityList: any;
 
-  constructor() {
-    this.familyName = 'family name';
-    this.date='2023-01-01';
+  constructor(public dayPlanService : DayPlanService, public activityService:ActivityService) {
+
   }
 
   ngOnInit() {
+
   }
 
 }

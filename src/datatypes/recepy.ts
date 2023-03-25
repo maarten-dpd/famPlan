@@ -2,7 +2,7 @@ import {Label} from './label';
 
 export interface IRecepy{
   name: string;
-  id: number;
+  id: string;
   ingredients: string[];
   prepTime: number;
   cookingTime: number;
@@ -15,7 +15,7 @@ export interface IRecepy{
 
 export class Recepy{
   name!: string;
-  id!: number;
+  id!: string;
   ingredients!: string[];
   prepTime!: number;
   cookingTime!: number;

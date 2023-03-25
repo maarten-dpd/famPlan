@@ -8,14 +8,6 @@ const routes: Routes = [
     path: '',
     component: RecepyPage
   },
-  {
-    path: 'menu-step',
-    loadChildren: () => import('./menu-step/menu-step.module').then( m => m.MenuStepPageModule)
-  },
-  {
-    path: 'ingredient',
-    loadChildren: () => import('./ingredient/ingredient.module').then( m => m.IngredientPageModule)
-  }
 ];
 
 @NgModule({

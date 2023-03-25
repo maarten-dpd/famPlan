@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {ToDo} from '../../datatypes/toDo';
 import {toDoFilter} from '../../datatypes/filter';
 import {Label} from '../../datatypes/label';
+import {uuid} from 'uuidv4';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,11 @@ export class ToDoService {
     return this.#toDoList;
   }
 
-  deleteToDo(id: number): void {
+  deleteToDo(id: string): void {
     this.#toDoList = this.#toDoList.filter(t => t.id !== id);
   }
 
-  toggleToDoStatus(id: number): void {
+  toggleToDoStatus(id: string): void {
     const toDo = this.#toDoList.find(t => t.id === id);
     if (toDo) {
       toDo.done = !toDo.done;
@@ -42,7 +43,7 @@ export class ToDoService {
   newToDo(name: string, description: string, deadline: string, labels: Label[] = []): void {
     this.#toDoList.push({
       name,
-      id: this.#id,
+      id: uuid(),
       done: false,
       description,
       deadline,
@@ -60,7 +61,7 @@ export class ToDoService {
     Object.assign(toDo, updatedToDo);
   }
 
-  getToDo(id: number): ToDo | undefined {
+  getToDo(id: string): ToDo | undefined {
     return this.#toDoList.find(t => t.id === id);
   }
 

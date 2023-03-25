@@ -1,14 +1,14 @@
 export interface IFamilyMember{
   firstName: string;
   lastName:string;
-  id: number;
+  id: string;
 }
 
 
 export class FamilyMember{
   firstName!: string;
   lastName!:string;
-  id!: number;
+  id!: string;
 
 
 

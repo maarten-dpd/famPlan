@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title *ngIf="id; else new">
+    <ion-title *ngIf="id; else createActivity">
       {{familyName}} - {{activityName}}
     </ion-title>
-    <ng-template #new>
+    <ng-template #createActivity>
       <ion-title>Create new activity for {{familyName}} on {{date}}</ion-title>
     </ng-template>
     <ion-buttons slot='start'>
@@ -43,9 +43,9 @@
       Labels
     </ion-list-header>
 
-    <ion-item *ngFor='let participant of participants; let i = index'>
+    <ion-item *ngFor='let p of participants; let i = index'>
       <ion-checkbox slot='start' [(ngModel)]='selectedParticipants[i]'></ion-checkbox>
-      <ion-label>{{familyMember.firstName}} {{familyMember.lastName}}</ion-label>
+      <ion-label>{{p.firstName}} {{p.lastName}}</ion-label>
     </ion-item>
   </ion-list>
 

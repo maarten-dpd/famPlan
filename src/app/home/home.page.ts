@@ -11,13 +11,13 @@ import {DayToDoListPage} from './day-to-do-list/day-to-do-list.page';
 })
 export class HomePage {
   dayList: DayPlan[] = [
-    {id:1,date:'2023-03-20'},
-    {id:2,date:'2023-03-21'},
-    {id:3,date:'2023-03-22'},
-    {id:4,date:'2023-03-23'},
-    {id:5,date:'2023-03-24'},
-    {id:6,date:'2023-03-25'},
-    {id:7,date:'2023-03-26'}
+    {id:"1",date:'2023-03-20'},
+    {id:"2",date:'2023-03-21'},
+    {id:"3",date:'2023-03-22'},
+    {id:"4",date:'2023-03-23'},
+    {id:"5",date:'2023-03-24'},
+    {id:"6",date:'2023-03-25'},
+    {id:"7",date:'2023-03-26'}
     ];
   familyName: string = '';
   currentWeek: string = '';

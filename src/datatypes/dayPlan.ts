@@ -4,7 +4,7 @@ import {Activity} from './activity';
 
 
 export interface IDayPlan {
-  id: number;
+  id: string;
   date: Date;
   toDos: ToDo[];
   activities: Activity[];
@@ -14,7 +14,7 @@ export interface IDayPlan {
 
 export class DayPlan {
 
-  id!: number;
+  id!: string;
   date!: string;
   toDos?:ToDo[];
   activities?:Activity[];

@@ -2,8 +2,9 @@ import {Label} from './label';
 import {FamilyMember} from './familyMember';
 
 export interface IActivity {
-  id: number;
+  id: string;
   name:string;
+  date: string;
   location: string;
   description: string;
   participants: FamilyMember[];
@@ -15,10 +16,11 @@ export interface IActivity {
 
 export class Activity {
 
-  id!: number;
+  id!: string;
   name!:string;
-  location?:string;
-  description?:string;
+  date!:string;
+  location!:string;
+  description!:string;
   participants:FamilyMember[] = [];
   labels:Label[]=[];
 

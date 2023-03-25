@@ -2,7 +2,7 @@ import {Label} from './label';
 
 export interface IToDo {
   name: string;
-  id: number;
+  id: string;
   done: boolean;
   description?: string;
   showFrom:string;
@@ -13,7 +13,7 @@ export interface IToDo {
 
 export class ToDo {
   done!: boolean;
-  id!: number;
+  id!: string;
   name!: string;
   description?: string;
 

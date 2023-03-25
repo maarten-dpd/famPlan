@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Recepy} from '../../datatypes/recepy';
 import {Label} from '../../datatypes/label';
+import {uuid} from 'uuidv4';
+
 
 
 @Injectable({
@@ -9,19 +11,18 @@ import {Label} from '../../datatypes/label';
 export class RecepyService {
 
   #recepyList: Recepy[] = [];
-  #id = 0;
+
 
   constructor() {
 
   }
-
 
   getAllRecepies(): Recepy[] {
     return this.#recepyList ;
   }
 
   //get recepyBy methodes zijn voor in de toekomst een filter op recepten te bouwen
-  getRecepyById(id: number): Recepy | undefined {
+  getRecepyById(id: string): Recepy | undefined {
     return this.#recepyList.find(r => r.id === id);
   }
   getRecepyByName(name: string): Recepy | undefined {
@@ -41,7 +42,7 @@ export class RecepyService {
   newRecepy(name: string, ingredients: string[],prepTime: number, cookingTime: number,instructions:string[], description: string, labels: Label[] = []): void {
     this.#recepyList.push({
       name,
-      id: this.#id,
+      id: uuid(),
       ingredients,
       prepTime,
       cookingTime,
@@ -49,9 +50,11 @@ export class RecepyService {
       description,
       labels
     });
-    this.#id++;
+
   }
-  updateRecepy(updatedRecepy: Recepy): void {
+
+  updateRecepy(updatedRecepy: { instructions: string[]; name: string; description: string; ingredients: string[];
+    id: string | null; cookingTime: number; prepTime: number; labels: Label[] }): void {
     const recepy = this.#recepyList.find(r => r.id === updatedRecepy.id);
     if (recepy === undefined) {
       console.error('Trying to update a nonexistent recepy.');
@@ -60,8 +63,8 @@ export class RecepyService {
 
     Object.assign(recepy, updatedRecepy);
   }
-  //denk niet dat ik recepten wil laten verwijderen, maar ge weet nooit
-  deleteRecepy(id: number): void {
+  //denk niet dat ik recepten wil laten verwijderen, maar je weet nooit
+  deleteRecepy(id: string): void {
     this.#recepyList = this.#recepyList.filter(r => r.id !== id);
   }
 

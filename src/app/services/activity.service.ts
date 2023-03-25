@@ -3,6 +3,7 @@ import {activityFilter} from '../../datatypes/filter';
 import {Label} from '../../datatypes/label';
 import {Activity} from '../../datatypes/activity';
 import {FamilyMember} from '../../datatypes/familyMember';
+import {uuid} from 'uuidv4';
 
 @Injectable({
   providedIn: 'root'
@@ -11,40 +12,35 @@ export class ActivityService {
 
   #activityList: Activity[] = [];
 
-  #id = 0;
-
   constructor() {
 
   }
-
   private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
-    if (activityFilter.all === filter) {
-      return true;
-    }
-
-    return false;
+    return activityFilter.all === filter;
   }
 
   getAllToActivities(): Activity[] {
     return this.#activityList;
   }
 
-  deleteActivity(id: number): void {
+  deleteActivity(id: string): void {
     this.#activityList = this.#activityList.filter(a => a.id !== id);
   }
 
-  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description?: string, location?: string): void {
+  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:string): void {
     this.#activityList.push({
       name,
-      id: this.#id,
+      id : uuid(),
+      date,
       description,
       location,
       participants,
       labels
     });
-    this.#id++;
+
   }
-  updateActivity(updatedActivity: Activity): void {
+
+  updateActivity(updatedActivity: { date: string; activityName: string; location: string; id: string | null }): void {
     const activity = this.#activityList.find(a => a.id === updatedActivity.id);
     if (activity === undefined) {
       console.error('Trying to update a nonexistent activity.');
@@ -54,8 +50,11 @@ export class ActivityService {
     Object.assign(activity, updatedActivity);
   }
 
-  getActivity(id: number): Activity | undefined {
+  getActivity(id: string): Activity | undefined {
     return this.#activityList.find(a => a.id === id);
+  }
+  getActivitiesByDate(date: string) {
+
   }
 
   getFilteredActivities(filter: activityFilter): Activity[] {
@@ -75,4 +74,6 @@ export class ActivityService {
   getToActivitiesByLabel(labelId: number) {
     return this.#activityList.filter(a => a.labels.some(l => l.id === labelId));
   }
+
+
 }
