@@ -7,7 +7,7 @@ import {uuid} from 'uuidv4';
 export class FamilyService {
 
   #familyMembers: FamilyMember[] = [];
-  familyName:string = '';
+  familyName:string = 'Test family';
 
 
   constructor() { }
@@ -24,6 +24,9 @@ export class FamilyService {
       lastName,
       id: uuid()
     });
+  }
+  updateFamilyName(familyName:string){
+    this.familyName = familyName;
   }
 }
 

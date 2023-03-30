@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import {DayPlan} from '../../datatypes/dayPlan';
 import {NavController} from '@ionic/angular';
-import {DayMenuPage} from './day-menu/day-menu.page';
-import {DayToDoListPage} from './day-to-do-list/day-to-do-list.page';
+import {FamilyService} from '../services/family.service';
+import {RecepyService} from '../services/recepy.service';
+import {ActivityService} from '../services/activity.service';
+import {Activity} from '../../datatypes/activity';
 
 @Component({
   selector: 'app-home',
@@ -10,22 +11,24 @@ import {DayToDoListPage} from './day-to-do-list/day-to-do-list.page';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  dayList: DayPlan[] = [
-    {id:"1",date:'2023-03-20'},
-    {id:"2",date:'2023-03-21'},
-    {id:"3",date:'2023-03-22'},
-    {id:"4",date:'2023-03-23'},
-    {id:"5",date:'2023-03-24'},
-    {id:"6",date:'2023-03-25'},
-    {id:"7",date:'2023-03-26'}
-    ];
+
   familyName: string = '';
-  currentWeek: string = '';
+  startDate = new Date() ;
+  currentWeekDays: Date[] = [];
+
+  allActivities: Activity[] = this.activityService.getAllActivities();
+  allPlannedMenus = this.recepyService.GetAllPlannedMenus();
 
 
-  constructor(public navCtrl: NavController) {
-    this.familyName = 'statische data test'
-    this.currentWeek = 'te berekenen'
+  constructor(public navCtrl: NavController, public familyService: FamilyService, public recepyService: RecepyService
+  , public activityService: ActivityService) {
+
+    this.familyName = familyService.getFamilyName()
+    for(let i = 0;i<7;i++){
+        let result = new Date(this.startDate);
+        result.setDate(result.getDate() + i);
+        this.currentWeekDays.push(result);
+    }
 
   }
 

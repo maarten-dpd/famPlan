@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {DayPlanService} from '../../services/day-plan.service';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
-import {DayPlan} from '../../../datatypes/dayPlan';
+import {today} from 'ionicons/icons';
+
 
 @Component({
   selector: 'app-activities-list',
@@ -11,9 +11,9 @@ import {DayPlan} from '../../../datatypes/dayPlan';
 })
 export class ActivitiesListPage implements OnInit {
   date: any;
-  activityList: any;
+  activityList: Activity[] = [];
 
-  constructor(public dayPlanService : DayPlanService, public activityService:ActivityService) {
+  constructor(public activityService:ActivityService) {
 
   }
 

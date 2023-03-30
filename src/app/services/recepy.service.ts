@@ -11,6 +11,7 @@ import {uuid} from 'uuidv4';
 export class RecepyService {
 
   #recepyList: Recepy[] = [];
+  dateMenuIdList = new Map<Date,string>;
 
 
   constructor() {
@@ -70,5 +71,16 @@ export class RecepyService {
 
   getNumberOfRecepies() {
     return this.#recepyList.length;
+  }
+
+  GetAllPlannedMenus() {
+    return this.dateMenuIdList;
+  }
+
+  getMenuForDate(day: Date) {
+    let menuForDay = this.dateMenuIdList.get(day);
+    if (menuForDay){return this.getRecepyById(menuForDay)};
+    return;
+
   }
 }

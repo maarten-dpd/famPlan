@@ -9,7 +9,6 @@ export interface IRecepy{
   instructions: string[];
   description: string;
   labels: Label[];
-
 }
 
 
@@ -22,7 +21,6 @@ export class Recepy{
   instructions!: string[];
   description!: string;
   labels:Label[]=[]
-
 
   constructor(obj: IRecepy) {
     Object.assign(this,obj);

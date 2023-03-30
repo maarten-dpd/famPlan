@@ -15,7 +15,7 @@ import {FamilyMember} from '../../../../datatypes/familyMember';
 export class ActivityPage implements OnInit {
   familyName = this.familyService.getFamilyName();
   activityName: string = '';
-  date: string = '';
+  date: Date = new Date();
   id: string | null = '';
   description: string = '';
   activityLocation: string = '';
@@ -68,7 +68,6 @@ export class ActivityPage implements OnInit {
   }
 
   private createActivity() {
-    //newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:string)
     this.activityService.newActivity(this.activityName, this.getSelectedParticipants(), this.getSelectedLabels(), this.description, this.activityLocation, this.date)
   }
 

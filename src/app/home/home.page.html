@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      {{familyName}} - {{currentWeek}}
+      {{familyName}} - {{currentWeekDays[0]}} to {{currentWeekDays[6]}}
     </ion-title>
     <ion-buttons slot='start'>
       <ion-menu-button menuId='side-menu'></ion-menu-button>
@@ -23,27 +23,21 @@
   </ion-header>
 
   <div id="container">
-    <ion-item *ngFor="let day of dayList">
+    <ion-item *ngFor="let day of currentWeekDays">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{day.date}}</ion-card-title>
+          <ion-card-title>{{day}}</ion-card-title>
         </ion-card-header>
-        <ion-button *ngIf="day.activities" fill="outline" size="small" [routerLink]="['/home','activities-list']">
-          {{day.activities.length}} activities planned
+        <ion-button *ngIf="activityService.getActivitiesByDate(day)" fill="outline" size="small" [routerLink]="['/home','activities-list']">
+          {{activityService.getNumberOfActivitiesOnDate(day)}} activities planned
         </ion-button>
-        <ion-button *ngIf="!day.activities" fill="outline" size="small" [routerLink]="['/home','activities-list']">
+        <ion-button *ngIf="!activityService.getActivitiesByDate(day)" fill="outline" size="small" [routerLink]="['/home','activities-list']">
           add an activity (or enjoy a lazy day)
         </ion-button>
-        <ion-button *ngIf="day.toDos" fill="outline" size="small" [routerLink]="['/home','day-to-do-list']">
-          {{day.toDos.length}} To-Do's
+        <ion-button *ngIf="recepyService.getMenuForDate(day)" fill="outline" size="small" [routerLink]="['/home','day-menu']">
+          Today {{recepyService.getMenuForDate(day)}} is on the menu
         </ion-button>
-        <ion-button *ngIf="!day.toDos" fill="outline" size="small" [routerLink]="['/home','day-to-do-list']">
-         nothing to do? Add a task
-        </ion-button>
-        <ion-button *ngIf="day.menu" fill="outline" size="small" [routerLink]="['/home','day-menu']">
-          Today {{day.menu.name}} is on the menu
-        </ion-button>
-        <ion-button *ngIf="!day.menu" fill="outline" size="small" [routerLink]="['/home','day-menu']">
+        <ion-button *ngIf="!recepyService.getMenuForDate(day)" fill="outline" size="small" [routerLink]="['/home','day-menu']">
           Choose a recepy for diner
         </ion-button>
       </ion-card>

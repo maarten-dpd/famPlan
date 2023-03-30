@@ -19,7 +19,7 @@ export class ActivityService {
     return activityFilter.all === filter;
   }
 
-  getAllToActivities(): Activity[] {
+  getAllActivities(): Activity[] {
     return this.#activityList;
   }
 
@@ -27,7 +27,7 @@ export class ActivityService {
     this.#activityList = this.#activityList.filter(a => a.id !== id);
   }
 
-  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:string): void {
+  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:Date): void {
     this.#activityList.push({
       name,
       id : uuid(),
@@ -40,7 +40,7 @@ export class ActivityService {
 
   }
 
-  updateActivity(updatedActivity: { date: string; activityName: string; location: string; id: string | null }): void {
+  updateActivity(updatedActivity: { date: Date; activityName: string; location: string; id: string | null }): void {
     const activity = this.#activityList.find(a => a.id === updatedActivity.id);
     if (activity === undefined) {
       console.error('Trying to update a nonexistent activity.');
@@ -53,17 +53,19 @@ export class ActivityService {
   getActivity(id: string): Activity | undefined {
     return this.#activityList.find(a => a.id === id);
   }
-  getActivitiesByDate(date: string) {
-
+  getActivitiesByDate(date: Date):Activity[] {
+    let activitiesOnDate = this.#activityList.filter(a =>a.date === date);
+    return activitiesOnDate;
   }
 
   getFilteredActivities(filter: activityFilter): Activity[] {
-    return this.getAllToActivities()
+    return this.getAllActivities()
       .filter(a => ActivityService.activityMatchesFilter(a, filter));
   }
 
-  getNumberOfActivities(): number {
-    return this.#activityList.length;
+  getNumberOfActivitiesOnDate(date: Date): number {
+    let activitiesOnDate = this.getActivitiesByDate(date);
+    return activitiesOnDate.length;
   }
 
   deleteLabelFromActivity(labelId: number) {
@@ -71,7 +73,7 @@ export class ActivityService {
     this.#activityList.forEach(a => a.labels = a.labels.filter(l => l.id !== labelId));
   }
 
-  getToActivitiesByLabel(labelId: number) {
+  getActivitiesByLabel(labelId: number) {
     return this.#activityList.filter(a => a.labels.some(l => l.id === labelId));
   }
 
