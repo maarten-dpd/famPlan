@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Recepy} from '../../datatypes/recepy';
 import {Label} from '../../datatypes/label';
-import {uuid} from 'uuidv4';
-
+import {UUID} from 'angular2-uuid';
 
 
 @Injectable({
@@ -43,7 +42,7 @@ export class RecepyService {
   newRecepy(name: string, ingredients: string[],prepTime: number, cookingTime: number,instructions:string[], description: string, labels: Label[] = []): void {
     this.#recepyList.push({
       name,
-      id: uuid(),
+      id: UUID.UUID(),
       ingredients,
       prepTime,
       cookingTime,
@@ -79,8 +78,8 @@ export class RecepyService {
 
   getMenuForDate(day: Date) {
     let menuForDay = this.dateMenuIdList.get(day);
-    if (menuForDay){return this.getRecepyById(menuForDay)};
-    return;
+    if (menuForDay){return this.getRecepyById(menuForDay)}
+    return
 
   }
 }

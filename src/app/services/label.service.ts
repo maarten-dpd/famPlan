@@ -15,8 +15,9 @@ export class LabelService {
     this.#labels.push({name: 'eenvoudig', color: Color.danger, id: 0});
     this.#labels.push({name: 'gezond', color: Color.primary, id: 1});
     this.#labels.push({name: 'Werk', color: Color.secondary, id: 2});
+    this.#labels.push({name: 'Plezant voor iedereen', color: Color.success, id:3})
 
-    this.#id = 3;
+    this.#id = 4;
   }
 
   getAllLabels(): Label[] {

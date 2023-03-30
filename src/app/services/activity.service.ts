@@ -3,7 +3,7 @@ import {activityFilter} from '../../datatypes/filter';
 import {Label} from '../../datatypes/label';
 import {Activity} from '../../datatypes/activity';
 import {FamilyMember} from '../../datatypes/familyMember';
-import {uuid} from 'uuidv4';
+import {UUID} from 'angular2-uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class ActivityService {
   newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:Date): void {
     this.#activityList.push({
       name,
-      id : uuid(),
+      id : UUID.UUID(),
       date,
       description,
       location,

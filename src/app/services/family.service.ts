@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {FamilyMember} from '../../datatypes/familyMember';
-import {uuid} from 'uuidv4';
+import {UUID} from 'angular2-uuid';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +23,7 @@ export class FamilyService {
     this.#familyMembers.push({
       firstName,
       lastName,
-      id: uuid()
+      id: UUID.UUID()
     });
   }
   updateFamilyName(familyName:string){
