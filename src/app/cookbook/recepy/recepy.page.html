@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title *ngIf="id; else new">Edit Recepy</ion-title>
-    <ng-template #new>
+    <ion-title *ngIf="id; else create">Edit Recepy</ion-title>
+    <ng-template #create>
       <ion-title>New Recepy</ion-title>
     </ng-template>
 
@@ -63,7 +63,7 @@
       Labels
     </ion-list-header>
 
-    <ion-item *ngFor='let ingredient of ingredients; let i = index'>
+    <ion-item *ngFor='let ingredient of ingredients'>
       <ion-label>{{ingredient}}</ion-label>
     </ion-item>
   </ion-list>
@@ -73,7 +73,7 @@
       Labels
     </ion-list-header>
 
-    <ion-item *ngFor='let instruction of instructions; let i = index'>
+    <ion-item *ngFor='let instruction of instructions'>
       <ion-label>{{instruction}}</ion-label>
     </ion-item>
   </ion-list>

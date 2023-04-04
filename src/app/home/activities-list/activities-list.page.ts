@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
-import {today} from 'ionicons/icons';
-
 
 @Component({
   selector: 'app-activities-list',
@@ -11,7 +9,7 @@ import {today} from 'ionicons/icons';
 })
 export class ActivitiesListPage implements OnInit {
   date: any;
-  activityList: Activity[] = [];
+  activityList: Activity[] = this.activityService.getAllActivities();
 
   constructor(public activityService:ActivityService) {
 

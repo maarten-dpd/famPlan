@@ -16,7 +16,7 @@
   <ion-item *ngIf="menu">
    <ion-title>{{menu.name}}</ion-title>
   </ion-item>
-  <ion-accordion-group #accordionGroup>
+  <ion-accordion-group>
     <ion-accordion value="first">
       <ion-item slot="header" color="light">
         <ion-label>Timing</ion-label>
@@ -35,7 +35,7 @@
       <div class="ion-padding" slot="content">
         <ion-list>
           <li *ngFor="let i of menu.ingredients">
-            {{ingredient.quantity}}*{{numberOfPersons}} : {{ingredient.name}}
+            {{i}}
           </li>
         </ion-list>
       </div>
@@ -46,8 +46,8 @@
       </ion-item>
       <div class="ion-padding" slot="content">
         <ion-list>
-          <li *ngFor="let i of menu.steps">
-            {{step.description}}
+          <li *ngFor="let i of menu.instructions">
+            {{i}}
           </li>
         </ion-list>
       </div>

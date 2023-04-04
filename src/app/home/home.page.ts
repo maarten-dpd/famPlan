@@ -15,12 +15,10 @@ export class HomePage {
   familyName: string = '';
   startDate = new Date() ;
   currentWeekDays: Date[] = [];
-
-  allActivities: Activity[] = this.activityService.getAllActivities();
-  allPlannedMenus = this.recepyService.GetAllPlannedMenus();
+  weekSpansMonth: boolean = false;
 
 
-  constructor(public navCtrl: NavController, public familyService: FamilyService, public recepyService: RecepyService
+  constructor(public familyService: FamilyService, public recepyService: RecepyService
   , public activityService: ActivityService) {
 
     this.familyName = familyService.getFamilyName()
@@ -29,8 +27,42 @@ export class HomePage {
         result.setDate(result.getDate() + i);
         this.currentWeekDays.push(result);
     }
+    if(this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth()){
+      this.weekSpansMonth = true;
+    }
 
   }
 
+
+  changeWeek(type: string) {
+    console.log('button change week pushed')
+    if (type === "next"){
+      this.startDate = this.addDays(this.startDate, 7)
+    }
+    else if(type === "previous"){
+      this.startDate = this.subtractDays(this.startDate, 7);
+    }
+    this.currentWeekDays.length = 0;
+    this.getCurrentWeek(this.startDate)
+    this.checkWeekSpansMonth();
+  }
+  addDays(date: Date, days: number): Date{
+    date.setDate(date.getDate()+days);
+    return date;
+  }
+  subtractDays(date: Date, days: number): Date{
+    date.setDate(date.getDate()-days);
+    return date;
+  }
+  getCurrentWeek(date: Date){
+    for(let i = 0;i<7;i++){
+      let result = new Date(date);
+      result.setDate(result.getDate() + i);
+      this.currentWeekDays.push(result);
+    }
+  }
+  checkWeekSpansMonth(){
+    this.weekSpansMonth = this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth();
+  }
 
 }

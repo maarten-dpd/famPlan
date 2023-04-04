@@ -25,15 +25,15 @@ export class RecepyService {
   getRecepyById(id: string): Recepy | undefined {
     return this.#recepyList.find(r => r.id === id);
   }
-  getRecepyByName(name: string): Recepy | undefined {
+/*  getRecepyByName(name: string): Recepy | undefined {
     return this.#recepyList.find(r => r.name === name);
-  }
-  getRecepyByTotalDuration(duration: number): Recepy | undefined {
+  }*/
+ /* getRecepyByTotalDuration(duration: number): Recepy | undefined {
     return this.#recepyList.find(r => r.prepTime + r.cookingTime === duration);
-  }
-  getRecepyByLabel(labelId: number) {
+  }*/
+ /* getRecepyByLabel(labelId: number) {
     return this.#recepyList.filter(r => r.labels.some(l => l.id === labelId));
-  }
+  }*/
 
   deleteLabelFromRecepy(labelId: number) {
     this.#recepyList.forEach(r => r.labels = r.labels.filter(l => l.id !== labelId));
@@ -64,9 +64,9 @@ export class RecepyService {
     Object.assign(recepy, updatedRecepy);
   }
   //denk niet dat ik recepten wil laten verwijderen, maar je weet nooit
-  deleteRecepy(id: string): void {
+  /*deleteRecepy(id: string): void {
     this.#recepyList = this.#recepyList.filter(r => r.id !== id);
-  }
+  }*/
 
   getNumberOfRecepies() {
     return this.#recepyList.length;

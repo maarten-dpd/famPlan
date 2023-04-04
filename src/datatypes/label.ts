@@ -2,16 +2,22 @@ export enum Color {
   danger = 'danger',
   primary = 'primary',
   secondary = 'secondary',
-  tertiary  = 'tertiary',
+  /*tertiary  = 'tertiary',*/
   success = 'success',
-  warning = 'warning',
+  /*warning = 'warning',
   light  = 'light',
   medium = 'medium',
-  dark = 'dark'
+  dark = 'dark'*/
+}
+
+export enum Type {
+  activity = 'activity',
+  /*recipe = 'recipe'*/
 }
 
 export interface Label {
   name: string;
   color?: Color;
   id: number;
+  type?: string;
 }

@@ -33,7 +33,7 @@
     <ion-input type="text" class="ion-margin-top"
                [(ngModel)]='familyName'></ion-input>
   </ion-item>
-  <ion-item *ngFor='let fm of familyMembers; let i = index'>
+  <ion-item *ngFor='let fm of familyMembers'>
     <ion-label>{{fm.firstName}} {{fm.lastName}}</ion-label>
   </ion-item>
 

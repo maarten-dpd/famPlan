@@ -1,13 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      {{familyName}} - {{currentWeekDays[0]}} to {{currentWeekDays[6]}}
+      {{familyName}}
     </ion-title>
     <ion-buttons slot='start'>
       <ion-menu-button menuId='side-menu'></ion-menu-button>
-    </ion-buttons>
-    <ion-buttons [collapse]="true" slot="end">
-      <ion-button fill="solid" size="small">Next week</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -15,18 +12,29 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">FamilyName - start and end date week</ion-title>
-      <ion-buttons [collapse]="true" slot="end">
-        <ion-button>Next week</ion-button>
-      </ion-buttons>
+      <ion-title size="large">{{familyName}}</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
+    <ion-buttons class="ion-justify-content-center" [collapse]="true" slot="end">
+      <ion-button size="small" (click)="changeWeek('previous')"><ion-icon name="chevron-back-outline"></ion-icon></ion-button>
+      <div>
+        <div *ngIf="!weekSpansMonth; else fullDate">
+          <div >
+            {{currentWeekDays[0] | customDate: 'day' }} to {{currentWeekDays[6] | customDate: 'dayMonth' }}
+          </div>
+        </div>
+        <ng-template #fullDate>
+          {{currentWeekDays[0] | customDate: 'dayMonthShort' }} to {{currentWeekDays[6] | customDate: 'dayMonthShort' }}
+        </ng-template>
+      </div>
+      <ion-button size="small" (click)="changeWeek('next')"><ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
+    </ion-buttons>
     <ion-item *ngFor="let day of currentWeekDays">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{day}}</ion-card-title>
+          <ion-card-title>{{day | customDate:'full'}}</ion-card-title>
         </ion-card-header>
         <ion-button *ngIf="activityService.getActivitiesByDate(day)" fill="outline" size="small" [routerLink]="['/home','activities-list']">
           {{activityService.getNumberOfActivitiesOnDate(day)}} activities planned
@@ -44,3 +52,6 @@
     </ion-item>
   </div>
 </ion-content>
+<ion-footer>
+
+</ion-footer>

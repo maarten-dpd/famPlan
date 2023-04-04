@@ -24,9 +24,9 @@ export class LabelService {
     return this.#labels;
   }
 
-  getLabelById(id: number): Label | undefined {
+  /*getLabelById(id: number): Label | undefined {
     return this.getAllLabels().find(l => l.id === id);
-  }
+  }*/
 
   deleteLabel(id: number): void {
     this.#labels = this.#labels.filter(l => l.id !== id);

@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {activityFilter} from '../../datatypes/filter';
 import {Label} from '../../datatypes/label';
 import {Activity} from '../../datatypes/activity';
 import {FamilyMember} from '../../datatypes/familyMember';
@@ -15,17 +14,17 @@ export class ActivityService {
   constructor() {
 
   }
-  private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
+ /* private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
     return activityFilter.all === filter;
-  }
+  }*/
 
   getAllActivities(): Activity[] {
     return this.#activityList;
   }
 
-  deleteActivity(id: string): void {
+  /*deleteActivity(id: string): void {
     this.#activityList = this.#activityList.filter(a => a.id !== id);
-  }
+  }*/
 
   newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:Date): void {
     this.#activityList.push({
@@ -54,14 +53,13 @@ export class ActivityService {
     return this.#activityList.find(a => a.id === id);
   }
   getActivitiesByDate(date: Date):Activity[] {
-    let activitiesOnDate = this.#activityList.filter(a =>a.date === date);
-    return activitiesOnDate;
+    return this.#activityList.filter(a =>a.date === date);
   }
 
-  getFilteredActivities(filter: activityFilter): Activity[] {
+  /*getFilteredActivities(filter: activityFilter): Activity[] {
     return this.getAllActivities()
       .filter(a => ActivityService.activityMatchesFilter(a, filter));
-  }
+  }*/
 
   getNumberOfActivitiesOnDate(date: Date): number {
     let activitiesOnDate = this.getActivitiesByDate(date);
@@ -73,9 +71,9 @@ export class ActivityService {
     this.#activityList.forEach(a => a.labels = a.labels.filter(l => l.id !== labelId));
   }
 
-  getActivitiesByLabel(labelId: number) {
+ /* getActivitiesByLabel(labelId: number) {
     return this.#activityList.filter(a => a.labels.some(l => l.id === labelId));
-  }
+  }*/
 
 
 }

@@ -26,9 +26,9 @@ export class FamilyService {
       id: UUID.UUID()
     });
   }
-  updateFamilyName(familyName:string){
+  /*updateFamilyName(familyName:string){
     this.familyName = familyName;
-  }
+  }*/
 }
 
 
