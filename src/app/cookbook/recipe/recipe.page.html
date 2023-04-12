@@ -1,11 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title *ngIf="id; else create">Edit Recepy</ion-title>
+    <ion-title *ngIf="id; else create">Edit Recipe</ion-title>
     <ng-template #create>
-      <ion-title>New Recepy</ion-title>
+      <ion-title>New Recipe</ion-title>
     </ng-template>
 
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" >
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
 
@@ -21,7 +21,7 @@
 
   <ion-item lines="full">
 
-    <ion-label position="floating">Recepy name</ion-label>
+    <ion-label position="floating">Recipe name</ion-label>
     <ion-input type="text" class="ion-margin-top"
                [(ngModel)]='recepyName'></ion-input>
   </ion-item>

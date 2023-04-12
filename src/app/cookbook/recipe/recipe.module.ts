@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { RecepyPageRoutingModule } from './recepy-routing.module';
+import { RecepyPageRoutingModule } from './recipe-routing.module';
 
-import { RecepyPage } from './recepy.page';
+import { RecipePage } from './recipe.page';
 
 @NgModule({
   imports: [
@@ -15,6 +15,6 @@ import { RecepyPage } from './recepy.page';
     IonicModule,
     RecepyPageRoutingModule
   ],
-  declarations: [RecepyPage]
+  declarations: [RecipePage]
 })
 export class RecepyPageModule {}

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import {NavController} from '@ionic/angular';
 import {FamilyService} from '../services/family.service';
-import {RecepyService} from '../services/recepy.service';
+import {RecipeService} from '../services/recipe.service';
 import {ActivityService} from '../services/activity.service';
-import {Activity} from '../../datatypes/activity';
+import {PlanningService} from '../services/planning.service';
+
 
 @Component({
   selector: 'app-home',
@@ -18,8 +18,8 @@ export class HomePage {
   weekSpansMonth: boolean = false;
 
 
-  constructor(public familyService: FamilyService, public recepyService: RecepyService
-  , public activityService: ActivityService) {
+  constructor(public familyService: FamilyService,public activityService: ActivityService,
+              public planningService:PlanningService) {
 
     this.familyName = familyService.getFamilyName()
     for(let i = 0;i<7;i++){
@@ -30,9 +30,7 @@ export class HomePage {
     if(this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth()){
       this.weekSpansMonth = true;
     }
-
   }
-
 
   changeWeek(type: string) {
     console.log('button change week pushed')

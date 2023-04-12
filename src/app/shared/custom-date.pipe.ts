@@ -21,6 +21,12 @@ export class CustomDatePipe extends DatePipe implements PipeTransform {
       case 'dayMonthShort' : {
         return super.transform(value, 'd/M')
       }
+      case 'dayMonthLong' : {
+        return super.transform(value, 'EE d/M')
+      }
+      case 'dayType' : {
+        return super.transform(value, 'EEEE')
+      }
     }
 
     return super.transform(value, "EEEE d/MMM/y")

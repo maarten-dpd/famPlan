@@ -12,7 +12,7 @@ export interface IRecepy{
 }
 
 
-export class Recepy{
+export class Recipe {
   name!: string;
   id!: string;
   ingredients!: string[];

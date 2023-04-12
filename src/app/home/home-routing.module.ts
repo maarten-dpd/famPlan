@@ -14,6 +14,14 @@ const routes: Routes = [
   {
     path: 'activities-list',
     loadChildren: () => import('./activities-list/activities-list.module').then( m => m.ActivitiesListPageModule)
+  },
+  {
+    path: 'day-menu/:day',
+    loadChildren: () => import('./day-menu/day-menu.module').then( m => m.DayMenuPageModule)
+  },
+  {
+    path: 'activities-list/:day',
+    loadChildren: () => import('./activities-list/activities-list.module').then( m => m.ActivitiesListPageModule)
   }
 ];
 

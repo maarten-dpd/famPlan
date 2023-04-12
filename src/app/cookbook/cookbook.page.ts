@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {RecepyService} from '../services/recepy.service';
+import {RecipeService} from '../services/recipe.service';
 
 @Component({
   selector: 'app-cookbook',
@@ -9,7 +9,7 @@ import {RecepyService} from '../services/recepy.service';
 export class CookbookPage implements OnInit {
   fabIsVisible = true;
 
-  constructor(public recepyService: RecepyService) { }
+  constructor(public recepyService: RecipeService) { }
 
   ngOnInit() {
   }

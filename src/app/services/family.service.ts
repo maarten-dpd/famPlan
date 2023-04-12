@@ -11,7 +11,12 @@ export class FamilyService {
   familyName:string = 'Test family';
 
 
-  constructor() { }
+  constructor() {
+    this.addFamilyMember('Pa', 'Testfamilie');
+    this.addFamilyMember('ma', 'Aangetrouwd');
+    this.addFamilyMember('Broer', 'Testfamilie');
+    this.addFamilyMember('Zus', 'Testfamilie');
+  }
 
   getFamilyName(): string {
     return this.familyName ;

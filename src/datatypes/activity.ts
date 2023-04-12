@@ -4,7 +4,7 @@ import {FamilyMember} from './familyMember';
 export interface IActivity {
   id: string;
   name:string;
-  date: Date;
+  date: string;
   location: string;
   description: string;
   participants: FamilyMember[];
@@ -15,7 +15,7 @@ export class Activity {
 
   id!: string;
   name!:string;
-  date!:Date;
+  date!:string;
   location!:string;
   description!:string;
   participants:FamilyMember[] = [];

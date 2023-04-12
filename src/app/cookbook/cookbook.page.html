@@ -26,24 +26,22 @@
   </ion-header>
   <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
 
-    <ion-fab-button [routerLink]="['/cookbook','recepy']">
+    <ion-fab-button [routerLink]="['recipe']">
       <ion-icon name='add' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-item *ngIf="recepyService.getNumberOfRecepies()>0">
-    <ion-list lines = 'full' *ngFor="let r of recepyService.getAllRecepies()">
-      <ion-item>
-        <ion-label [routerLink]="['/cookbook','recepy.id']">
+  <ion-list *ngIf="recepyService.getNumberOfRecipes()>0">
+    <ion-item lines = 'full' *ngFor="let r of recepyService.getAllRecepies()">
+        <ion-label [routerLink]="['recipe','recipe.id']">
           {{r.name}}
         </ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-item>
-  <ion-item *ngIf="recepyService.getNumberOfRecepies() === 0">
+    </ion-item>
+  </ion-list>
+  <ion-item *ngIf="recepyService.getNumberOfRecipes() === 0">
     <div>
       <h3>An empty cookbook fills no stomach</h3>
-      <ion-button [routerLink]="['/cookbook','recepy']">add a Recepy</ion-button>
+      <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>
     </div>
   </ion-item>
 </ion-content>

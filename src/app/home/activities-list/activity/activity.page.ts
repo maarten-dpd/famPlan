@@ -13,28 +13,38 @@ import {FamilyMember} from '../../../../datatypes/familyMember';
   styleUrls: ['./activity.page.scss'],
 })
 export class ActivityPage implements OnInit {
-  familyName = this.familyService.getFamilyName();
   activityName: string = '';
-  date: Date = new Date();
+  date: string =(new Date().toString());
+  dateToParse:string = new Date(this.date).toISOString();
   id: string | null = '';
   description: string = '';
-  activityLocation: string = '';
+  location: string = '';
   participants = this.familyService.getFamilyMembers();
   selectedParticipants: boolean[] = Array(this.participants.length).fill(false);
-  labels = this.labelService.getAllLabels();
+  labels = this.labelService.getLabelsByType('activity');
   selectedLabels: boolean[] = Array(this.labels.length).fill(false);
+  yearValues: number[] = []
 
   constructor(public familyService: FamilyService, public labelService: LabelService,
-              public activityService: ActivityService, public activatedRoute : ActivatedRoute, public navController: NavController) { }
+              public activityService: ActivityService, public activatedRoute : ActivatedRoute,
+              public navController: NavController) {
+    const currentYear:number = (new Date().getFullYear());
+    for (let year = currentYear; year<(currentYear + 100); year++){
+      this.yearValues.push(year);
+    }
+  }
 
   ngOnInit() {
     this.setData();
   }
 
   handleCreateAndUpdate() {
+    console.log('entered handle create and update')
     if (this.id) {
+      console.log('choose to update')
       this.updateActivity();
     } else {
+      console.log('choose to create')
       this.createActivity();
     }
     this.navController.back();
@@ -45,30 +55,46 @@ export class ActivityPage implements OnInit {
     if(this.id===null){
       return;
     }
+    console.log(this.id);
     const activity = this.activityService.getActivity(this.id);
+    console.log(activity)
     if(activity){
+      this.dateToParse = new Date(activity.date).toISOString();
       this.activityName = activity.name;
-      this.activityLocation = activity.location;
-      this.date = activity.date;
+      this.location = activity.location;
+      this.date = this.dateToParse;
       this.description = activity.description;
       this.selectedLabels = this.labels.map(l => !!activity.labels.find(l2 => l2.id === l.id));
-      this.selectedParticipants = this.participants.map(p => !!activity.participants.find(p2 => p2.id === p.id));
+      this.selectedParticipants = this.participants.map
+      (p => !!activity.participants.find(p2 => p2.id === p.id));
     }
 
   }
 
   private updateActivity() {
+    console.log('updating with following data: ' + this.id + 'name: ' + this.activityName + 'date: ' + this.dateToParse + 'location: ' + this.location)
+    console.log('participants: ' + this.getSelectedParticipants() + 'labels: ' + this.getSelectedLabels())
+    let convertedDate = new Date(this.dateToParse).toString()
     this.activityService.updateActivity({
       id:this.id,
-      activityName: this.activityName,
-      date:this.date,
-      location:this.activityLocation,
+      name: this.activityName,
+      date:convertedDate,
+      location:this.location,
+      description:this.description,
+      participants:this.getSelectedParticipants(),
+      labels: this.getSelectedLabels()
 
     })
   }
 
   private createActivity() {
-    this.activityService.newActivity(this.activityName, this.getSelectedParticipants(), this.getSelectedLabels(), this.description, this.activityLocation, this.date)
+    this.date = new Date(this.dateToParse).toString(),
+    console.log ('date: ');
+    console.log(this.date);
+    console.log('date To parse: ');
+    console.log(this.dateToParse)
+    this.activityService.newActivity(this.activityName, this.getSelectedParticipants(),
+      this.getSelectedLabels(), this.description, this.location, this.date)
   }
 
   private getSelectedParticipants():FamilyMember[] {

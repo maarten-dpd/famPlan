@@ -12,12 +12,12 @@ export enum Color {
 
 export enum Type {
   activity = 'activity',
-  /*recipe = 'recipe'*/
+  recipe = 'recipe'
 }
 
 export interface Label {
   name: string;
   color?: Color;
   id: number;
-  type?: string;
+  type?: Type;
 }

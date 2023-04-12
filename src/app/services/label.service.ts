@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Color, Label} from '../../datatypes/label';
-import {RecepyService} from './recepy.service';
+import {Color, Label, Type} from '../../datatypes/label';
+import {RecipeService} from './recipe.service';
 import {ActivityService} from './activity.service';
 
 @Injectable({
@@ -11,11 +11,11 @@ export class LabelService {
   #labels: Label[] = [];
   #id = 0;
 
-  constructor(private recepyService: RecepyService, private activityService: ActivityService) {
-    this.#labels.push({name: 'eenvoudig', color: Color.danger, id: 0});
-    this.#labels.push({name: 'gezond', color: Color.primary, id: 1});
-    this.#labels.push({name: 'Werk', color: Color.secondary, id: 2});
-    this.#labels.push({name: 'Plezant voor iedereen', color: Color.success, id:3})
+  constructor(private recepyService: RecipeService, private activityService: ActivityService) {
+    this.#labels.push({name: 'eenvoudig', color: Color.danger, id: 0, type: Type.recipe});
+    this.#labels.push({name: 'gezond', color: Color.primary, id: 1, type: Type.recipe});
+    this.#labels.push({name: 'Werk', color: Color.secondary, id: 2, type:Type.activity});
+    this.#labels.push({name: 'Plezant voor iedereen', color: Color.success, id:3,type: Type.activity})
 
     this.#id = 4;
   }
@@ -30,7 +30,7 @@ export class LabelService {
 
   deleteLabel(id: number): void {
     this.#labels = this.#labels.filter(l => l.id !== id);
-    this.recepyService.deleteLabelFromRecepy(id);
+    this.recepyService.deleteLabelFromRecipe(id);
     this.activityService.deleteLabelFromActivity(id);
   }
 
@@ -41,5 +41,9 @@ export class LabelService {
       id: this.#id
     });
     this.#id++;
+  }
+
+  getLabelsByType(type: string) {
+    return this.#labels.filter(l=>l.type === type)
   }
 }

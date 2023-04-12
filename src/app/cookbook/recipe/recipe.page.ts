@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {RecepyService} from '../../services/recepy.service';
+import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
 import {LabelService} from '../../services/label.service';
 import {Label} from '../../../datatypes/label';
 
-
 @Component({
-  selector: 'app-recepy',
-  templateUrl: './recepy.page.html',
-  styleUrls: ['./recepy.page.scss'],
+  selector: 'app-recipe',
+  templateUrl: './recipe.page.html',
+  styleUrls: ['./recipe.page.scss'],
 })
-export class RecepyPage implements OnInit {
+export class RecipePage implements OnInit {
   recepyName: string = '';
   prepTime: number = 0;
   cookingTime: number = 0;
@@ -21,9 +20,9 @@ export class RecepyPage implements OnInit {
   ingredients: string[] = [];
   instructions: string[] =[];
   id: string | null ='';
+  fromMenuSelector: string | null = '';
 
-
-  constructor(public navController: NavController, public recepyService: RecepyService,
+  constructor(public navController: NavController, public recipeService: RecipeService,
               public activatedRoute: ActivatedRoute, public labelService: LabelService,) {
 
 
@@ -31,16 +30,20 @@ export class RecepyPage implements OnInit {
   ngOnInit() {
     this.setData();
   }
-
+  /*back button should redirect to menu selector if page was opened from there
+  * found this to do so: https://stackoverflow.com/questions/60999267/angular-query-params-as-boolean-type-not-string */
   setData(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
+      this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
+    }
 
 
     if (this.id === null) {
       return;
     }
 
-    const recepy = this.recepyService.getRecepyById(this.id);
+    const recepy = this.recipeService.getRecipeById(this.id);
     if(recepy){
       this.recepyName = recepy.name;
       this.prepTime = recepy.prepTime;
@@ -55,19 +58,19 @@ export class RecepyPage implements OnInit {
 
     handleCreateAndUpdate(): void {
     if (this.id) {
-      this.updateRecepy();
+      this.updateRecipe();
     } else {
-      this.createRecepy();
+      this.createRecipe();
     }
     this.navController.back();
   }
 
-  private createRecepy(): void {
-    this.recepyService.newRecepy(this.recepyName,this.ingredients,this.prepTime,this.cookingTime, this.instructions, this.description, this.getSelectedLabels());
+  private createRecipe(): void {
+    this.recipeService.newRecipe(this.recepyName,this.ingredients,this.prepTime,this.cookingTime, this.instructions, this.description, this.getSelectedLabels());
   }
 
-  private updateRecepy(): void {
-    this.recepyService.updateRecepy({
+  private updateRecipe(): void {
+    this.recipeService.updateRecipe({
       id: this.id,
       name: this.recepyName,
       cookingTime: this.cookingTime,
@@ -82,4 +85,5 @@ export class RecepyPage implements OnInit {
   private getSelectedLabels(): Label[] {
     return this.labels.filter((l, i) => this.selectedLabels[i]);
   }
+
 }

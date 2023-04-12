@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: DayMenuPage
+  },
+  {
+    path: 'select-menu',
+    loadChildren: () => import('./select-menu/select-menu.module').then( m => m.SelectMenuPageModule)
   }
 ];
 

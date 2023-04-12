@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
+import {NavController} from '@ionic/angular';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-activities-list',
@@ -8,15 +10,28 @@ import {ActivityService} from '../../services/activity.service';
   styleUrls: ['./activities-list.page.scss'],
 })
 export class ActivitiesListPage implements OnInit {
-  date: any;
-  activityList: Activity[] = this.activityService.getAllActivities();
+  date: string = '';
+  activityList: Activity[] = [];
+  dateForTitle = new Date();
 
-  constructor(public activityService:ActivityService) {
+  constructor(public activityService:ActivityService, public navController: NavController, public activatedRoute:ActivatedRoute) {
 
   }
 
   ngOnInit() {
-
+  this.setData();
   }
 
+  private setData() {
+    const day = this.activatedRoute.snapshot.paramMap.get('day');
+    if(day === null){
+      return;
+    }
+    this.dateForTitle = new Date(day);
+    /*console.log(this.dateForTitle);*/
+    this.date = this.dateForTitle.toString()
+    /*console.log(this.date)*/
+    this.activityList = this.activityService.getActivitiesByDate(this.date);
+
+  }
 }

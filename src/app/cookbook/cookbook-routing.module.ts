@@ -9,8 +9,12 @@ const routes: Routes = [
     component: CookbookPage
   },
   {
-    path: 'recepy',
-    loadChildren: () => import('./recepy/recepy.module').then( m => m.RecepyPageModule)
+    path: 'recipe',
+    loadChildren: () => import('./recipe/recipe.module').then(m => m.RecepyPageModule)
+  },
+  {
+    path: 'recipe/:fromMenuSelector',
+    loadChildren: () => import('./recipe/recipe.module').then(m => m.RecepyPageModule)
   }
 ];
 

@@ -1,34 +1,59 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      {{date}}
+    <ion-title class="ion-text-center">
+      {{dateForTitle | customDate :'dayMonthLong'}}
     </ion-title>
     <ion-buttons slot='start'>
       <ion-menu-button menuId='side-menu'></ion-menu-button>
     </ion-buttons>
     <ion-buttons [collapse]="true" slot="end">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-item *ngIf="activityList.length>0">
-    <ion-list lines = 'full' *ngFor="let activity of activityList">
-      <ion-item>
-        <ion-label [routerLink]="['/home','activities-list','activity.id']">
-          {{activity.name}}
-        </ion-label>
-      </ion-item>
-    </ion-list>
-    <h4 [routerLink]="['/home','activities-list','activity']">Click here to add an activity</h4>
+  <ion-list *ngIf="activityList.length>0">
+    <ion-item lines = 'full' *ngFor="let activity of activityList">
+      <ion-card class="ion-text-center">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-label [routerLink]="['/home','activities-list','activity',activity.id]">
+              {{activity.name}}
+            </ion-label>
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list class="ion-text-center">
+            <ion-item >{{activity.location}}</ion-item>
+            <ion-item>{{activity.description}}</ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+
+
+  </ion-list>
+  <ion-item *ngIf="activityList.length===0" class="ion-text-center">
+    <ion-grid>
+      <ion-row class="ion-text-center, ion-justify-content-center">
+        <h3>No activities planned</h3>
+      </ion-row>
+      <ion-row class="ion-text-center, ion-justify-content-center">
+        <h4>Have a lazy day</h4>
+      </ion-row>
+      <ion-row class="ion-text-center, ion-justify-content-center">
+        <h4>or</h4>
+      </ion-row>
+      <ion-row class="ion-text-center, ion-justify-content-center">
+        <ion-button [routerLink]="['/home','activities-list','activity']">add an activity</ion-button>
+      </ion-row>
+    </ion-grid>
   </ion-item>
-  <ion-item *ngIf="activityList.length===0">
-    <div>
-      <h3>No activities planned</h3>
-      <h4>Have a lazy day</h4>
-      <br>
-      <h4 [routerLink]="['/home','activities-list','activity']">Click here to create an activity</h4>
-    </div>
-  </ion-item>
+
+  <ion-fab *ngIf="activityList.length>0" slot="fixed" vertical="bottom" horizontal="center">
+    <ion-fab-button [routerLink]="['/home','activities-list','activity']">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
