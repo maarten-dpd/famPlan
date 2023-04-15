@@ -3,6 +3,7 @@ import {RecipeService} from '../../../services/recipe.service';
 import {Recipe} from '../../../../datatypes/recipe';
 import {PlanningService} from '../../../services/planning.service';
 import {NavController, ToastController} from '@ionic/angular';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-select-menu',
@@ -11,11 +12,13 @@ import {NavController, ToastController} from '@ionic/angular';
 })
 export class SelectMenuPage implements OnInit {
 
+  selectionDate =new Date();
   constructor(public recepyService:RecipeService, public planningService:PlanningService, private toastController:ToastController,
-              public navCtrl :NavController) {
+              public navCtrl :NavController, public activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.setData();
   }
 /*
   toast method found at
@@ -23,9 +26,11 @@ export class SelectMenuPage implements OnInit {
 */
   async setMenuForDate(r: Recipe) {
     if(this.planningService.menuIsPlannedForDate(this.planningService.dateForDetail)){
-      this.planningService.removeMenuForDate(this.planningService.dateForDetail)
+      this.planningService.removeMenuForDate(this.planningService.dateForDetail.toString())
     }
-    this.planningService.selectMenuForDate(r,this.planningService.dateForDetail);
+    this.planningService.setMenuForDate(r.id,this.planningService.dateForDetail.toString());
+    console.log(this.planningService.getMenuForDate(this.planningService.dateForDetail.toString()))
+
     const toast = await this.toastController.create({
       message: 'A menu was selected, click change to reconsider , click back to close ',
       position: 'top',
@@ -44,5 +49,14 @@ export class SelectMenuPage implements OnInit {
       ]
     });
     await toast.present();
+  }
+
+  private setData() {
+    const day = this.activatedRoute.snapshot.paramMap.get('day');
+    console.log(day);
+    if(day === null){
+      return;
+    }
+    this.selectionDate = new Date(day);
   }
 }

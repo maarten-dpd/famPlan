@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import {FamilyService} from '../services/family.service';
-import {RecipeService} from '../services/recipe.service';
 import {ActivityService} from '../services/activity.service';
 import {PlanningService} from '../services/planning.service';
-
 
 @Component({
   selector: 'app-home',
@@ -30,10 +28,11 @@ export class HomePage {
     if(this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth()){
       this.weekSpansMonth = true;
     }
+    /*console.log(this.currentWeekDays);*/
   }
 
   changeWeek(type: string) {
-    console.log('button change week pushed')
+    /*console.log('button change week pushed')*/
     if (type === "next"){
       this.startDate = this.addDays(this.startDate, 7)
     }

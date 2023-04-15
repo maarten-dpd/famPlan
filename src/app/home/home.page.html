@@ -15,7 +15,6 @@
       <ion-title>{{familyName}}</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <div id="container">
     <ion-buttons class="ion-justify-content-center" [collapse]="true" slot="end">
       <ion-button size="small" (click)="changeWeek('previous')"><ion-icon name="chevron-back-outline"></ion-icon></ion-button>
@@ -31,28 +30,8 @@
       </div>
       <ion-button size="small" (click)="changeWeek('next')"><ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
     </ion-buttons>
-    <ion-item *ngFor="let day of currentWeekDays">
-      <ion-card class="ion-text-center, ion-justify-content-center">
-        <ion-card-header>
-          <ion-card-subtitle class="ion-text-center">{{day | customDate: 'dayType'}}</ion-card-subtitle>
-          <ion-card-title class="ion-text-center">{{day | customDate:'dayMonth'}}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content class="ion-justify-content-center, ion-text-center">
-          <ion-button color="success" *ngIf="activityService.getNumberOfActivitiesOnDate(day.toString())" size="small" [routerLink]="['/home','activities-list',day.toString()]">
-            {{activityService.getNumberOfActivitiesOnDate(day.toString())}} activities planned
-          </ion-button>
-          <ion-button  *ngIf="!activityService.getNumberOfActivitiesOnDate(day.toString())" fill="outline" size="small" [routerLink]="['/home','activities-list','activity']">
-            add an activity
-          </ion-button>
-          <ion-button color = "success" *ngIf="planningService.menuIsPlannedForDate(day)" size="small" [routerLink]="['/home','day-menu',day]">
-            Today <!--{{planningService.getMenuForDate(day).name}}--> is on the menu
-          </ion-button>
-          <ion-button *ngIf="!planningService.menuIsPlannedForDate(day)" fill="outline" size="small" [routerLink]="['/home','day-menu']">
-            Choose a recepy for diner
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
-    </ion-item>
+    <app-day-card *ngFor="let day of currentWeekDays" [day]='day'>
+    </app-day-card>
   </div>
 </ion-content>
 <ion-footer>

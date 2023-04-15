@@ -39,12 +39,12 @@ export class ActivityPage implements OnInit {
   }
 
   handleCreateAndUpdate() {
-    console.log('entered handle create and update')
+    /*console.log('entered handle create and update')*/
     if (this.id) {
-      console.log('choose to update')
+      /*console.log('choose to update')*/
       this.updateActivity();
     } else {
-      console.log('choose to create')
+      /*console.log('choose to create')*/
       this.createActivity();
     }
     this.navController.back();
@@ -55,9 +55,9 @@ export class ActivityPage implements OnInit {
     if(this.id===null){
       return;
     }
-    console.log(this.id);
+    /*console.log(this.id);*/
     const activity = this.activityService.getActivity(this.id);
-    console.log(activity)
+    /*console.log(activity)*/
     if(activity){
       this.dateToParse = new Date(activity.date).toISOString();
       this.activityName = activity.name;
@@ -72,8 +72,8 @@ export class ActivityPage implements OnInit {
   }
 
   private updateActivity() {
-    console.log('updating with following data: ' + this.id + 'name: ' + this.activityName + 'date: ' + this.dateToParse + 'location: ' + this.location)
-    console.log('participants: ' + this.getSelectedParticipants() + 'labels: ' + this.getSelectedLabels())
+    /*console.log('updating with following data: ' + this.id + 'name: ' + this.activityName + 'date: ' + this.dateToParse + 'location: ' + this.location)
+    console.log('participants: ' + this.getSelectedParticipants() + 'labels: ' + this.getSelectedLabels())*/
     let convertedDate = new Date(this.dateToParse).toString()
     this.activityService.updateActivity({
       id:this.id,
@@ -88,11 +88,11 @@ export class ActivityPage implements OnInit {
   }
 
   private createActivity() {
-    this.date = new Date(this.dateToParse).toString(),
-    console.log ('date: ');
+    this.date = new Date(this.dateToParse).toString();
+    /*console.log ('date: ');
     console.log(this.date);
     console.log('date To parse: ');
-    console.log(this.dateToParse)
+    console.log(this.dateToParse)*/
     this.activityService.newActivity(this.activityName, this.getSelectedParticipants(),
       this.getSelectedLabels(), this.description, this.location, this.date)
   }

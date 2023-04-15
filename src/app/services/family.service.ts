@@ -12,10 +12,10 @@ export class FamilyService {
 
 
   constructor() {
-    this.addFamilyMember('Pa', 'Testfamilie');
-    this.addFamilyMember('ma', 'Aangetrouwd');
-    this.addFamilyMember('Broer', 'Testfamilie');
-    this.addFamilyMember('Zus', 'Testfamilie');
+    this.addFamilyMember('Pa', 'Testfamilie', 'pa@family.com');
+    this.addFamilyMember('ma', 'Aangetrouwd', 'ma@family.com');
+    this.addFamilyMember('Broer', 'Testfamilie', 'broer@family.com');
+    this.addFamilyMember('Zus', 'Testfamilie', 'zus@family.com');
   }
 
   getFamilyName(): string {
@@ -24,11 +24,12 @@ export class FamilyService {
   getFamilyMembers(): FamilyMember[] {
     return this.#familyMembers ;
   }
-  addFamilyMember(firstName: string, lastName: string){
+  addFamilyMember(firstName: string, lastName: string, email: string){
     this.#familyMembers.push({
       firstName,
       lastName,
-      id: UUID.UUID()
+      id: UUID.UUID(),
+      email
     });
   }
   /*updateFamilyName(familyName:string){

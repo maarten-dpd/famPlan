@@ -1,68 +1,81 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      {{familyName}} - {{date}}
+      {{date | customDate:'dayMonthShort'}}
     </ion-title>
     <ion-buttons slot='start'>
       <ion-menu-button menuId='side-menu'></ion-menu-button>
     </ion-buttons>
     <ion-buttons [collapse]="true" slot="end">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-item *ngIf="menu">
-   <ion-title>{{menu.name}}</ion-title>
-    <ion-item>
-      {{menu.description}}
-    </ion-item>
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header" color="light">
-          <ion-label>Timing</ion-label>
+  <ion-grid *ngIf="menu" class="ion-justify-content-center">
+    <ion-row>
+      <ion-col>
+        <ion-title class="ion-text-center">{{menu.name}}</ion-title>
+        <ion-item>
+          <ion-label [routerLink]="['/cookbook','recipe', menu.id]" class="ion-text-center">
+            {{menu.description}}
+          </ion-label>
         </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-list>
-            <li>Preparation time : {{menu.prepTime}}</li>
-            <li>Cooking time : {{menu.cookingTime}}</li>
-          </ion-list>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="second">
-        <ion-item slot="header" color="light">
-          <ion-label>Ingredients</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-list>
-            <li *ngFor="let i of menu.ingredients">
-              {{i}}
-            </li>
-          </ion-list>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="third">
-        <ion-item slot="header" color="light">
-          <ion-label>Steps</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-list *ngIf="menu">
-            <li *ngFor="let i of menu.instructions">
-              {{i}}
-            </li>
-          </ion-list>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
-
-  </ion-item>
-
-  <ion-item *ngIf="!planningService.menuIsPlannedForDate(date)">
-    <div>
-      <h3>No Menu chosen</h3>
-      <br>
-      <h4 [routerLink]="['select-menu']">Click here to add a menu</h4>
-    </div>
-  </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-item-divider></ion-item-divider>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-accordion-group>
+          <ion-accordion value="first" toggleIcon="caret-down-circle" toggleIconSlot="start">
+            <ion-item slot="header" color="light">
+              <ion-label>Timing</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-list>
+                <li>Preparation time : {{menu.prepTime}}</li>
+                <li>Cooking time : {{menu.cookingTime}}</li>
+              </ion-list>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="second" toggleIcon="caret-down-circle" toggleIconSlot="start">
+            <ion-item slot="header" color="light">
+              <ion-label>Ingredients</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-list>
+                <li *ngFor="let i of menu.ingredients">
+                  {{i}}
+                </li>
+              </ion-list>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="third" toggleIcon="caret-down-circle" toggleIconSlot="start">
+            <ion-item slot="header" color="light">
+              <ion-label>Steps</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-list *ngIf="menu">
+                <li *ngFor="let i of menu.instructions">
+                  {{i}}
+                </li>
+              </ion-list>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-col>
+   </ion-row>
+  </ion-grid>
 </ion-content>
+<ion-footer>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-button fill="outline" [routerLink]="['select-menu', date.toString()]">
+        change menu
+      </ion-button>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

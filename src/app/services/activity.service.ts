@@ -31,10 +31,8 @@ export class ActivityService {
       activityName = 'activity ' + b;
       /*console.log (activityName);*/
     }
-    /*let date = new Date().toLocaleString();
-  this.newActivity('test',[],[],'a test activity', 'a test location',date );
-  console.log(this.getAllActivities());*/
-    console.log(this.getAllActivities());
+
+    /*console.log(this.getAllActivities());*/
   }
  /* private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
     return activityFilter.all === filter;
@@ -47,9 +45,9 @@ export class ActivityService {
     return this.#activityList;
   }
 
-  /*deleteActivity(id: string): void {
+  deleteActivity(id: string): void {
     this.#activityList = this.#activityList.filter(a => a.id !== id);
-  }*/
+  }
 
   newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:string): void {
     this.#activityList.push({
@@ -110,7 +108,7 @@ export class ActivityService {
   }*/
 
 
-  private getActivityByName(name: string) {
+/*  private getActivityByName(name: string) {
     return this.#activityList.find(a => a.name === name);
-  }
+  }*/
 }

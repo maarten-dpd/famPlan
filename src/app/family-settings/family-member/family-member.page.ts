@@ -9,6 +9,7 @@ import {FamilyService} from '../../services/family.service';
 export class FamilyMemberPage implements OnInit {
   firstName: string = '';
   lastName: string = this.familySettingsService.getFamilyName();
+  email: string = '';
 
   constructor(public familySettingsService: FamilyService) { }
 
@@ -16,6 +17,6 @@ export class FamilyMemberPage implements OnInit {
   }
 
   handleCreate() {
-    this.familySettingsService.addFamilyMember(this.firstName, this.lastName);
+    this.familySettingsService.addFamilyMember(this.firstName, this.lastName, this.email);
   }
 }

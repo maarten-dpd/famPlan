@@ -30,9 +30,10 @@ export class RecipeService {
   getRecipeById(id: string): Recipe | undefined {
     return this.#recipeList.find(r => r.id === id);
   }
-/*  getRecipeByName(name: string): Recipe | undefined {
-    return this.#recipeList.find(r => r.name === name);
-  }*/
+  getRecipeByName(name: string): Recipe[] {
+    return this.#recipeList.filter(r => r.name === name);
+  }
+
  /* getRecipeByTotalDuration(duration: number): Recipe | undefined {
     return this.#recipeList.find(r => r.prepTime + r.cookingTime === duration);
   }*/

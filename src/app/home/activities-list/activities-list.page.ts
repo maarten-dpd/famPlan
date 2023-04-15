@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
-import {NavController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -14,7 +13,7 @@ export class ActivitiesListPage implements OnInit {
   activityList: Activity[] = [];
   dateForTitle = new Date();
 
-  constructor(public activityService:ActivityService, public navController: NavController, public activatedRoute:ActivatedRoute) {
+  constructor(public activityService:ActivityService, public activatedRoute:ActivatedRoute) {
 
   }
 

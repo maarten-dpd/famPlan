@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./recipe/recipe.module').then(m => m.RecepyPageModule)
   },
   {
-    path: 'recipe/:fromMenuSelector',
+    path: 'recipe/:id',
     loadChildren: () => import('./recipe/recipe.module').then(m => m.RecepyPageModule)
   }
 ];

@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'select-menu',
     loadChildren: () => import('./select-menu/select-menu.module').then( m => m.SelectMenuPageModule)
+  },
+  {
+    path: 'select-menu/:day',
+    loadChildren: () => import('./select-menu/select-menu.module').then( m => m.SelectMenuPageModule)
   }
 ];
 

@@ -1,31 +1,41 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Select a recepy for {{planningService.dateForDetail | customDate : 'dayMonthShort'}}
+      Select menu
     </ion-title>
     <ion-buttons slot='start'>
       <ion-menu-button menuId='side-menu'></ion-menu-button>
     </ion-buttons>
     <ion-buttons [collapse]="true" slot="end">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-list-header>
-        Available recipes
-    </ion-list-header>
-    <ion-item *ngFor="let r of recepyService.getAllRecepies()" >
-     <ion-button [color]="planningService.recipeIsPlannedForToday(r,planningService.dateForDetail) ? 'primary' :''"
-                 (click)="setMenuForDate(r)">
-       {{r.name}}
-     </ion-button>
-    </ion-item>
-  </ion-list>
-  <ion-item>
-    <h4>haven't found what you are looking for?</h4>
-    <ion-button [routerLink]="'cookbook'" fill="outline">add a recipe in the cookbook</ion-button>
-  </ion-item>
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-list class="ion-text-center, ion-justify-content-center" lines="none">
+        <ion-item *ngFor="let r of recepyService.getAllRecepies()" class="ion-text-center, ion-justify-content-center" >
+          <ion-button size="large" expand = "block"
+                      [color]="planningService.isRecipeIsPlannedForToday(r,selectionDate) ? 'primary' :'alert'"
+                      (click)="setMenuForDate(r)" class="ion-text-center">
+            {{r.name}}
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
 </ion-content>
+<ion-footer>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-justify-content-center ion-text-center">
+        <ion-button [routerLink]="'cookbook'" fill="outline" class="ion-text-center">add a recipe in the cookbook</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

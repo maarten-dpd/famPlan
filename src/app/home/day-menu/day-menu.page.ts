@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {Recipe} from '../../../datatypes/recipe';
-import {RecipeService} from '../../services/recipe.service';
 import {PlanningService} from '../../services/planning.service';
 import {FamilyService} from '../../services/family.service';
 import {ActivatedRoute} from '@angular/router';
@@ -15,25 +14,23 @@ export class DayMenuPage implements OnInit {
   date: Date = new Date();
   menu: Recipe | undefined;
 
-
-
   constructor(public planningService:PlanningService, public familyService: FamilyService,
               public activatedRoute:ActivatedRoute) {
     this.familyName = familyService.getFamilyName();
   }
-
   ngOnInit() {
     this.setData()
   }
   setData(){
     const day = this.activatedRoute.snapshot.paramMap.get('day');
+    /*console.log(day);*/
     if(day === null){
       return;
     }
     this.date = new Date(day);
-    this.menu = this.planningService.getMenuForDate(this.date);
+   /* console.log(this.date);*/
+    this.menu = this.planningService.getPlannedMenu(this.date);
+   /* console.log(this.menu);*/
     this.planningService.setDateForDetail(this.date);
-
   }
-
 }
