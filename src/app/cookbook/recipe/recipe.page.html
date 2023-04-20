@@ -23,7 +23,14 @@
 
     <ion-label position="floating">Recipe name</ion-label>
     <ion-input type="text" class="ion-margin-top"
-               [(ngModel)]='recepyName'></ion-input>
+               [(ngModel)]='recipeName'></ion-input>
+  </ion-item>
+  <ion-item *ngIf="recipePhotoUrl">
+    <ion-img [src]="recipePhotoUrl"></ion-img>
+    <ion-button (click)="putPhotoIn()">change foto</ion-button>
+  </ion-item>
+  <ion-item (click)="putPhotoIn()">
+    add photo
   </ion-item>
   <ion-item lines="full">
 
@@ -47,6 +54,32 @@
 
   <ion-item-divider></ion-item-divider>
 
+
+
+  <ion-list lines="none">
+    <ion-list-header>
+      Ingredients
+    </ion-list-header>
+    <ion-item *ngFor='let ingredient of ingredients'>
+      <ion-label>{{ingredient}}</ion-label>
+    </ion-item>
+    <ion-button (click)="addIngredient()">
+      add ingredient
+    </ion-button>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>
+      instructions
+    </ion-list-header>
+    <ion-item *ngFor='let instruction of instructions'>
+      <ion-label>{{instruction}}</ion-label>
+    </ion-item>
+    <ion-button (click)="addInstruction()">
+      add instruction
+    </ion-button>
+  </ion-list>
+
   <ion-list lines="none" *ngIf="labels.length > 0">
     <ion-list-header>
       Labels
@@ -55,26 +88,6 @@
     <ion-item *ngFor='let label of labels; let i = index'>
       <ion-checkbox slot='start' [color]='label.color' [(ngModel)]='selectedLabels[i]'></ion-checkbox>
       <ion-label [color]='label.color'>{{label.name}}</ion-label>
-    </ion-item>
-  </ion-list>
-
-  <ion-list lines="none" *ngIf="ingredients.length > 0">
-    <ion-list-header>
-      Labels
-    </ion-list-header>
-
-    <ion-item *ngFor='let ingredient of ingredients'>
-      <ion-label>{{ingredient}}</ion-label>
-    </ion-item>
-  </ion-list>
-
-  <ion-list lines="none" *ngIf="instructions.length > 0">
-    <ion-list-header>
-      Labels
-    </ion-list-header>
-
-    <ion-item *ngFor='let instruction of instructions'>
-      <ion-label>{{instruction}}</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

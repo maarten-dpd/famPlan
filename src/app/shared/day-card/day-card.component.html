@@ -1,0 +1,20 @@
+<ion-card class="ion-text-center, ion-justify-content-center">
+  <ion-card-header>
+    <ion-card-subtitle class="ion-text-center">{{day | customDate: 'dayType'}}</ion-card-subtitle>
+    <ion-card-title class="ion-text-center">{{day | customDate:'dayMonth'}}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="ion-justify-content-center, ion-text-center">
+    <ion-button color="success" *ngIf="activityService.getNumberOfActivitiesOnDate(day.toString())" size="small" [routerLink]="['/home','activities-list',day.toString()]">
+      {{activityService.getNumberOfActivitiesOnDate(day.toString())}} activities planned
+    </ion-button>
+    <ion-button  *ngIf="!activityService.getNumberOfActivitiesOnDate(day.toString())" fill="outline" size="small" [routerLink]="['/home','activities-list','activity']">
+      add an activity
+    </ion-button>
+    <ion-button color = "success" *ngIf="planningService.menuIsPlannedForDate(day)" size="small" [routerLink]="['/home','day-menu',day.toString()]">
+      Today {{planningService.getPlannedMenuName(day)}} is on the menu
+    </ion-button>
+    <ion-button *ngIf="!planningService.menuIsPlannedForDate(day)" fill="outline" size="small" [routerLink]="['/home','day-menu','select-menu', day.toString()]">
+      Choose a recepy for diner
+    </ion-button>
+  </ion-card-content>
+</ion-card>

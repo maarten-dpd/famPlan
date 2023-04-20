@@ -7,7 +7,7 @@
       <ion-menu-button menuId='side-menu'></ion-menu-button>
     </ion-buttons>
     <ion-buttons [collapse]="true" slot="end">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button defaultHref="/" text = ""></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -20,7 +20,7 @@
     <ion-toolbar>
       <ion-title size="large">cookbook</ion-title>
       <ion-buttons [collapse]="true" slot="end">
-        <ion-back-button defaultHref="/"></ion-back-button>
+        <ion-back-button defaultHref="/" text=""></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -31,14 +31,12 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-list *ngIf="recepyService.getNumberOfRecipes()>0">
-    <ion-item lines = 'full' *ngFor="let r of recepyService.getAllRecepies()">
-        <ion-label [routerLink]="['recipe','recipe.id']">
-          {{r.name}}
-        </ion-label>
-    </ion-item>
+  <ion-list *ngIf="recipeService.getNumberOfRecipes()>0">
+    <app-recipe-item  *ngFor='let r of recipeService.getAllRecepies()'
+                        [recipe]='r'>
+    </app-recipe-item>
   </ion-list>
-  <ion-item *ngIf="recepyService.getNumberOfRecipes() === 0">
+  <ion-item *ngIf="recipeService.getNumberOfRecipes() === 0">
     <div>
       <h3>An empty cookbook fills no stomach</h3>
       <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>

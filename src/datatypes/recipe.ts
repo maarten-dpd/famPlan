@@ -9,6 +9,7 @@ export interface IRecepy{
   instructions: string[];
   description: string;
   labels: Label[];
+  photoUrl: string;
 }
 
 
@@ -20,7 +21,8 @@ export class Recipe {
   cookingTime!: number;
   instructions!: string[];
   description!: string;
-  labels:Label[]=[]
+  labels:Label[]=[];
+  photoUrl?: string;
 
   constructor(obj: IRecepy) {
     Object.assign(this,obj);

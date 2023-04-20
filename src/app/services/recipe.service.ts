@@ -18,8 +18,7 @@ export class RecipeService {
     this.newRecipe('recipe 2',['0.5liter frit vet', '2 kilo aardappelen', '2 grote biefstukken', '150 gr boter'],
       20,25,['schil de aardappelen', 'snijd ze in frietjes',
         'kook in een pot met ruim water voor 20 minuten','maak een koekenpan super warm','bak de biefstuk aan beide kanten','giet de aardappelen af', 'frituur de aardappelen 5 minuten']
-      ,'gebakken aardappelen')
-
+      ,'patatfriet')
   }
 
   getAllRecepies(): Recipe[] {
@@ -45,7 +44,8 @@ export class RecipeService {
     this.#recipeList.forEach(r => r.labels = r.labels.filter(l => l.id !== labelId));
   }
 
-  newRecipe(name: string, ingredients: string[],prepTime: number, cookingTime: number,instructions:string[], description: string, labels: Label[] = []): void {
+  newRecipe(name: string, ingredients: string[],prepTime: number, cookingTime: number,
+            instructions:string[], description: string, labels: Label[] = [],photoUrl?:string): void {
     this.#recipeList.push({
       name,
       id: UUID.UUID(),
@@ -54,25 +54,34 @@ export class RecipeService {
       cookingTime,
       instructions,
       description,
-      labels
+      labels,
+      photoUrl
     });
 
   }
 
-  updateRecipe(updatedRecipe: { instructions: string[]; name: string; description: string; ingredients: string[];
-    id: string | null; cookingTime: number; prepTime: number; labels: Label[] }): void {
+  updateRecipe(updatedRecipe: {
+    instructions: string[];
+    photoUrl: string | undefined;
+    name: string;
+    description: string;
+    ingredients: string[];
+    id: string | null;
+    cookingTime: number;
+    prepTime: number;
+    labels: Label[]
+  }): void {
     const recipe = this.#recipeList.find(r => r.id === updatedRecipe.id);
     if (recipe === undefined) {
       console.error('Trying to update a nonexistent recipe.');
       return;
     }
-
     Object.assign(recipe, updatedRecipe);
   }
-  //denk niet dat ik recepten wil laten verwijderen, maar je weet nooit
-  /*deleteRecepy(id: string): void {
+
+  deleteRecipe(id: string): void {
     this.#recipeList = this.#recipeList.filter(r => r.id !== id);
-  }*/
+  }
 
   getNumberOfRecipes() {
     return this.#recipeList.length;

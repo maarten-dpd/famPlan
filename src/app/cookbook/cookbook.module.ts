@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { CookbookPageRoutingModule } from './cookbook-routing.module';
 
 import { CookbookPage } from './cookbook.page';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    CookbookPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        CookbookPageRoutingModule,
+        SharedModule
+    ],
   declarations: [CookbookPage]
 })
 export class CookbookPageModule {}

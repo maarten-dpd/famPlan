@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title><!--{{ title }}--></ion-title>
+    <!--<ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>-->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <form [formGroup]="myForm">
+      <ion-item>
+        <ion-label position="stacked">{{requestedInput}}:</ion-label>
+        <ion-input formControlName="myString"></ion-input>
+      </ion-item>
+    </form>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()" color="secondary">
+        Cancel
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button [disabled]="!myForm.valid" (click)="closeModal()" color="primary">
+        Add
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

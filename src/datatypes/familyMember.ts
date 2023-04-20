@@ -3,6 +3,7 @@ export interface IFamilyMember{
   lastName:string;
   id: string;
   email: string;
+  photoUrl:string;
 }
 
 
@@ -11,6 +12,7 @@ export class FamilyMember{
   lastName!:string;
   id!: string;
   email!: string;
+  photoUrl?:string;
 
 
 

@@ -9,7 +9,7 @@ import {RecipeService} from '../services/recipe.service';
 export class CookbookPage implements OnInit {
   fabIsVisible = true;
 
-  constructor(public recepyService: RecipeService) { }
+  constructor(public recipeService: RecipeService) { }
 
   ngOnInit() {
   }
