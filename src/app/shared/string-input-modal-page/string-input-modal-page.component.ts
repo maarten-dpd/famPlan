@@ -22,13 +22,5 @@ export class StringInputModalPageComponent{
     const data = {stringToAdd: this.myForm.value.myString};
     await this.modalController.dismiss(data);
   }
- /* async presentModal(){
-    const modal = await this.modalController.create({
-      component: StringInputModalPageComponent,
-      cssClass: 'StringInputModalPageComponent-css',
-    });
-    return await modal.present();
-  }*/
-
 
 }

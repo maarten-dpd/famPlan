@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {RecipeService} from '../../../services/recipe.service';
 import {Recipe} from '../../../../datatypes/recipe';
 import {PlanningService} from '../../../services/planning.service';
-import {NavController, ToastController} from '@ionic/angular';
+import {ModalController, NavController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
+import {ConfirmOrCancelModalPageComponent} from '../../../shared/confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
 
 @Component({
   selector: 'app-select-menu',
@@ -13,38 +14,51 @@ import {ActivatedRoute} from '@angular/router';
 export class SelectMenuPage implements OnInit {
 
   selectionDate =new Date();
-  constructor(public recepyService:RecipeService, public planningService:PlanningService, private toastController:ToastController,
+  constructor(public recepyService:RecipeService, public planningService:PlanningService,
+              private modalController:ModalController,
               public navCtrl :NavController, public activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.setData();
   }
-/*
-  toast method found at
-  https://stackoverflow.com/questions/65611158/redirecting-to-other-page-when-alert-message-clicked-ok-in-an-ionic-app
-*/
+  async changeMenu(r:Recipe){
+    await this.presentConfirmOrCancelModal(r);
+  }
+  async presentConfirmOrCancelModal(r: Recipe){
+    const newMenu = r.name;
+    let currentMenu: string |undefined = this.planningService.getPlannedMenuName(this.selectionDate);
+    let question;
+    if(currentMenu === undefined){
+      question = `Set ${newMenu} for ${this.selectionDate.toString().substring(0,10)}`
+    }
+    else{
+      question= `Change menu from ${currentMenu} to ${newMenu}?`
+    }
+    const modal = await this.modalController.create({
+      component: ConfirmOrCancelModalPageComponent,
+      componentProps:{
+        question: question,
+      }
+    });
+    modal.onDidDismiss().then((data) =>{
+      if(data){
+        console.log('answer: ');
+        console.log(data)
+        if(data.data.answer){
+          this.setMenuForDate(r);
+          this.navCtrl.navigateRoot('/home');
+        }
+      }
+    });
+    return await modal.present();
+  }
+
   async setMenuForDate(r: Recipe) {
-    if(this.planningService.menuIsPlannedForDate(this.selectionDate)){
+    if (this.planningService.menuIsPlannedForDate(this.selectionDate)) {
       this.planningService.removeMenuForDate(this.selectionDate.toString())
     }
-    this.planningService.setMenuForDate(r.id,this.selectionDate.toString());
-  /*  console.log(this.planningService.getMenuForDate(this.planningService.dateForDetail.toString()));
-    */
-
-    const toast = await this.toastController.create({
-      message: 'A menu was selected',
-      position: 'top',
-      buttons: [
-        {
-          text: 'Ok',
-          handler: () => {
-            console.log('ok clicked');
-          }
-        },
-      ]
-    });
-    await toast.present();
+    this.planningService.setMenuForDate(r.id, this.selectionDate.toString());
   }
 
   private setData() {

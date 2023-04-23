@@ -11,7 +11,7 @@
       add an activity
     </ion-button>
     <ion-button color = "success" *ngIf="planningService.menuIsPlannedForDate(day)" size="small" [routerLink]="['/home','day-menu',day.toString()]">
-      Today {{planningService.getPlannedMenuName(day)}} is on the menu
+      {{planningService.getPlannedMenuName(day)}} is for dinner
     </ion-button>
     <ion-button *ngIf="!planningService.menuIsPlannedForDate(day)" fill="outline" size="small" [routerLink]="['/home','day-menu','select-menu', day.toString()]">
       Choose a recepy for diner

@@ -8,6 +8,8 @@ import {DayCardComponent} from './day-card/day-card.component';
 import {RecipeItemComponent} from './recipe-item/recipe-item.component';
 import {StringInputModalPageComponent} from './string-input-modal-page/string-input-modal-page.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {ConfirmOrCancelModalPageComponent} from './confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +17,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     ActivityItemComponent,
     DayCardComponent,
     RecipeItemComponent,
-    StringInputModalPageComponent
+    StringInputModalPageComponent,
+    ConfirmOrCancelModalPageComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +31,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     ActivityItemComponent,
     DayCardComponent,
     RecipeItemComponent,
-    StringInputModalPageComponent
+    StringInputModalPageComponent,
+    ConfirmOrCancelModalPageComponent
   ]
 })
 export class SharedModule { }

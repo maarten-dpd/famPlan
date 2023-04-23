@@ -16,8 +16,6 @@ export class ActivityService {
     let date = new Date();
     let activityName = 'activity '+ b;
     let activityDate = date;
-    /*console.log('date on init:' + date)*/
-
     for (let i = 0; i<20;i++){
       activityDate = this.addDays(date,i)
      /* console.log('date after adding days' + date)*/
@@ -32,24 +30,15 @@ export class ActivityService {
       /*console.log (activityName);*/
     }
 
-    /*console.log(this.getAllActivities());*/
-  }
- /* private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
-    return activityFilter.all === filter;
-  }*/
-  addDays(date: Date, days: number): Date{
-    date.setDate(date.getDate()+days);
-    return date;
-  }
-  getAllActivities(): Activity[] {
-    return this.#activityList;
   }
 
-  deleteActivity(id: string): void {
+  //crud operations methods
+  deleteActivity(id: string) {
+    console.log('activity service delete activity entered')
     this.#activityList = this.#activityList.filter(a => a.id !== id);
   }
-
-  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],description: string, location: string, date:string): void {
+  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],
+              description: string, location: string, date:string): void {
     this.#activityList.push({
       name,
       id : UUID.UUID(),
@@ -61,54 +50,66 @@ export class ActivityService {
     });
 
   }
-
-  updateActivity(updatedActivity: { date: string; name: string; location: string; description:string;
-    participants:FamilyMember[]; labels: Label[]; id: string | null }): void {
-    const activity = this.#activityList.find(a => a.id === updatedActivity.id);
-/*    console.log('before update execution');
-    console.log(activity);*/
-    if (activity === undefined) {
-      console.error('Trying to update a nonexistent activity.');
-      return;
+  updateActivity(updatedActivity: {
+                                    date: string;
+                                    name: string;
+                                    location: string;
+                                    description:string;
+                                    participants:FamilyMember[];
+                                    labels: Label[];
+                                    id: string | null }): void {
+      const activity = this.#activityList.find(a => a.id === updatedActivity.id);
+      if (activity === undefined) {
+        console.error('Trying to update a nonexistent activity.');
+        return;
+      }
+      Object.assign(activity, updatedActivity);
     }
 
-    Object.assign(activity, updatedActivity);
-/*    console.log('after update execution');
-    console.log(activity);*/
+  //get data methods
+  getAllActivities(): Activity[] {
+    return this.#activityList;
   }
-
   getActivity(id: string): Activity | undefined {
     return this.#activityList.find(a => a.id === id);
   }
   getActivitiesByDate(date: string):Activity[] {
     return this.#activityList.filter(a =>a.date.substring(0,10) === date.substring(0,10));
   }
-
-  /*getFilteredActivities(filter: activityFilter): Activity[] {
-    return this.getAllActivities()
-      .filter(a => ActivityService.activityMatchesFilter(a, filter));
-  }*/
-
   getNumberOfActivitiesOnDate(date: string): number {
     let activitiesOnDate = this.getActivitiesByDate(date);
-/*    console.log('date')
-    console.log(date)
-    console.log('found activity')
-    console.log(activitiesOnDate)*/
+    /*    console.log('date')
+        console.log(date)
+        console.log('found activity')
+        console.log(activitiesOnDate)*/
     return activitiesOnDate.length;
   }
 
+  //misc methods
+  //add days method is used in the constructor to create a set of test activities
+  addDays(date: Date, days: number): Date{
+    date.setDate(date.getDate()+days);
+    return date;
+  }
   deleteLabelFromActivity(labelId: number) {
 
     this.#activityList.forEach(a => a.labels = a.labels.filter(l => l.id !== labelId));
   }
 
+  //methods for future use
+
+  /*getFilteredActivities(filter: activityFilter): Activity[] {
+    return this.getAllActivities()
+      .filter(a => ActivityService.activityMatchesFilter(a, filter));
+  }*/
  /* getActivitiesByLabel(labelId: number) {
     return this.#activityList.filter(a => a.labels.some(l => l.id === labelId));
   }*/
-
-
-/*  private getActivityByName(name: string) {
+/*  getActivityByName(name: string) {
     return this.#activityList.find(a => a.name === name);
   }*/
+  /* private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
+    return activityFilter.all === filter;
+  }*/
+
 }

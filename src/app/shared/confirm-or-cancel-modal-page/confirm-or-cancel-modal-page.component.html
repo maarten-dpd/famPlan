@@ -1,0 +1,24 @@
+<ion-header>
+
+</ion-header>
+<ion-content class="ion-padding" style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+  <ion-grid>
+    <ion-row style="height: 40%">
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+      <h3 style="text-align: center;">
+        {{question}}
+      </h3>
+    </ion-row>
+    <ion-row  style="height: 40%">
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-footer>
+  <div class="ion-text-center">
+    <ion-button (click)="confirm()">Confirm</ion-button>
+    <ion-button (click)="cancel()">Cancel</ion-button>
+  </div>
+</ion-footer>

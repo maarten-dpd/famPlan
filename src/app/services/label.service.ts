@@ -20,20 +20,12 @@ export class LabelService {
     this.#id = 4;
   }
 
-  getAllLabels(): Label[] {
-    return this.#labels;
-  }
-
-  /*getLabelById(id: number): Label | undefined {
-    return this.getAllLabels().find(l => l.id === id);
-  }*/
-
+  //crud operation methods
   deleteLabel(id: number): void {
     this.#labels = this.#labels.filter(l => l.id !== id);
     this.recepyService.deleteLabelFromRecipe(id);
     this.activityService.deleteLabelFromActivity(id);
   }
-
   createLabel(name: string, color: Color): void {
     this.#labels.push({
       name,
@@ -43,7 +35,18 @@ export class LabelService {
     this.#id++;
   }
 
+  //get data methods
+  getAllLabels(): Label[] {
+    return this.#labels;
+  }
   getLabelsByType(type: string) {
     return this.#labels.filter(l=>l.type === type)
   }
+
+  //misc methods
+
+  //methods for later use
+  /*getLabelById(id: number): Label | undefined {
+    return this.getAllLabels().find(l => l.id === id);
+  }*/
 }
