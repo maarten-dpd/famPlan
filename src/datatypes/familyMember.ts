@@ -20,5 +20,4 @@ export class FamilyMember{
     Object.assign(this,obj);
 
   }
-
 }

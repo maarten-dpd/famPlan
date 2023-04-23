@@ -16,9 +16,29 @@
     </ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <ion-list class="ion-text-center">
-      <ion-item >{{activity.location}}</ion-item>
-      <ion-item>{{activity.description}}</ion-item>
+    <ion-list lines="none">
+      <ion-item-group class="ion-text-center">
+        <ion-item-divider>
+          <ion-label>
+            Location
+          </ion-label>
+        </ion-item-divider>
+        <ion-item >{{activity.location}}</ion-item>
+        <ion-item-divider>
+          <ion-label>
+            Description
+          </ion-label>
+        </ion-item-divider>
+        <ion-item>{{activity.description}}</ion-item>
+        <ion-item-divider>
+          <ion-label>
+            Participants
+          </ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let fm of activity.participants ">
+          {{fm.firstName}} {{fm.lastName}}
+        </ion-item>
+      </ion-item-group>
     </ion-list>
   </ion-card-content>
 </ion-card>

@@ -81,7 +81,7 @@ export class ActivityService {
     return this.#activityList.find(a => a.id === id);
   }
   getActivitiesByDate(date: string):Activity[] {
-    return this.#activityList.filter(a =>a.date === date);
+    return this.#activityList.filter(a =>a.date.substring(0,10) === date.substring(0,10));
   }
 
   /*getFilteredActivities(filter: activityFilter): Activity[] {

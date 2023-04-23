@@ -9,6 +9,7 @@ import {PlannedMenu} from '../../datatypes/plannedMenu';
 export class PlanningService {
 
   #plannedMenus : PlannedMenu[] = [];
+
   dateForDetail:Date=new Date();
   constructor(public recipeService:RecipeService) {
     this.setMenuForDate(this.recipeService.getRecipeByName('recipe 1')[0].id,this.dateForDetail.toString())
@@ -22,18 +23,26 @@ export class PlanningService {
     })
   }
   getMenuForDate(date: string) {
-    return this.#plannedMenus.filter(pm => pm.date === date);
+    /*console.log('date passed to function:');
+    console.log(date);
+    console.log('substring of date passed to function');
+    console.log(date.substring(0,15));
+
+      this.#plannedMenus.forEach((item:PlannedMenu)=>{
+        console.log('substring of date in plannedmenus array');
+        console.log(item.date.substring(0,15));
+      })*/
+
+    return this.#plannedMenus.filter(pm => pm.date.substring(0,15) === date.substring(0,15));
   }
   removeMenuForDate(date: string) {
-    this.#plannedMenus = this.#plannedMenus.filter(pm => pm.date !== date)
+    this.#plannedMenus = this.#plannedMenus.filter(pm => pm.date.substring(0,15) !== date.substring(0,15))
   }
   setDateForDetail(date: Date){
     this.dateForDetail = date;
   }
   menuIsPlannedForDate(date: Date) {
-    let menuIsPlanned = this.#plannedMenus.filter(pm => pm.date === date.toString())
-    /*console.log(menuIsPlanned);*/
-    return menuIsPlanned.length > 0;
+    return !!this.getPlannedMenuName(date);
 
   }
   getPlannedMenuName(date: Date) {
@@ -54,20 +63,20 @@ export class PlanningService {
     if(!this.getPlannedMenu(dateForDetail) || !this.getMenuForDate(dateForDetail.toString())){
       return false;
     }
-    console.log('recipe =');
+    /*console.log('recipe =');
     console.log(r);
     console.log('date =');
     console.log(dateForDetail);
     console.log('getMenuForDate =');
     console.log(this.getMenuForDate(dateForDetail.toString()));
     console.log('getPlannedMenu =');
-    console.log(this.getPlannedMenu(dateForDetail));
+    console.log(this.getPlannedMenu(dateForDetail));*/
     if(!r){return false;}
     if(this.getMenuForDate(dateForDetail.toString()) && this.getPlannedMenu(dateForDetail)?.id === r.id){
-      console.log('returned true');
+      /*console.log('returned true');*/
       return true;
     }
-    console.log('returned false');
+    /*console.log('returned false');*/
     return false;
   }
 }

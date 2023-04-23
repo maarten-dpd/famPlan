@@ -25,27 +25,23 @@ export class SelectMenuPage implements OnInit {
   https://stackoverflow.com/questions/65611158/redirecting-to-other-page-when-alert-message-clicked-ok-in-an-ionic-app
 */
   async setMenuForDate(r: Recipe) {
-    if(this.planningService.menuIsPlannedForDate(this.planningService.dateForDetail)){
-      this.planningService.removeMenuForDate(this.planningService.dateForDetail.toString())
+    if(this.planningService.menuIsPlannedForDate(this.selectionDate)){
+      this.planningService.removeMenuForDate(this.selectionDate.toString())
     }
-    this.planningService.setMenuForDate(r.id,this.planningService.dateForDetail.toString());
-    console.log(this.planningService.getMenuForDate(this.planningService.dateForDetail.toString()))
+    this.planningService.setMenuForDate(r.id,this.selectionDate.toString());
+  /*  console.log(this.planningService.getMenuForDate(this.planningService.dateForDetail.toString()));
+    */
 
     const toast = await this.toastController.create({
-      message: 'A menu was selected, click change to reconsider , click back to close ',
+      message: 'A menu was selected',
       position: 'top',
       buttons: [
         {
-          text: 'change',
+          text: 'Ok',
           handler: () => {
-            console.log('change clicked');
+            console.log('ok clicked');
           }
-        }, {
-          text: 'back',
-          handler: () => {
-            this.navCtrl.navigateRoot('/home/day-menu');
-          }
-        }
+        },
       ]
     });
     await toast.present();
