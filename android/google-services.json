@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "832543227709",
+    "project_id": "famplan-ba690",
+    "storage_bucket": "famplan-ba690.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832543227709:android:a1647b2224132997888f54",
+        "android_client_info": {
+          "package_name": "com.deen.maarten.famPlan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832543227709-etimjloj3va3h25t674t1v0ironfsuoj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deen.maarten.famPlan",
+            "certificate_hash": "c84a4fc77faa06ab52b8a371f04afdd31bd2bd71"
+          }
+        },
+        {
+          "client_id": "832543227709-k7q7maaua4paqjrfr5c9ghvdn2s2o96n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOaV8UY9ty08FnxqqSSuUMv34zUnAwxhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832543227709-k7q7maaua4paqjrfr5c9ghvdn2s2o96n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

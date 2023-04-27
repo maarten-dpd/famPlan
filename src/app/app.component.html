@@ -1,19 +1,28 @@
 <ion-app>
-
+<ion-split-pane contentId="main">
   <ion-menu #menu side='start' menuId="side-menu" contentId='main'>
     <ion-header>
       <ion-toolbar color='primary'>
         <ion-title>Family Planner</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content *ngIf="(authService.currentUser | async); let user">
+      <ion-avatar slot = "start">
+        <img [src]="user?.photoURL ?? placeholder" #avatar (error)="avatar.src = placeholder">
+      </ion-avatar>
       <ion-list lines='full' (click)='menu.close()'>
         <ion-item [routerLink]="['home']" >This week</ion-item>
         <ion-item [routerLink]="['cookbook']" >Cookbook</ion-item>
         <ion-item [routerLink]="['labels']" >labels</ion-item>
         <ion-item [routerLink]="['family-settings']">Settings</ion-item>
       </ion-list>
+      <ion-list lines="none">
+        <ion-item (click)="authService.signOut()">
+          Logout
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-menu>
   <ion-router-outlet id='main'></ion-router-outlet>
+</ion-split-pane>
 </ion-app>

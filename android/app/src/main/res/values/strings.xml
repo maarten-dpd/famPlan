@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">famPlan</string>
+    <string name="title_activity_main">famPlan</string>
+    <string name="package_name">com.deen.maarten.famPlan</string>
+    <string name="custom_url_scheme">com.deen.maarten.famPlan</string>
+</resources>

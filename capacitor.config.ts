@@ -1,10 +1,16 @@
-/*import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.deen.maarten.famPlan',
   appName: 'famPlan',
   webDir: 'www',
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
+  plugins: {
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ['phone', 'google.com'],
+    },
+  }
 };
 
-/!*export default config;*!/*/
+export default config;
