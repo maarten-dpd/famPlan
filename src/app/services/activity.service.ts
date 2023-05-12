@@ -91,7 +91,7 @@ export class ActivityService {
     date.setDate(date.getDate()+days);
     return date;
   }
-  deleteLabelFromActivity(labelId: number) {
+  deleteLabelFromActivity(labelId: string) {
 
     this.#activityList.forEach(a => a.labels = a.labels.filter(l => l.id !== labelId));
   }

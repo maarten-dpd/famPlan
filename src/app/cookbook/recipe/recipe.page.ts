@@ -6,6 +6,7 @@ import {LabelService} from '../../services/label.service';
 import {Label} from '../../../datatypes/label';
 import {PhotoService} from '../../services/photo.service';
 import {StringInputModalPageComponent} from '../../shared/string-input-modal-page/string-input-modal-page.component';
+import {Recipe} from '../../../datatypes/recipe';
 
 @Component({
   selector: 'app-recipe',
@@ -19,7 +20,7 @@ export class RecipePage implements OnInit {
   cookingTime: number = 0;
   description: string = '';
   labels= this.labelService.getLabelsByType('recipe');
-  selectedLabels: boolean[] = Array(this.labels.length).fill(false);
+  selectedLabels: Label[] = [];
   ingredients: string[] = [];
   instructions: string[] =[];
   id: string | null ='';
@@ -44,23 +45,26 @@ export class RecipePage implements OnInit {
       return;
     }
 
-    const recipe = this.recipeService.getRecipeById(this.id);
-    if(recipe){
-      this.recipeName = recipe.name;
-      this.prepTime = recipe.prepTime;
-      this.cookingTime = recipe.cookingTime;
-      this.ingredients = recipe.ingredients;
-      this.instructions = recipe.instructions;
-      this.description = recipe.description;
-      this.selectedLabels = this.labels.map(l => !!recipe.labels.find(l2 => l2.id === l.id));
-      if (recipe.photoUrl != null) {
-        this.recipePhotoUrl = recipe.photoUrl;
+    this.recipeService.getRecipeById(this.id).subscribe(recipes =>{
+      if(recipes && recipes.length >0){
+        const recipe = recipes[0];
+        this.recipeName = recipe.name;
+        this.prepTime = recipe.prepTime;
+        this.cookingTime = recipe.cookingTime;
+        this.ingredients = recipe.ingredients;
+        this.instructions = recipe.instructions;
+        this.description = recipe.description;
+        this.selectedLabels = recipe.labels;
+        if (recipe.photoUrl != null) {
+          this.recipePhotoUrl = recipe.photoUrl;
+        }
       }
-    }
+    }) ;
+
 
   }
 
-    handleCreateAndUpdate(): void {
+   handleCreateAndUpdate(): void {
     if (this.id) {
       this.updateRecipe();
     } else {
@@ -71,26 +75,35 @@ export class RecipePage implements OnInit {
 
   private createRecipe(): void {
     this.recipeService.newRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
-      this.instructions, this.description, this.getSelectedLabels(),this.recipePhotoUrl);
+      this.instructions, this.description, this.selectedLabels,this.recipePhotoUrl);
   }
 
   private updateRecipe(): void {
-    this.recipeService.updateRecipe({
-      id: this.id,
-      name: this.recipeName,
-      cookingTime: this.cookingTime,
-      description: this.description,
-      prepTime: this.prepTime,
-      ingredients: this.ingredients,
-      instructions:this.instructions,
-      labels: this.getSelectedLabels(),
-      photoUrl:this.recipePhotoUrl
-    });
+    if(this.id){
+      const recipeToUpdate :Recipe = {
+        id: this.id,
+        name: this.recipeName,
+        cookingTime: this.cookingTime,
+        description: this.description,
+        prepTime: this.prepTime,
+        ingredients: this.ingredients,
+        instructions:this.instructions,
+        labels: this.selectedLabels,
+        photoUrl:this.recipePhotoUrl
+      }
+      this.recipeService.updateRecipe(this.id,recipeToUpdate);
+    }
+    else{
+      console.log('recipe has no id field and can not be deleted')
+      //replace by modal to give user warning
+    }
+
+
   }
 
-  private getSelectedLabels(): Label[] {
-    return this.labels.filter((l, i) => this.selectedLabels[i]);
-  }
+  // private getSelectedLabels(): Label[] {
+  //   return this.selectedLabels;
+  // }
 
   async addIngredient() {
     await this.presentInputModal('add an ingredient','ingredient')
@@ -131,4 +144,18 @@ export class RecipePage implements OnInit {
     })
   }
 
+  isSelected(label: Label) {
+    return this.selectedLabels.some(l=>l.id === label.id);
+  }
+
+  changeLabelSelection(label: Label) {
+    if(this.isSelected(label)){
+      const index = this.selectedLabels.findIndex(l=>l.id === label.id);
+      if (index !== -1){
+        this.selectedLabels.splice(index, 1);
+      }
+    } else {
+      this.selectedLabels.push(label);
+    }
+  }
 }

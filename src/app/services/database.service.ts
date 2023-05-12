@@ -1,26 +1,12 @@
 import {Injectable} from '@angular/core';
-import {AuthService} from './auth.service';
-import {
-  addDoc,
-  collection,
-  collectionData,
-  CollectionReference,
-  deleteDoc,
-  doc,
-  DocumentReference,
-  Firestore,
-  orderBy,
-  query,
-  updateDoc
-} from '@angular/fire/firestore';
-import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
-  constructor(private authService: AuthService, private firestore: Firestore) {
+  constructor() {
   }
+
 
   /**
    * Create a new message in the database.

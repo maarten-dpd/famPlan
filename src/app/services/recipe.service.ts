@@ -2,6 +2,16 @@ import {Injectable} from '@angular/core';
 import {Recipe} from '../../datatypes/recipe';
 import {Label} from '../../datatypes/label';
 import {UUID} from 'angular2-uuid';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference, deleteDoc,
+  doc,
+  DocumentReference,
+  Firestore,
+  query, updateDoc, where
+} from '@angular/fire/firestore';
 
 
 @Injectable({
@@ -9,44 +19,55 @@ import {UUID} from 'angular2-uuid';
 })
 export class RecipeService {
 
-  #recipeList: Recipe[] = [];
-
-  constructor() {
-    this.newRecipe('recipe 1',['100 gr boter', '2 kilo aardappelen'],
-      30,30,['schil de aardappelen', 'kook in een pot met ruim water voor 20 minuten', 'giet af', 'bak de aardappelen 10 minuten in de boter']
-    ,'gebakken aardappelen')
-    this.newRecipe('recipe 2',['0.5liter frit vet', '2 kilo aardappelen', '2 grote biefstukken', '150 gr boter'],
-      20,25,['schil de aardappelen', 'snijd ze in frietjes',
-        'kook in een pot met ruim water voor 20 minuten','maak een koekenpan super warm','bak de biefstuk aan beide kanten','giet de aardappelen af', 'frituur de aardappelen 5 minuten']
-      ,'patatfriet')
+  constructor(private firestore:Firestore) {
+    // this.newRecipe('recipe 1',['100 gr boter', '2 kilo aardappelen'],
+    //   30,30,['schil de aardappelen', 'kook in een pot met ruim water voor 20 minuten', 'giet af', 'bak de aardappelen 10 minuten in de boter']
+    // ,'gebakken aardappelen')
+    // this.newRecipe('recipe 2',['0.5liter frit vet', '2 kilo aardappelen', '2 grote biefstukken', '150 gr boter'],
+    //   20,25,['schil de aardappelen', 'snijd ze in frietjes',
+    //     'kook in een pot met ruim water voor 20 minuten','maak een koekenpan super warm','bak de biefstuk aan beide kanten','giet de aardappelen af', 'frituur de aardappelen 5 minuten']
+    //   ,'patatfriet')
   }
 
-  getAllRecepies(): Recipe[] {
-    return this.#recipeList ;
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  }
+  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
+  }
+
+  getAllRecepies() {
+    return collectionData<Recipe>(
+      query<Recipe>(
+        this.#getCollectionRef('recipes')
+      ),
+      {idField: 'id'}
+    ) ;
   }
 
   //get recepyBy methodes zijn voor in de toekomst een filter op recepten te bouwen
-  getRecipeById(id: string): Recipe | undefined {
-    return this.#recipeList.find(r => r.id === id);
+  getRecipeById(id: string){
+    return collectionData<Recipe>(
+      query<Recipe>(
+        this.#getCollectionRef('recipes'),
+        where('id','==',id)
+      ),
+      {idField: 'id'}
+    );
   }
-  getRecipeByName(name: string): Recipe[] {
-    return this.#recipeList.filter(r => r.name === name);
+  getRecipeByName(name: string)  {
+    return collectionData<Recipe>(
+      query<Recipe>(
+        this.#getCollectionRef('recipes'),
+        where('name','==',name)
+      ),
+      {idField: 'id'}
+    );
   }
 
- /* getRecipeByTotalDuration(duration: number): Recipe | undefined {
-    return this.#recipeList.find(r => r.prepTime + r.cookingTime === duration);
-  }*/
- /* getRecipeByLabel(labelId: number) {
-    return this.#recipeList.filter(r => r.labels.some(l => l.id === labelId));
-  }*/
-
-  deleteLabelFromRecipe(labelId: number) {
-    this.#recipeList.forEach(r => r.labels = r.labels.filter(l => l.id !== labelId));
-  }
-
-  newRecipe(name: string, ingredients: string[],prepTime: number, cookingTime: number,
-            instructions:string[], description: string, labels: Label[] = [],photoUrl?:string): void {
-    this.#recipeList.push({
+  async newRecipe(name: string, ingredients: string[],prepTime: number, cookingTime: number,
+            instructions:string[], description: string, labels: Label[] = [],photoUrl?:string) {
+    const newRecipe ={
       name,
       id: UUID.UUID(),
       ingredients,
@@ -56,35 +77,46 @@ export class RecipeService {
       description,
       labels,
       photoUrl
-    });
+    };
+    await addDoc(
+      this.#getCollectionRef<Recipe>('recipes'),
+      newRecipe
+    )
 
   }
 
-  updateRecipe(updatedRecipe: {
-    instructions: string[];
-    photoUrl: string | undefined;
-    name: string;
-    description: string;
-    ingredients: string[];
-    id: string | null;
-    cookingTime: number;
-    prepTime: number;
-    labels: Label[]
-  }): void {
-    const recipe = this.#recipeList.find(r => r.id === updatedRecipe.id);
-    if (recipe === undefined) {
-      console.error('Trying to update a nonexistent recipe.');
-      return;
-    }
-    Object.assign(recipe, updatedRecipe);
-  }
+ async updateRecipe(id: string, recipe: Recipe){
+    await updateDoc(this.#getDocumentRef('recipes',id), recipe)
+ }
 
-  deleteRecipe(id: string): void {
-    this.#recipeList = this.#recipeList.filter(r => r.id !== id);
+
+  async deleteRecipe(id: string){
+    await deleteDoc(this.#getDocumentRef('recipes', id));
   }
 
   getNumberOfRecipes() {
-    return this.#recipeList.length;
+    const recipes = this.getAllRecepies();
+    let numberOfRecipes = 0;
+    recipes.subscribe(recipes =>{
+      for(const recipe of recipes){
+        numberOfRecipes++;
+      }
+    })
+    return numberOfRecipes;
   }
 
+  labelIsInUse(id: string) {
+    const recipes = this.getAllRecepies();
+    let result = false
+    recipes.subscribe(recipes =>{
+      for (const recipe of recipes){
+        const labelUsed = recipe.labels.some(label =>label.id === id);
+        if(labelUsed){
+          result = true;
+        }
+      }
+      }
+    )
+    return result;
+  }
 }

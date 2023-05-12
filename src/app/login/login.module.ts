@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
-import {PhoneVerificationComponent} from './phone-verification/phone-verification.component';
 
 @NgModule({
   imports: [
@@ -16,6 +15,6 @@ import {PhoneVerificationComponent} from './phone-verification/phone-verificatio
     IonicModule,
     LoginPageRoutingModule
   ],
-  declarations: [LoginPage, PhoneVerificationComponent]
+  declarations: [LoginPage]
 })
 export class LoginPageModule {}

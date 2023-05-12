@@ -17,7 +17,7 @@
   <ion-row>
     <ion-col>
       <ion-item-group class="justify-content-center text-center">
-        <ion-item *ngFor="let r of recepyService.getAllRecepies()">
+        <ion-item *ngFor="let r of recepyService.getAllRecepies() | async">
           <ion-grid>
             <ion-row>
               <ion-col></ion-col>

@@ -32,7 +32,7 @@
   </ion-fab>
 
   <ion-list *ngIf="recipeService.getNumberOfRecipes()>0">
-    <app-recipe-item  *ngFor='let r of recipeService.getAllRecepies()'
+    <app-recipe-item  *ngFor='let r of recipeService.getAllRecepies() | async'
                         [recipe]='r'>
     </app-recipe-item>
   </ion-list>

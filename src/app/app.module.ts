@@ -11,6 +11,7 @@ import {enableMultiTabIndexedDbPersistence, getFirestore, provideFirestore} from
 
 @NgModule({
   declarations: [AppComponent],
+  entryComponents:[],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
   provideFirebaseApp(()=>initializeApp(environment.firebaseConfig)),
   provideAuth(()=>getAuth()),

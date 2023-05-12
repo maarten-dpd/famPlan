@@ -17,28 +17,20 @@
           <ion-label>Login with Google</ion-label>
         </ion-item>
 
-        <ion-item *ngIf="isNative" class="ion-margin-vertical" color="light" (click)="showPhoneVerification()">
-          <div slot="start">
-            <ion-icon size="large" name="chatbox-ellipses"></ion-icon>
-          </div>
-          <ion-label>Login with phone number</ion-label>
-        </ion-item>
 
         <form (ngSubmit)="signIn()">
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+            <ion-input type="email" [(ngModel)]="email" name="email"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label position="floating">Password</ion-label>
-            <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+            <ion-input type="password" [(ngModel)]="password" name="password" ></ion-input>
           </ion-item>
 
           <ion-button type="submit" expand="block">Sign In</ion-button>
         </form>
-
-
 
       </ion-col>
     </ion-row>

@@ -20,7 +20,7 @@
 
 
   <ion-list lines='full'>
-    <ion-item-sliding *ngFor='let label of this.labelService.getAllLabels()'>
+    <ion-item-sliding *ngFor='let label of this.labelService.getAllLabels() | async'>
 
       <ion-item-options side='start'>
         <ion-item-option color='danger' (click)='labelService.deleteLabel(label.id)'>

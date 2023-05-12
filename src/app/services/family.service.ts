@@ -1,39 +1,55 @@
 import { Injectable } from '@angular/core';
 import {FamilyMember} from '../../datatypes/familyMember';
 import {UUID} from 'angular2-uuid';
+import {
+  addDoc,
+  collection, collectionData,
+  CollectionReference,
+  Firestore,
+  query
+} from '@angular/fire/firestore';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FamilyService {
 
-  #familyMembers: FamilyMember[] = [];
   familyName:string = 'Test family';
 
-  constructor() {
-    this.addFamilyMember('Pa', 'Testfamilie', 'pa@family.com');
-    this.addFamilyMember('ma', 'Aangetrouwd', 'ma@family.com');
-    this.addFamilyMember('Broer', 'Testfamilie', 'broer@family.com');
-    this.addFamilyMember('Zus', 'Testfamilie', 'zus@family.com');
+  constructor(private firestore:Firestore) {
+
   }
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  }
+
   //crud operation methods
-  addFamilyMember(firstName: string, lastName: string, email: string){
-    this.#familyMembers.push({
-      firstName,
-      lastName,
-      id: UUID.UUID(),
-      email
-    });
+  async addFamilyMember(firstName: string, lastName: string, email: string){
+    const newFamilyMember ={
+      firstName:firstName,
+      lastName: lastName,
+      email:email,
+      id: UUID.UUID()
+    };
+    await addDoc(
+      this.#getCollectionRef<FamilyMember>('familyMembers'),
+      newFamilyMember
+    );
   }
 
   //get data methods
   getFamilyName(): string {
     return this.familyName ;
   }
-  getFamilyMembers(): FamilyMember[] {
-    return this.#familyMembers ;
+  getFamilyMembers(): Observable<FamilyMember[]> {
+    return collectionData<FamilyMember>(
+      query<FamilyMember>(
+        this.#getCollectionRef('familyMembers')
+      ),
+      {idField: 'id'}
+    );
   }
-
   //misc methods
 
   //methods for later use

@@ -43,26 +43,36 @@
   </div>
   <ion-item-divider></ion-item-divider>
 
-  <ion-list lines="none" *ngIf="participants.length > 0">
+  <ion-list lines="none">
     <ion-list-header>
       Participants
     </ion-list-header>
 
-    <ion-item *ngFor='let p of participants; let i = index'>
-      <ion-checkbox slot='start' [(ngModel)]='selectedParticipants[i]'></ion-checkbox>
+    <ion-item *ngFor='let p of participants |async'>
+      <ion-checkbox
+        slot='start'
+        [(ngModel)]='selectedParticipants[p.id]'
+      [checked]="isSelectedParticipant(p)"
+      (ionChange)="changeParticipantSelection(p)"></ion-checkbox>
       <ion-label>{{p.firstName}} {{p.lastName}}</ion-label>
     </ion-item>
   </ion-list>
 
   <ion-item-divider></ion-item-divider>
 
-  <ion-list lines="none" *ngIf="labels.length > 0">
+  <ion-list lines="none">
     <ion-list-header>
       Labels
     </ion-list-header>
 
-    <ion-item *ngFor='let label of labels; let i = index'>
-      <ion-checkbox slot='start' [color]='label.color' [(ngModel)]='selectedLabels[i]'></ion-checkbox>
+    <ion-item *ngFor='let label of labels | async'>
+      <ion-checkbox
+        slot='start'
+        [color]='label.color'
+        [(ngModel)]='selectedLabels[label.id]'
+        [checked]="isSelectedLabel(label)"
+        (ionChange)="changeLabelSelection(label)">
+      </ion-checkbox>
       <ion-label [color]='label.color'>{{label.name}}</ion-label>
     </ion-item>
   </ion-list>

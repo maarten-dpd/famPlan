@@ -9,46 +9,20 @@ import {
   signOut,
   Unsubscribe
 } from '@angular/fire/auth';
-import {updateProfile, GoogleAuthProvider, PhoneAuthProvider, User} from 'firebase/auth';
+import { GoogleAuthProvider,  User} from 'firebase/auth';
 import {Capacitor} from '@capacitor/core';
 import {BehaviorSubject} from 'rxjs';
-import firebase from 'firebase/compat';
-import auth = firebase.auth;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-
-
   public currentUser: BehaviorSubject<null | User> = new BehaviorSubject<null | User>(null);
-  #verificationId?: string;
   #authUnsubscribe: Unsubscribe;
 
   constructor(private auth: Auth, private router: Router) {
     this.#authUnsubscribe = this.auth.onAuthStateChanged(user => this.setCurrentUser(user));
-  }
-
-  isLoggedIn(): boolean {
-    return this.currentUser.value !== null;
-  }
-
-  getProfilePic(): string {
-    const placeholder = '/assets/Portrait_Placeholder.png';
-    return this.currentUser.value?.photoURL ?? placeholder;
-  }
-
-  getDisplayName(): string | undefined {
-    return this.currentUser.value?.displayName ?? undefined;
-  }
-
-  getEmail(): string | undefined {
-    return this.currentUser.value?.email ?? undefined;
-  }
-
-  getUserUID(): string | undefined {
-    return this.currentUser.value?.uid;
   }
 
   async signOut(): Promise<void> {
@@ -70,45 +44,6 @@ export class AuthService {
       const newCredential = GoogleAuthProvider.credential(credential?.idToken);
       await signInWithCredential(this.auth, newCredential);
     }
-  }
-
-  /**
-   * The login process for a phone is seperated in 2 part.
-   *  1. A Verification code is send to the user. <-- This method.
-   *  2. The verification code is entered on the website and used to log in.
-   *
-   * @param phoneNumber The phone number to which the verification code must be sent.
-   */
-  async sendPhoneVerificationCode(phoneNumber: string): Promise<void> {
-    const listener = FirebaseAuthentication.addListener('phoneCodeSent', ({verificationId}) => {
-      this.#verificationId = verificationId;
-      listener.remove();
-    });
-    await FirebaseAuthentication.signInWithPhoneNumber({phoneNumber});
-  }
-
-  /**
-   * Authenticate the user through the verification send to his phone number.
-   *
-   * @param verificationCode
-   */
-  async signInWithPhoneNumber(verificationCode: string): Promise<void> {
-    if (!this.#verificationId) {
-      throw new Error(`No valid verificationId found, ensure the sendPhoneVerificationCode method was called first.`);
-    }
-
-    const credential = PhoneAuthProvider.credential(this.#verificationId, verificationCode);
-    await signInWithCredential(this.auth, credential);
-  };
-
-  async updateDisplayName(displayName: string): Promise<void> {
-    if (!this.auth.currentUser) {
-      return;
-    }
-
-    await updateProfile(this.auth.currentUser, {
-      displayName
-    });
   }
 
   /**

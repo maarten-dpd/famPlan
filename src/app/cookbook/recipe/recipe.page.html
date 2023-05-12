@@ -80,13 +80,20 @@
     </ion-button>
   </ion-list>
 
-  <ion-list lines="none" *ngIf="labels.length > 0">
+  <ion-list lines="none">
     <ion-list-header>
       Labels
     </ion-list-header>
 
-    <ion-item *ngFor='let label of labels; let i = index'>
-      <ion-checkbox slot='start' [color]='label.color' [(ngModel)]='selectedLabels[i]'></ion-checkbox>
+
+    <ion-item *ngFor='let label of labels | async'>
+      <ion-checkbox
+        slot='start'
+        [color]='label.color'
+        [(ngModel)]='selectedLabels[label.id]'
+        [checked]="isSelected(label)"
+        (ionChange)="changeLabelSelection(label)">
+      </ion-checkbox>
       <ion-label [color]='label.color'>{{label.name}}</ion-label>
     </ion-item>
   </ion-list>

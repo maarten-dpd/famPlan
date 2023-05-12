@@ -18,6 +18,6 @@ export enum Type {
 export interface Label {
   name: string;
   color?: Color;
-  id: number;
   type?: Type;
+  id: string;
 }

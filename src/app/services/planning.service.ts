@@ -2,6 +2,16 @@ import { Injectable } from '@angular/core';
 import {Recipe} from '../../datatypes/recipe';
 import {RecipeService} from './recipe.service';
 import {PlannedMenu} from '../../datatypes/plannedMenu';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference, deleteDoc,
+  doc,
+  DocumentReference,
+  Firestore, query, where
+} from '@angular/fire/firestore';
+import {UUID} from 'angular2-uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +21,36 @@ export class PlanningService {
   #plannedMenus : PlannedMenu[] = [];
 
   dateForDetail:Date=new Date();
-  constructor(public recipeService:RecipeService) {
-    this.setMenuForDate(this.recipeService.getRecipeByName('recipe 1')[0].id,this.dateForDetail.toString())
+  constructor(public recipeService:RecipeService, private firestore:Firestore) {
+    // this.setMenuForDate(this.recipeService.getRecipeByName('recipe 1')[0].id,this.dateForDetail.toString())
     /*console.log(this.#plannedMenus);*/
   }
-
-  setMenuForDate(recipeId:string, date: string){
-    this.#plannedMenus.push({
-      date,
-      recipeId,
-    })
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
   }
-  getMenuForDate(date: string) {
+  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
+  }
+  async setMenuForDate(recipeId:string, date: string){
+    const newPlannedMenu={
+      date: date,
+      recipeId: recipeId,
+      id: UUID.UUID(),
+    };
+    await addDoc(
+      this.#getCollectionRef<PlannedMenu>('plannedMenus'),
+      newPlannedMenu
+    );
+
+  }
+   getMenuForDate(date: string) {
+    return collectionData<PlannedMenu>(
+      query<PlannedMenu>(
+        this.#getCollectionRef('plannedMenus'),
+        where ('date.substring(0,15)', '==',date.substring(0,15))
+      ),
+      {idField: 'id'}
+    );
     /*console.log('date passed to function:');
     console.log(date);
     console.log('substring of date passed to function');
@@ -32,10 +60,18 @@ export class PlanningService {
         console.log('substring of date in plannedmenus array');
         console.log(item.date.substring(0,15));
       })*/
-
-    return this.#plannedMenus.filter(pm => pm.date.substring(0,15) === date.substring(0,15));
   }
-  removeMenuForDate(date: string) {
+  async removeMenuForDate(date: string) {
+    const plannedMenus = this.getMenuForDate(date);
+    let idToRemove = '';
+    plannedMenus.subscribe(plannedMenus =>{
+        if(plannedMenus && plannedMenus.length>0){
+          let plannedMenuToRemove = plannedMenus[0];
+          idToRemove = plannedMenuToRemove.id;
+        }
+    })
+
+    await deleteDoc(this.#getDocumentRef('plannedMenus',idToRemove))
     this.#plannedMenus = this.#plannedMenus.filter(pm => pm.date.substring(0,15) !== date.substring(0,15))
   }
   setDateForDetail(date: Date){
@@ -46,18 +82,43 @@ export class PlanningService {
 
   }
   getPlannedMenuName(date: Date) {
+    let plannedMenuName = ''
     let menuId = this.getMenuForDate(date.toString());
-    if(menuId.length>0){
-      return this.recipeService.getRecipeById(menuId[0].recipeId)?.name;
-    }
-    return;
+    menuId.subscribe(menus=>{
+      if(menus && menus.length >0) {
+        this.recipeService.getRecipeById(menus[0].recipeId).subscribe(recipes => {
+          plannedMenuName = recipes[0].name;
+        })
+      }
+    });
+    return plannedMenuName;
   }
+
   getPlannedMenu(date: Date) {
     let menuId = this.getMenuForDate(date.toString());
-    if(menuId.length>0){
-      return this.recipeService.getRecipeById(menuId[0].recipeId);
-    }
-    return;
+    let recipe= new Recipe({
+      id : '',
+      cookingTime: 0,
+      description: '',
+      ingredients: [],
+      instructions: [],
+      labels: [],
+      name: '',
+      photoUrl: '',
+      prepTime: 0
+
+    });
+    menuId.subscribe(menus=>{
+      if(menus.length>0){
+        this.recipeService.getRecipeById(menus[0].recipeId).subscribe(recipes=>{
+          if(recipes.length>0){
+            recipe = recipes[0];
+        }
+        });
+      }
+
+    })
+    return recipe;
   }
   isRecipeIsPlannedForToday(r: Recipe, dateForDetail: Date) {
     if(!this.getPlannedMenu(dateForDetail) || !this.getMenuForDate(dateForDetail.toString())){

@@ -20,9 +20,9 @@ export class ActivityPage implements OnInit {
   description: string = '';
   location: string = '';
   participants = this.familyService.getFamilyMembers();
-  selectedParticipants: boolean[] = Array(this.participants.length).fill(false);
+  selectedParticipants: FamilyMember[] = [];
   labels = this.labelService.getLabelsByType('activity');
-  selectedLabels: boolean[] = Array(this.labels.length).fill(false);
+  selectedLabels: Label[] =[];
   yearValues: number[] = []
 
   constructor(public familyService: FamilyService, public labelService: LabelService,
@@ -64,9 +64,8 @@ export class ActivityPage implements OnInit {
       this.location = activity.location;
       this.date = this.dateToParse;
       this.description = activity.description;
-      this.selectedLabels = this.labels.map(l => !!activity.labels.find(l2 => l2.id === l.id));
-      this.selectedParticipants = this.participants.map
-      (p => !!activity.participants.find(p2 => p2.id === p.id));
+      this.selectedLabels = activity.labels;
+      this.selectedParticipants = activity.participants;
     }
 
   }
@@ -81,8 +80,8 @@ export class ActivityPage implements OnInit {
       date:convertedDate,
       location:this.location,
       description:this.description,
-      participants:this.getSelectedParticipants(),
-      labels: this.getSelectedLabels()
+      participants:this.selectedParticipants,
+      labels: this.selectedLabels
 
     })
   }
@@ -93,15 +92,45 @@ export class ActivityPage implements OnInit {
     console.log(this.date);
     console.log('date To parse: ');
     console.log(this.dateToParse)*/
-    this.activityService.newActivity(this.activityName, this.getSelectedParticipants(),
-      this.getSelectedLabels(), this.description, this.location, this.date)
+    this.activityService.newActivity(this.activityName, this.selectedParticipants,
+      this.selectedLabels, this.description, this.location, this.date)
   }
 
-  private getSelectedParticipants():FamilyMember[] {
-    return this.participants.filter((f, i) => this.selectedParticipants[i]);
+  // private getSelectedParticipants():FamilyMember[] {
+  //   return this.participants.filter((f, i) => this.selectedParticipants[i]);
+  // }
+  //
+  // private getSelectedLabels():Label[] {
+  //   return this.labels.filter((l, i) => this.selectedLabels[i]);
+  // }
+
+  isSelectedParticipant(participant: FamilyMember) {
+    return this.selectedParticipants.some(p=>p.id === participant.id);
   }
 
-  private getSelectedLabels():Label[] {
-    return this.labels.filter((l, i) => this.selectedLabels[i]);
+  changeParticipantSelection(participant: FamilyMember) {
+    if(this.isSelectedParticipant(participant)){
+      const index = this.selectedParticipants.findIndex(p=>p.id === participant.id);
+      if (index !== -1){
+        this.selectedParticipants.splice(index, 1);
+      }
+    } else {
+      this.selectedParticipants.push(participant);
+    }
+  }
+
+  isSelectedLabel(label: Label) {
+    return this.selectedLabels.some(l=>l.id === label.id);
+  }
+
+  changeLabelSelection(label: Label) {
+    if(this.isSelectedLabel(label)){
+      const index = this.selectedLabels.findIndex(l=>l.id === label.id);
+      if (index !== -1){
+        this.selectedLabels.splice(index, 1);
+      }
+    } else {
+      this.selectedLabels.push(label);
+    }
   }
 }

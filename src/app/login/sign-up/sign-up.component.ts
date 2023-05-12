@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {createUserWithEmailAndPassword, getAuth} from '@angular/fire/auth';
-import firebase from 'firebase/compat';
 
 @Component({
   selector: 'app-sign-up',

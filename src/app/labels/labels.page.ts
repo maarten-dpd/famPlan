@@ -41,7 +41,7 @@ export class LabelsPage implements OnInit {
       return;
     }
 
-    this.labelService.createLabel(data.data.name, data.data.color);
+    this.labelService.createLabel(data.data.name, data.data.color, data.data.type);
   }
 
 
