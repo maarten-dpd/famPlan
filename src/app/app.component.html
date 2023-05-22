@@ -7,9 +7,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content *ngIf="(authService.currentUser | async); let user">
-      <ion-avatar slot = "start">
-        <img [src]="user?.photoURL ?? placeholder" #avatar (error)="avatar.src = placeholder">
-      </ion-avatar>
+      <ion-item>{{user.displayName}}</ion-item>
       <ion-list lines='full' (click)='menu.close()'>
         <ion-item [routerLink]="['home']" >This week</ion-item>
         <ion-item [routerLink]="['cookbook']" >Cookbook</ion-item>

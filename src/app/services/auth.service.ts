@@ -19,12 +19,27 @@ import {BehaviorSubject} from 'rxjs';
 export class AuthService {
 
   public currentUser: BehaviorSubject<null | User> = new BehaviorSubject<null | User>(null);
+  private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   #authUnsubscribe: Unsubscribe;
 
   constructor(private auth: Auth, private router: Router) {
+    this.auth.onAuthStateChanged((user: User | null) => {
+
+      if (user !== null) {
+
+        this.setCurrentUser(user);
+
+        this.updateLoggedInState(true);
+
+      }
+
+    });
+
     this.#authUnsubscribe = this.auth.onAuthStateChanged(user => this.setCurrentUser(user));
   }
-
+  updateLoggedInState(isLoggedIn: boolean): void {
+    this.isLoggedInSubject.next(isLoggedIn);
+  }
   async signOut(): Promise<void> {
     await FirebaseAuthentication.signOut();
 
@@ -42,26 +57,26 @@ export class AuthService {
       // Make sure to check the Firebase JavaScript SDK docs to find the required parameters.
       // https://firebase.google.com/docs/auth/web/google-signin
       const newCredential = GoogleAuthProvider.credential(credential?.idToken);
-      await signInWithCredential(this.auth, newCredential);
+      await signInWithCredential(this.auth, newCredential).then(()=>this.router.navigate(['/home']));
     }
+
   }
 
-  /**
-   * Save the new user as an instance variable, and perform any necessary reroutes.
-   *
-   * @param user The new user.
-   * @private
-   */
   private async setCurrentUser(user: User | null): Promise<void> {
+    console.log('user set')
     this.currentUser.next(user);
-    if (this.currentUser.value) {
-      await this.router.navigate(['/']);
+    const isAuthenticated = user !== null;
+
+    if (isAuthenticated) {
+      console.log('is authenticated')
+      await this.router.navigate(['/home']);
     } else {
+      console.log('not authenticated dan')
       await this.router.navigate(['/login']);
     }
   }
 
-  signUp(email:string, password:string){
+  signUp(email:string, password:string, displayName: string){
     const auth = getAuth()
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -74,6 +89,7 @@ export class AuthService {
         const errorMessage = error.message;
         // ..
       });
+
   }
   signIn(email:string, password:string){
     const auth = getAuth();
