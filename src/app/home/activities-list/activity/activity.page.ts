@@ -133,4 +133,6 @@ export class ActivityPage implements OnInit {
       this.selectedLabels.push(label);
     }
   }
+
+    protected readonly Number = Number;
 }

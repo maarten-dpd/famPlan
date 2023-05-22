@@ -51,7 +51,7 @@
     <ion-item *ngFor='let p of participants |async'>
       <ion-checkbox
         slot='start'
-        [(ngModel)]='selectedParticipants[p.id]'
+        [(ngModel)]='selectedParticipants[Number(p.id)]'
       [checked]="isSelectedParticipant(p)"
       (ionChange)="changeParticipantSelection(p)"></ion-checkbox>
       <ion-label>{{p.firstName}} {{p.lastName}}</ion-label>
@@ -69,7 +69,7 @@
       <ion-checkbox
         slot='start'
         [color]='label.color'
-        [(ngModel)]='selectedLabels[label.id]'
+        [(ngModel)]='selectedLabels[Number(label.id)]'
         [checked]="isSelectedLabel(label)"
         (ionChange)="changeLabelSelection(label)">
       </ion-checkbox>

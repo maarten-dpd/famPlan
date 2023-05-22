@@ -158,4 +158,6 @@ export class RecipePage implements OnInit {
       this.selectedLabels.push(label);
     }
   }
+
+    protected readonly Number = Number;
 }
