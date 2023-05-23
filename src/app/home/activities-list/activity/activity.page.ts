@@ -19,7 +19,7 @@ export class ActivityPage implements OnInit {
   id: string | null = '';
   description: string = '';
   location: string = '';
-  participants = this.familyService.getFamilyMembers();
+  participants: FamilyMember[]=[];
   selectedParticipants: FamilyMember[] = [];
   labels = this.labelService.getLabelsByType('activity');
   selectedLabels: Label[] =[];

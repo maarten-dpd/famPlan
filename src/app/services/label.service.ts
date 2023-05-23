@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Color, Label, Type} from '../../datatypes/label';
+import {Label} from '../../datatypes/label';
 import {RecipeService} from './recipe.service';
 import {ActivityService} from './activity.service';
 import {
@@ -15,7 +15,6 @@ import {
   where
 } from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
-import {UUID} from 'angular2-uuid';
 
 @Injectable({
   providedIn: 'root'

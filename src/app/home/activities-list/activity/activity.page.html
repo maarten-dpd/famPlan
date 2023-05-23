@@ -48,7 +48,7 @@
       Participants
     </ion-list-header>
 
-    <ion-item *ngFor='let p of participants |async'>
+    <ion-item *ngFor='let p of participants'>
       <ion-checkbox
         slot='start'
         [(ngModel)]='selectedParticipants[Number(p.id)]'

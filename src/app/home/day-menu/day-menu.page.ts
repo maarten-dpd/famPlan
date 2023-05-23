@@ -10,13 +10,13 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./day-menu.page.scss'],
 })
 export class DayMenuPage implements OnInit {
-  familyName: string;
+  familyName: string = '';
   date: Date = new Date();
   menu: Recipe | undefined;
 
   constructor(public planningService:PlanningService, public familyService: FamilyService,
               public activatedRoute:ActivatedRoute) {
-    this.familyName = familyService.getFamilyName();
+    // this.familyName = familyService.getFamilyName();
   }
   ngOnInit() {
     this.setData()

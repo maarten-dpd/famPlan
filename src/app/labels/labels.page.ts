@@ -11,7 +11,6 @@ import {Label} from '../../datatypes/label';
   templateUrl: './labels.page.html',
   styleUrls: ['./labels.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class LabelsPage implements OnInit {
   fabIsVisible = true;
@@ -64,22 +63,14 @@ console.log(this.labels);
   }
 
   private handleModalDismiss(data: any) {
-    console.log(data)
     if (data.data === undefined) {
       return;
     }
-    let name = data.data.name;
-    console.log(name);
-    let color = data.data.color;
-    console.log(color);
-    let type = data.data.type;
-    console.log(type);
     this.labelService.createLabel(data.data.name, data.data.color, data.data.type);
   }
 
 
   checkDeleteLabel(id: string | undefined) {
-    console.log(id);
     if(id){
       this.labelService.deleteLabel(id)
     }else{

@@ -19,7 +19,7 @@ export class HomePage {
   constructor(public familyService: FamilyService,public activityService: ActivityService,
               public planningService:PlanningService) {
 
-    this.familyName = familyService.getFamilyName()
+    // this.familyName = familyService.getFamilyName()
     for(let i = 0;i<7;i++){
         let result = new Date(this.startDate);
         result.setDate(result.getDate() + i);

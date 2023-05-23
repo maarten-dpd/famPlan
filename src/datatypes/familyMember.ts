@@ -4,6 +4,8 @@ export interface IFamilyMember{
   id: string;
   email: string;
   photoUrl:string;
+  userId:string;
+  familyId:string;
 }
 
 
@@ -13,6 +15,8 @@ export class FamilyMember{
   id!: string;
   email!: string;
   photoUrl?:string;
+  userId?:string;
+  familyId!:string;
 
 
 

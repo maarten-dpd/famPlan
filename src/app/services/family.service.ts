@@ -6,9 +6,12 @@ import {
   collection, collectionData,
   CollectionReference,
   Firestore,
-  query
+  query, where
 } from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
+import {AuthService} from './auth.service';
+import {User} from 'firebase/auth';
+import {Family} from '../../datatypes/family';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,8 @@ export class FamilyService {
 
   familyName:string = 'Test family';
 
-  constructor(private firestore:Firestore) {
+  constructor(private firestore:Firestore,
+              private authService:AuthService) {
 
   }
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
@@ -37,6 +41,24 @@ export class FamilyService {
       newFamilyMember
     );
   }
+  getFamilyMemberByUserId(userId: string):Observable<FamilyMember[]>{
+    return collectionData<FamilyMember>(
+      query<FamilyMember>(
+        this.#getCollectionRef('familyMembers'),
+        where ('userId','==', userId)
+      ),
+      {idField: 'id'}
+    )
+  }
+  getFamilyById(familyId: string):Observable<Family[]>{
+    return collectionData<Family>(
+      query<Family>(
+        this.#getCollectionRef('families'),
+        where('id','==', familyId)
+      ),
+      {idField: 'id'}
+    )
+  }
 
   //get data methods
   getFamilyName(): string {
@@ -46,6 +68,16 @@ export class FamilyService {
     return collectionData<FamilyMember>(
       query<FamilyMember>(
         this.#getCollectionRef('familyMembers')
+      ),
+      {idField: 'id'}
+    );
+  }
+
+  getFamilyMembersByFamilyId(familyId: string): Observable<FamilyMember[]> {
+    return collectionData<FamilyMember>(
+      query<FamilyMember>(
+        this.#getCollectionRef('familyMembers'),
+        where('familyId', '==', familyId)
       ),
       {idField: 'id'}
     );

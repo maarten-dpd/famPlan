@@ -12,13 +12,27 @@ export class LoginPage implements OnInit {
   isNative = Capacitor.isNativePlatform();
   email: string ='';
   password: string='';
+  firstName: string = '';
+  lastName: string = '';
   constructor(public authService: AuthService,  public navController:NavController) { }
 
-  // private modalController: ModalController,
   ngOnInit() {
   }
 
   signIn() {
     this.authService.signIn(this.email,this.password);
+    this.clearFieldsAfterSubmit();
+  }
+
+  signUp() {
+    let fullName = this.firstName + ' ' + this.lastName;
+    this.authService.signUp(this.email,this.password,fullName)
+    this.clearFieldsAfterSubmit();
+  }
+  clearFieldsAfterSubmit(){
+    this.firstName='';
+    this.lastName='';
+    this.password='';
+    this.email='';
   }
 }
