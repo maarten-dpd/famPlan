@@ -104,4 +104,7 @@ export class AuthService {
         const errorMessage = error.message;
       });
   }
+  getCurrentUserId(){
+    return this.currentUser.value?.uid;
+  }
 }

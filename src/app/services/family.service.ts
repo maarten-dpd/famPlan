@@ -19,6 +19,8 @@ import {Family} from '../../datatypes/family';
 export class FamilyService {
 
   familyName:string = 'Test family';
+  currentUserId: string | undefined = this.authService.getCurrentUserId();
+
 
   constructor(private firestore:Firestore,
               private authService:AuthService) {
@@ -46,6 +48,15 @@ export class FamilyService {
       query<FamilyMember>(
         this.#getCollectionRef('familyMembers'),
         where ('userId','==', userId)
+      ),
+      {idField: 'id'}
+    )
+  }
+  getCurrentFamilyMemberByUserId():Observable<FamilyMember[]>{
+    return collectionData<FamilyMember>(
+      query<FamilyMember>(
+        this.#getCollectionRef('familyMembers'),
+        where ('userId','==', this.currentUserId)
       ),
       {idField: 'id'}
     )
@@ -79,15 +90,9 @@ export class FamilyService {
         this.#getCollectionRef('familyMembers'),
         where('familyId', '==', familyId)
       ),
-      {idField: 'id'}
+      { idField: 'id' }
     );
   }
-  //misc methods
-
-  //methods for later use
-  /*updateFamilyName(familyName:string){
-    this.familyName = familyName;
-  }*/
 }
 
 
