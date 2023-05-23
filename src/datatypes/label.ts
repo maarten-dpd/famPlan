@@ -17,7 +17,7 @@ export enum Type {
 
 export interface Label {
   name: string;
-  color?: Color;
-  type?: Type;
-  id: string;
+  color?: string;
+  type?: string;
+  id?: string;
 }

@@ -19,15 +19,20 @@ export class NewLabelModalComponent implements OnInit {
 
   ngOnInit() {}
 
+  selectLabelType(labelType: Type){
+    console.log(labelType);
+    this.selectedLabelType = labelType
+  }
   async dismissModal(cancelled = false) {
+    console.log(this.selectedLabelType)
     if (cancelled) {
       await this.modalController.dismiss();
     }
     else {
       await this.modalController.dismiss({
         name: this.labelName,
-        color: this.selectedColor,
-        labelType: this.selectedLabelType
+        color: this.selectedColor.toString(),
+        type: this.selectedLabelType.toString()
       });
     }
   }

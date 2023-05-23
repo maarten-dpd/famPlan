@@ -4,12 +4,15 @@ import {RecipeService} from './recipe.service';
 import {ActivityService} from './activity.service';
 import {
   addDoc,
-  collection, collectionData,
-  CollectionReference, deleteDoc,
+  collection,
+  collectionData,
+  CollectionReference,
+  deleteDoc,
   doc,
   DocumentReference,
   Firestore,
-  query, where
+  query, setDoc,
+  where
 } from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {UUID} from 'angular2-uuid';
@@ -46,18 +49,20 @@ export class LabelService {
     }
 
   }
-  async createLabel(name: string, color: Color, type: Type): Promise<void>  {
+  async createLabel(name: string, color: string, type: string): Promise<void>  {
    const newLabel = {
      name: name,
      color:color,
      type:type,
-     id: UUID.UUID()
+     id:''
    };
 
-   await addDoc(
+   const docRef = await addDoc(
      this.#getCollectionRef<Label>('labels'),
      newLabel
-  )
+  );
+   newLabel.id = docRef.id
+    await setDoc(docRef, newLabel);
   }
 
   //get data methods
@@ -66,6 +71,7 @@ export class LabelService {
       query<Label>(
         this.#getCollectionRef('labels')
       ),
+      { idField: 'id' }
     );
   }
   getLabelsByType(type: string):Observable<Label[]> {
@@ -74,7 +80,7 @@ export class LabelService {
         this.#getCollectionRef('labels'),
         where('type', '==', type)
       ),
-      {idField: 'id'}
+      { idField: 'id' }
     );
   }
 

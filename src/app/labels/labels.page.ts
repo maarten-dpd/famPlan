@@ -1,32 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {LabelService} from '../services/label.service';
 import {ModalController} from '@ionic/angular';
 import {NewLabelModalComponent} from './new-label-modal/new-label-modal.component';
+import {Subscription} from 'rxjs';
+import {Label} from '../../datatypes/label';
 
 
 @Component({
   selector: 'app-labels',
   templateUrl: './labels.page.html',
   styleUrls: ['./labels.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class LabelsPage implements OnInit {
   fabIsVisible = true;
-  labels = this.labelService.getAllLabels();
-  labelList = this.labels.toPromise()
+  #labelSub! : Subscription;
+  labels: Label[] = [];
 
-  constructor(public labelService: LabelService, private modalController: ModalController) {
-    console.log('start lezen labels');
-    this.labelList
-      .then((values) => {
-        console.log(values); // Process the resolved values
-      })
-      .catch((error) => {
-        console.error(error); // Handle any errors that occurred
-      });
-    console.log('lezen labels klaar')
+  constructor(
+    public labelService: LabelService,
+    private modalController: ModalController,
+    private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
+    this.#labelSub = this.labelService.getAllLabels().subscribe( res =>{
+      console.log(res);
+      this.labels = res;
+      this.cdr.detectChanges();
+    })
+console.log(this.labels);
+  }
+  ngOnDestroy(){
+    if(this.#labelSub){
+      this.#labelSub.unsubscribe();
+    }
+  }
+
+  trackByLabelId(index: number, label: Label): string |undefined {
+    if(label.id){
+      return label.id;
+    }else{
+      return;
+    }
   }
 
   async presentModal() {
@@ -36,7 +53,6 @@ export class LabelsPage implements OnInit {
     });
     modal.onDidDismiss().then(d => this.handleModalDismiss(d));
     return await modal.present();
-
   }
 
   logScrollStart(): void {
@@ -48,13 +64,26 @@ export class LabelsPage implements OnInit {
   }
 
   private handleModalDismiss(data: any) {
-
+    console.log(data)
     if (data.data === undefined) {
       return;
     }
-
+    let name = data.data.name;
+    console.log(name);
+    let color = data.data.color;
+    console.log(color);
+    let type = data.data.type;
+    console.log(type);
     this.labelService.createLabel(data.data.name, data.data.color, data.data.type);
   }
 
 
+  checkDeleteLabel(id: string | undefined) {
+    console.log(id);
+    if(id){
+      this.labelService.deleteLabel(id)
+    }else{
+      //show modal with error
+    }
+  }
 }
