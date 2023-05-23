@@ -11,8 +11,20 @@ import {NewLabelModalComponent} from './new-label-modal/new-label-modal.componen
 })
 export class LabelsPage implements OnInit {
   fabIsVisible = true;
+  labels = this.labelService.getAllLabels();
+  labelList = this.labels.toPromise()
 
-  constructor(public labelService: LabelService, private modalController: ModalController) { }
+  constructor(public labelService: LabelService, private modalController: ModalController) {
+    console.log('start lezen labels');
+    this.labelList
+      .then((values) => {
+        console.log(values); // Process the resolved values
+      })
+      .catch((error) => {
+        console.error(error); // Handle any errors that occurred
+      });
+    console.log('lezen labels klaar')
+  }
 
   ngOnInit() {
   }

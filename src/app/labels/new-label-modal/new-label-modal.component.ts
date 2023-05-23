@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Color} from '../../../datatypes/label';
+import {Color, Type} from '../../../datatypes/label';
 import {ModalController} from '@ionic/angular';
 
 @Component({
@@ -12,6 +12,8 @@ export class NewLabelModalComponent implements OnInit {
   labelName: string = '';
   colors = Object.values(Color) as Color[];
   selectedColor = this.colors[0];
+  labelTypes = Object.values(Type) as Type[];
+  selectedLabelType = this.labelTypes[0];
 
   constructor(private modalController: ModalController) { }
 
@@ -24,7 +26,8 @@ export class NewLabelModalComponent implements OnInit {
     else {
       await this.modalController.dismiss({
         name: this.labelName,
-        color: this.selectedColor
+        color: this.selectedColor,
+        labelType: this.selectedLabelType
       });
     }
   }

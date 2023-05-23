@@ -66,7 +66,6 @@ export class LabelService {
       query<Label>(
         this.#getCollectionRef('labels')
       ),
-      {idField: 'id'}
     );
   }
   getLabelsByType(type: string):Observable<Label[]> {

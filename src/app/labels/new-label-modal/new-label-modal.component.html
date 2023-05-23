@@ -29,6 +29,13 @@
           </ion-chip>
         </ion-col>
       </ion-row>
+      <ion-row>
+        <ion-col size='4' *ngFor='let labelType of labelTypes' class='ion-text-center'>
+          <ion-chip (click)='selectedLabelType = labelType'>
+            <ion-label>{{labelType}}</ion-label>
+          </ion-chip>
+        </ion-col>
+      </ion-row>
     </ion-grid>
 
   </ion-item>
