@@ -63,15 +63,12 @@ export class AuthService {
   }
 
   private async setCurrentUser(user: User | null): Promise<void> {
-    console.log('user set')
     this.currentUser.next(user);
     const isAuthenticated = user !== null;
 
     if (isAuthenticated) {
-      console.log('is authenticated')
       await this.router.navigate(['/home']);
     } else {
-      console.log('not authenticated dan')
       await this.router.navigate(['/login']);
     }
   }

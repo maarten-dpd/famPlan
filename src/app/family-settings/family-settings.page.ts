@@ -11,52 +11,23 @@ import {Subscription} from 'rxjs';
 export class FamilySettingsPage implements OnInit {
   fabIsVisible = true;
   familyName = this.familySettingsService.getFamilyName();
-  allfamilyMembers:FamilyMember[]=[];
   #familymemberSub!:Subscription;
   familyMembers: FamilyMember[]=[];
 
   constructor(public familySettingsService: FamilyService,
-              private cdr: ChangeDetectorRef)
-  {
-
-  }
+              private cdr: ChangeDetectorRef) {  }
 
   ngOnInit() {
-
-    // this.#familymemberSub = this.familySettingsService.getFamilyMembers()
-    //   .subscribe((res=>{
-    //     console.log(res);
-    //     this.allfamilyMembers = res;
-    //     this.familyMembers=this.allfamilyMembers.filter(x=>x.familyId === " fDtZDxeGMRSUm74z7r67");
-    //     this.cdr.detectChanges();
-    //   })
-    //   )
-
-    this.#familymemberSub = this.familySettingsService.getFamilyMembersByFamilyId(' fDtZDxeGMRSUm74z7r67')
+    this.#familymemberSub = this.familySettingsService.getFamilyMembersByFamilyId()
       .subscribe((res=>{
-        console.log(res);
-          this.allfamilyMembers = res;
+          this.familyMembers = res;
           this.cdr.detectChanges();
         })
       )
-    // console.log(this.familyMembers);
-    // this.familyMembers=this.allfamilyMembers.filter(x=>x.familyId === 'fDtZDxeGMRSUm74z7r67');
-    // console.log(this.allfamilyMembers);
-
   }
-
   ngOnDestroy(){
-
     if(this.#familymemberSub){
       this.#familymemberSub.unsubscribe();
     }
-  }
-
-  logfamilymembers() {
-    console.log(this.allfamilyMembers);
-  }
-  logFilterdmembers(){
-
-    console.log(this.familyMembers);
   }
 }

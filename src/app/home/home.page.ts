@@ -19,7 +19,7 @@ export class HomePage {
   constructor(public familyService: FamilyService,public activityService: ActivityService,
               public planningService:PlanningService) {
 
-    // this.familyName = familyService.getFamilyName()
+    this.familyName = familyService.getFamilyName()
     for(let i = 0;i<7;i++){
         let result = new Date(this.startDate);
         result.setDate(result.getDate() + i);
@@ -28,13 +28,10 @@ export class HomePage {
     if(this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth()){
       this.weekSpansMonth = true;
     }
-    /*console.log(this.currentWeekDays);*/
-    console.log('list of activities');
-    console.log(this.activityService.getAllActivities());
   }
 
   changeWeek(type: string) {
-    /*console.log('button change week pushed')*/
+
     if (type === "next"){
       this.startDate = this.addDays(this.startDate, 7)
     }

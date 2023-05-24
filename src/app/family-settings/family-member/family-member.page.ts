@@ -10,6 +10,7 @@ export class FamilyMemberPage implements OnInit {
   firstName: string = '';
   lastName: string = this.familySettingsService.getFamilyName();
   email: string = '';
+  userId: string ='';
 
   constructor(public familySettingsService: FamilyService) { }
 
@@ -17,6 +18,6 @@ export class FamilyMemberPage implements OnInit {
   }
 
   handleCreate() {
-    this.familySettingsService.addFamilyMember(this.firstName, this.lastName, this.email);
+    this.familySettingsService.addFamilyMember(this.firstName, this.lastName, this.email, this.userId);
   }
 }
