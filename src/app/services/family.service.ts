@@ -31,7 +31,7 @@ export class FamilyService {
       )
       .then(()=>{
         console.log('currentfamilyID = ' + this.currentFamilyId);
-        this.getFamilyById(this.currentFamilyId);
+        // console.log(this.getFamilyById(this.currentFamilyId));
         this.setCurrentFamily();
         console.log(this.currentFamily)}
       );
@@ -83,19 +83,23 @@ export class FamilyService {
     return collectionData<Family>(
       query<Family>(
         this.#getCollectionRef('families'),
-        where (documentId(),'==', this.currentFamilyId)
+        // where (documentId(),'==',this.currentFamilyId)
       ),
       {idField: 'id'}
     )
   }
-  async getFamilyById(familyId:string){
-    const docRef = doc(this.firestore,'families', familyId)
-    const docSnap = await getDoc(docRef);
-    docSnap.data();
-    console.log(docSnap.data())
-  }
+  // async getFamilyById(familyId:string){
+  //   const docRef = doc(this.firestore,'families', familyId)
+  //   const docSnap = await getDoc(docRef);
+  //   docSnap.data();
+  // }
   getFamilyName(): string {
-    return this.currentFamily.name;
+    if(this.currentFamily){
+      return this.currentFamily.name;
+    }
+    else{
+      return 'name was not found'
+    }
   }
   getFamilyMembers(): Observable<FamilyMember[]> {
     return collectionData<FamilyMember>(
