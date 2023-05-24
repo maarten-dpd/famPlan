@@ -3,8 +3,8 @@ import {FamilyMember} from '../../datatypes/familyMember';
 import {
   addDoc,
   collection, collectionData,
-  CollectionReference,
-  Firestore,
+  CollectionReference, doc, documentId,
+  Firestore, getDoc,
   query, setDoc, where
 } from '@angular/fire/firestore';
 import { firstValueFrom, Observable, take} from 'rxjs';
@@ -25,7 +25,16 @@ export class FamilyService {
 
   constructor(private firestore:Firestore,
               private authService:AuthService) {
-    this.setCurrentFamilyMember().then(()=>this.setCurrentFamilyId()).then(()=>this.setCurrentFamily());
+    this.setCurrentFamilyMember()
+      .then(()=>{
+        this.setCurrentFamilyId()}
+      )
+      .then(()=>{
+        console.log('currentfamilyID = ' + this.currentFamilyId);
+        this.getFamilyById(this.currentFamilyId);
+        this.setCurrentFamily();
+        console.log(this.currentFamily)}
+      );
   }
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
     return collection(this.firestore, collectionName) as CollectionReference<T>;
@@ -74,10 +83,16 @@ export class FamilyService {
     return collectionData<Family>(
       query<Family>(
         this.#getCollectionRef('families'),
-        where ('userId','==', this.currentFamilyId)
+        where (documentId(),'==', this.currentFamilyId)
       ),
       {idField: 'id'}
     )
+  }
+  async getFamilyById(familyId:string){
+    const docRef = doc(this.firestore,'families', familyId)
+    const docSnap = await getDoc(docRef);
+    docSnap.data();
+    console.log(docSnap.data())
   }
   getFamilyName(): string {
     return this.currentFamily.name;
