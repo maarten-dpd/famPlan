@@ -8,9 +8,8 @@ import {
   Firestore,
   query, setDoc, where
 } from '@angular/fire/firestore';
-import {Observable} from 'rxjs';
+import {first, firstValueFrom, Observable, take} from 'rxjs';
 import {AuthService} from './auth.service';
-import {User} from 'firebase/auth';
 import {Family} from '../../datatypes/family';
 
 @Injectable({
@@ -22,10 +21,12 @@ export class FamilyService {
   currentUserId: string | undefined = this.authService.getCurrentUserId();
   currentFamilyId: string =this.getCurrentFamilyId();
   currentFamilyName:string | undefined = this.getCurrentFamilyName(this.currentFamilyId);
+  currentFamilyMember!:FamilyMember
 
 
   constructor(private firestore:Firestore,
               private authService:AuthService) {
+    this.setCurrentFamilyMember();
   }
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
     return collection(this.firestore, collectionName) as CollectionReference<T>;
@@ -47,6 +48,11 @@ export class FamilyService {
     );
     newFamilyMember.id = docRef.id
     await setDoc(docRef, newFamilyMember)
+  }
+
+  async setCurrentFamilyMember(){
+    const tempCurrentFamilyMember = await firstValueFrom(this.getCurrentFamilyMemberByUserId().pipe(take(1)))
+    this.currentFamilyMember = tempCurrentFamilyMember[0];
   }
   getFamilyMemberByUserId(userId: string):Observable<FamilyMember[]>{
     return collectionData<FamilyMember>(
@@ -106,7 +112,6 @@ export class FamilyService {
   private getCurrentFamilyId() {
     return '';
   }
-
   private getCurrentFamilyName(currentFamilyId: string | undefined) {
     return undefined;
   }
