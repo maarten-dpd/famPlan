@@ -6,7 +6,7 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button (click)="handleCreate()">
+      <ion-button (click)="handleCreateAndUpdate()">
         <ion-icon slot="icon-only" name="checkmark"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -27,4 +27,11 @@
                   [(ngModel)]='lastName'>
     </ion-textarea>
   </ion-item>
+  <ion-item lines="full">
+    <ion-label position="floating">email</ion-label>
+    <ion-textarea cols="20" rows="4" [autoGrow]="true"
+                  [(ngModel)]='email'>
+    </ion-textarea>
+  </ion-item>
+
 </ion-content>

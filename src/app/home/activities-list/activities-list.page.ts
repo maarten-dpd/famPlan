@@ -1,9 +1,7 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
 import {ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs';
-
 @Component({
   selector: 'app-activities-list',
   templateUrl: './activities-list.page.html',

@@ -51,14 +51,13 @@ export class ActivityPage implements OnInit {
       return;
     }
     const activity = this.activityService.getActivityById(this.id);
-    console.log(activity);
     this.dateToParse = new Date(activity.date).toISOString();
-    // this.activityName = activity.name;
-    // this.location = activity.location;
-    // this.date = this.dateToParse;
-    // this.description = activity.description;
-    // this.selectedLabels = activity.labels;
-    // this.selectedParticipants = activity.participants;
+    this.activityName = activity.name;
+    this.location = activity.location;
+    this.date = this.dateToParse;
+    this.description = activity.description;
+    this.selectedLabels = activity.labels;
+    this.selectedParticipants = activity.participants;
   }
   private updateActivity() {
     let convertedDate = new Date(this.dateToParse).toString()

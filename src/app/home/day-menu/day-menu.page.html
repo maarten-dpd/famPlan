@@ -13,13 +13,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid *ngIf="menu" class="ion-justify-content-center">
+  <ion-grid *ngIf="plannedMenu" class="ion-justify-content-center">
     <ion-row>
       <ion-col>
-        <ion-title class="ion-text-center">{{menu.name}}</ion-title>
+        <ion-title class="ion-text-center">{{recipe[0].name}}</ion-title>
         <ion-item>
-          <ion-label [routerLink]="['/cookbook','recipe', menu.id]" class="ion-text-center">
-            {{menu.description}}
+          <ion-label [routerLink]="['/cookbook','recipe', recipe[0].id]" class="ion-text-center">
+            {{recipe[0].description}}
           </ion-label>
         </ion-item>
       </ion-col>
@@ -36,8 +36,8 @@
             </ion-item>
             <div class="ion-padding" slot="content">
               <ion-list>
-                <li>Preparation time : {{menu.prepTime}}</li>
-                <li>Cooking time : {{menu.cookingTime}}</li>
+                <li>Preparation time : {{recipe[0].prepTime}}</li>
+                <li>Cooking time : {{recipe[0].cookingTime}}</li>
               </ion-list>
             </div>
           </ion-accordion>
@@ -47,7 +47,7 @@
             </ion-item>
             <div class="ion-padding" slot="content">
               <ion-list>
-                <li *ngFor="let i of menu.ingredients">
+                <li *ngFor="let i of recipe[0].ingredients">
                   {{i}}
                 </li>
               </ion-list>
@@ -58,8 +58,8 @@
               <ion-label>Steps</ion-label>
             </ion-item>
             <div class="ion-padding" slot="content">
-              <ion-list *ngIf="menu">
-                <li *ngFor="let i of menu.instructions">
+              <ion-list>
+                <li *ngFor="let i of recipe[0].instructions">
                   {{i}}
                 </li>
               </ion-list>

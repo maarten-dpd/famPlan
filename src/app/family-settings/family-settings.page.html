@@ -11,7 +11,6 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
@@ -22,19 +21,26 @@
     </ion-toolbar>
   </ion-header>
   <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
-
     <ion-fab-button [routerLink]="['/family-settings','family-member']">
       <ion-icon name='add' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  <ion-item>
+    <ion-label>Family Name</ion-label>
+  </ion-item>
   <ion-item lines="full">
-
-    <ion-label position="floating">Family Name</ion-label>
     <ion-input type="text" class="ion-margin-top"
                [(ngModel)]='familyName'></ion-input>
   </ion-item>
-  <ion-item *ngFor='let fm of familyMembers'>
-    <ion-label>{{fm.firstName}} {{fm.lastName}}</ion-label>
+  <ion-item-divider/>
+  <ion-item lines="full">
+    <ion-label>
+      Family Members
+    </ion-label>
   </ion-item>
-
+  <ion-item *ngFor='let fm of familyMembers'>
+    <ion-label [routerLink]="['/family-settings','family-member',fm.id]">
+    {{fm.firstName}} {{fm.lastName}}
+    </ion-label>
+  </ion-item>
 </ion-content>

@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'family-member',
     loadChildren: () => import('./family-member/family-member.module').then( m => m.FamilyMemberPageModule)
+  },
+  {
+    path: 'family-member/:id',
+    loadChildren: () => import('./family-member/family-member.module').then( m => m.FamilyMemberPageModule)
   }
 ];
 

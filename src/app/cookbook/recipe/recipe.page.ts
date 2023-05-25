@@ -29,12 +29,11 @@ export class RecipePage implements OnInit {
   constructor(public navController: NavController, public recipeService: RecipeService,
               public activatedRoute: ActivatedRoute, public labelService: LabelService,
               public photoService: PhotoService, private actionSheetCtrl: ActionSheetController,
-              private modalController: ModalController) {
-  }
+              private modalController: ModalController) {}
   ngOnInit() {
     this.setData();
   }
-  setData(): void {
+  private setData(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
       this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
@@ -70,7 +69,7 @@ export class RecipePage implements OnInit {
     this.navController.back();
   }
   private createRecipe(): void {
-    this.recipeService.newRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
+    this.recipeService.createRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
       this.instructions, this.description, this.selectedLabels,this.recipePhotoUrl);
   }
   private updateRecipe(): void {

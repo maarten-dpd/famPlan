@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Recipe} from '../../datatypes/recipe';
 import {Label} from '../../datatypes/label';
-import {UUID} from 'angular2-uuid';
 import {
   addDoc,
   collection,
@@ -21,21 +20,46 @@ import {FamilyService} from './family.service';
 export class RecipeService {
 
   constructor(private firestore:Firestore, private familyService:FamilyService) {
-    // this.newRecipe('recipe 1',['100 gr boter', '2 kilo aardappelen'],
+    // this.createRecipe('recipe 1',['100 gr boter', '2 kilo aardappelen'],
     //   30,30,['schil de aardappelen', 'kook in een pot met ruim water voor 20 minuten', 'giet af', 'bak de aardappelen 10 minuten in de boter']
     // ,'gebakken aardappelen')
-    // this.newRecipe('recipe 2',['0.5liter frit vet', '2 kilo aardappelen', '2 grote biefstukken', '150 gr boter'],
+    // this.createRecipe('recipe 2',['0.5liter frit vet', '2 kilo aardappelen', '2 grote biefstukken', '150 gr boter'],
     //   20,25,['schil de aardappelen', 'snijd ze in frietjes',
     //     'kook in een pot met ruim water voor 20 minuten','maak een koekenpan super warm','bak de biefstuk aan beide kanten','giet de aardappelen af', 'frituur de aardappelen 5 minuten']
     //   ,'patatfriet')
   }
 
-  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
-    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  //crud operations
+  async createRecipe(name: string, ingredients: string[], prepTime: number, cookingTime: number,
+                     instructions:string[], description: string, labels: Label[] = [], photoUrl?:string) {
+    const newRecipe ={
+      name,
+      id: '',
+      ingredients,
+      prepTime,
+      cookingTime,
+      instructions,
+      description,
+      labels,
+      photoUrl,
+      familyId: this.familyService.currentFamilyId
+    };
+    const docRef=await addDoc(
+      this.#getCollectionRef<Recipe>('recipes'),
+      newRecipe
+    );
+    newRecipe.id=docRef.id
+    await setDoc(docRef, newRecipe)
+
   }
-  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
-    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
+  async updateRecipe(id: string, recipe: Recipe){
+    await updateDoc(this.#getDocumentRef('recipes',id), recipe)
+ }
+  async deleteRecipe(id: string){
+    await deleteDoc(this.#getDocumentRef('recipes', id));
   }
+
+  //get data methods
   getAllRecepies() {
     return collectionData<Recipe>(
       query<Recipe>(
@@ -62,34 +86,6 @@ export class RecipeService {
       {idField: 'id'}
     );
   }
-  async newRecipe(name: string, ingredients: string[],prepTime: number, cookingTime: number,
-            instructions:string[], description: string, labels: Label[] = [], photoUrl?:string) {
-    const newRecipe ={
-      name,
-      id: '',
-      ingredients,
-      prepTime,
-      cookingTime,
-      instructions,
-      description,
-      labels,
-      photoUrl,
-      familyId: this.familyService.currentFamilyId
-    };
-    const docRef=await addDoc(
-      this.#getCollectionRef<Recipe>('recipes'),
-      newRecipe
-    );
-    newRecipe.id=docRef.id
-    await setDoc(docRef, newRecipe)
-
-  }
- async updateRecipe(id: string, recipe: Recipe){
-    await updateDoc(this.#getDocumentRef('recipes',id), recipe)
- }
-  async deleteRecipe(id: string){
-    await deleteDoc(this.#getDocumentRef('recipes', id));
-  }
   getNumberOfRecipes() {
     const recipes = this.getAllRecepies();
     let numberOfRecipes = 0;
@@ -100,6 +96,17 @@ export class RecipeService {
     })
     return numberOfRecipes;
   }
+  getRecipesByFamilyId() {
+    return collectionData<Recipe>(
+      query<Recipe>(
+        this.#getCollectionRef('recipes'),
+        where('familyId','==', this.familyService.currentFamilyId)
+      ),
+      {idField: 'id'}
+    ) ;
+  }
+
+  //Misc methods
   labelIsInUse(id: string) {
     const recipes = this.getAllRecepies();
     let result = false
@@ -114,13 +121,10 @@ export class RecipeService {
     )
     return result;
   }
-  getRecipesByFamilyId() {
-    return collectionData<Recipe>(
-      query<Recipe>(
-        this.#getCollectionRef('recipes'),
-        where('familyId','==', this.familyService.currentFamilyId)
-      ),
-      {idField: 'id'}
-    ) ;
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  }
+  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
   }
 }

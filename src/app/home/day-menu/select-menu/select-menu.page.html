@@ -17,13 +17,13 @@
   <ion-row>
     <ion-col>
       <ion-item-group class="justify-content-center text-center">
-        <ion-item *ngFor="let r of recepyService.getAllRecepies() | async">
+        <ion-item *ngFor="let r of recipes">
           <ion-grid>
             <ion-row>
               <ion-col></ion-col>
               <ion-col>
                 <ion-button size="large" expand = "block"
-                            [color]="planningService.isRecipeIsPlannedForToday(r,selectionDate) ? 'primary' :'alert'"
+                            [color]="currentPlannedMenu ? 'primary' :'alert'"
                             (click)="changeMenu(r)">
                   {{r.name}}
                 </ion-button>

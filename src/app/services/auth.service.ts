@@ -22,7 +22,9 @@ export class AuthService {
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   #authUnsubscribe: Unsubscribe;
 
-  constructor(private auth: Auth, private router: Router) {
+  constructor(private auth: Auth,
+              private router: Router,
+              ) {
     this.auth.onAuthStateChanged((user: User | null) => {
 
       if (user !== null) {
@@ -41,15 +43,15 @@ export class AuthService {
     this.isLoggedInSubject.next(isLoggedIn);
   }
   async signOut(): Promise<void> {
-    await FirebaseAuthentication.signOut();
+    await FirebaseAuthentication.signOut().then(()=>{
+    });
 
     if (Capacitor.isNativePlatform()) {
-      await signOut(this.auth);
+      await signOut(this.auth).then(()=>{
+      });
     }
   }
-
   async signInWithGoogle(): Promise<void> {
-
     const {credential} = await FirebaseAuthentication.signInWithGoogle();
     if (Capacitor.isNativePlatform() && credential?.idToken) {
       // A credential can be generated for each supported provider,
@@ -57,11 +59,10 @@ export class AuthService {
       // Make sure to check the Firebase JavaScript SDK docs to find the required parameters.
       // https://firebase.google.com/docs/auth/web/google-signin
       const newCredential = GoogleAuthProvider.credential(credential?.idToken);
-      await signInWithCredential(this.auth, newCredential).then(()=>this.router.navigate(['/home']));
+      await signInWithCredential(this.auth, newCredential)
+        .then(()=>this.router.navigate(['/home']));
     }
-
   }
-
   private async setCurrentUser(user: User | null): Promise<void> {
     this.currentUser.next(user);
     const isAuthenticated = user !== null;
@@ -72,7 +73,6 @@ export class AuthService {
       await this.router.navigate(['/login']);
     }
   }
-
   signUp(email:string, password:string, displayName: string){
     const auth = getAuth()
     createUserWithEmailAndPassword(auth, email, password)

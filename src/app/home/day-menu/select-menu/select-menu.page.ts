@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {RecipeService} from '../../../services/recipe.service';
 import {Recipe} from '../../../../datatypes/recipe';
 import {PlanningService} from '../../../services/planning.service';
 import {ModalController, NavController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {ConfirmOrCancelModalPageComponent} from '../../../shared/confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
+import {firstValueFrom, Subscription, take} from 'rxjs';
+import {PlannedMenu} from '../../../../datatypes/plannedMenu';
 
 @Component({
   selector: 'app-select-menu',
@@ -14,9 +16,18 @@ import {ConfirmOrCancelModalPageComponent} from '../../../shared/confirm-or-canc
 export class SelectMenuPage implements OnInit {
 
   selectionDate =new Date();
-  constructor(public recepyService:RecipeService, public planningService:PlanningService,
+  #recipeSub!: Subscription;
+  recipes:Recipe[]=[];
+  #plannedMenuSub!:Subscription;
+  plannedMenus:PlannedMenu[]=[];
+  currentPlannedMenu! :PlannedMenu;
+
+  constructor(public recipeService:RecipeService,
+              public planningService:PlanningService,
               private modalController:ModalController,
-              public navCtrl :NavController, public activatedRoute: ActivatedRoute) {
+              public navCtrl :NavController,
+              public activatedRoute: ActivatedRoute,
+              private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -26,14 +37,14 @@ export class SelectMenuPage implements OnInit {
     await this.presentConfirmOrCancelModal(r);
   }
   async presentConfirmOrCancelModal(r: Recipe){
-    const newMenu = r.name;
-    let currentMenu: string |undefined = this.planningService.getPlannedMenuName(this.selectionDate);
     let question;
-    if(currentMenu === undefined){
-      question = `Set ${newMenu} for ${this.selectionDate.toString().substring(0,10)}`
+
+    if(this.currentPlannedMenu === undefined){
+      question = `Set ${r.name} for ${this.selectionDate.toString().substring(0,10)}`
     }
-    else{
-      question= `Change menu from ${currentMenu} to ${newMenu}?`
+    else if(this.currentPlannedMenu){
+      const currentRecipe=await firstValueFrom(this.recipeService.getRecipeById(this.currentPlannedMenu.recipeId));
+      question= `Change menu from ${currentRecipe[0].name} to ${r.name}?`
     }
     const modal = await this.modalController.create({
       component: ConfirmOrCancelModalPageComponent,
@@ -43,10 +54,8 @@ export class SelectMenuPage implements OnInit {
     });
     modal.onDidDismiss().then((data) =>{
       if(data){
-        console.log('answer: ');
-        console.log(data)
         if(data.data.answer){
-          this.setMenuForDate(r);
+          this.setMenuForDate(r,this.selectionDate);
           this.navCtrl.navigateRoot('/home');
         }
       }
@@ -54,19 +63,35 @@ export class SelectMenuPage implements OnInit {
     return await modal.present();
   }
 
-  async setMenuForDate(r: Recipe) {
-    if (this.planningService.menuIsPlannedForDate(this.selectionDate)) {
-      this.planningService.removeMenuForDate(this.selectionDate.toString())
+  setMenuForDate(r: Recipe, d: Date) {
+    //check if a planned menu with the given date exists
+    const menuIsPlannedForDate = this.plannedMenus.some(p=>p.date===d.toString())
+    //If a menu exists - do an update
+    if(menuIsPlannedForDate){
+      const menuToUpdate = this.plannedMenus.filter(p=>p.date===d.toString())[0];
+      menuToUpdate.recipeId = r.id;
+      this.planningService.updatePlannedMenu(menuToUpdate.id,menuToUpdate);
     }
-    this.planningService.setMenuForDate(r.id, this.selectionDate.toString());
+    //otherwise create a new plannedMenu
+    else{
+      this.planningService.createPlannedMenu(r.id, d.toString());
+    }
   }
 
   private setData() {
     const day = this.activatedRoute.snapshot.paramMap.get('day');
-    console.log(day);
     if(day === null){
       return;
     }
     this.selectionDate = new Date(day);
+    this.#recipeSub = this.recipeService.getAllRecepies().subscribe(res=>{
+      this.recipes = res;
+      this.cdr.detectChanges();
+    })
+    this.#plannedMenuSub = this.planningService.getAllPlannedMenus().subscribe(res=>{
+      this.plannedMenus = res;
+      this.cdr.detectChanges();
+    })
+    this.currentPlannedMenu = this.plannedMenus.filter(p=>p.date === this.selectionDate.toString())[0];
   }
 }
