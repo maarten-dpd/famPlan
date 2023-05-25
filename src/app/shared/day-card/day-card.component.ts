@@ -4,6 +4,7 @@ import {PlanningService} from '../../services/planning.service';
 import {PlannedMenu} from '../../../datatypes/plannedMenu';
 import {Recipe} from '../../../datatypes/recipe';
 import {RecipeService} from '../../services/recipe.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-day-card',

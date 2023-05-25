@@ -12,7 +12,7 @@
                  fill="outline" size="small" [routerLink]="['/home','activities-list','activity']">
       add an activity
     </ion-button>
-    <ion-button color = "success" *ngIf="menuplanned" size="small"
+    <ion-button color = "success" *ngIf="recipe.length>0" size="small"
                 [routerLink]="['/home','day-menu',day.toString()]">
       {{recipe[0].name}} is for dinner
     </ion-button>

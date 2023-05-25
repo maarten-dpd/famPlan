@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid *ngIf="plannedMenu" class="ion-justify-content-center">
+  <ion-grid *ngIf="recipe.length>0" class="ion-justify-content-center">
     <ion-row>
       <ion-col>
         <ion-title class="ion-text-center">{{recipe[0].name}}</ion-title>
