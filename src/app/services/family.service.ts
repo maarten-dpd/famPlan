@@ -64,6 +64,7 @@ export class FamilyService {
   }
   async setCurrentFamily(){
     const tempCurrentFamily = await firstValueFrom((this.getCurrentFamilyByFamilyId().pipe(take(1))))
+    console.log (tempCurrentFamily);
     this.currentFamily=tempCurrentFamily[0];
   }
   private setCurrentFamilyId() {

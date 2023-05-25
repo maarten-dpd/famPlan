@@ -9,6 +9,7 @@ export interface IActivity {
   description: string;
   participants: FamilyMember[];
   labels:Label[];
+  familyId: string;
 }
 
 export class Activity {
@@ -20,6 +21,7 @@ export class Activity {
   description!:string;
   participants:FamilyMember[] = [];
   labels:Label[]=[];
+  familyId?:string;
 
   constructor(obj:IActivity) {
     Object.assign(this, obj);

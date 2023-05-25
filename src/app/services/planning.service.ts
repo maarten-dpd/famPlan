@@ -105,7 +105,8 @@ export class PlanningService {
       labels: [],
       name: '',
       photoUrl: '',
-      prepTime: 0
+      prepTime: 0,
+      familyId:'',
 
     });
     menuId.subscribe(menus=>{
