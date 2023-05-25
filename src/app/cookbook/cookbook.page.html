@@ -31,12 +31,12 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-list *ngIf="recipeService.getNumberOfRecipes()>0">
-    <app-recipe-item  *ngFor='let r of recipeService.getAllRecepies() | async'
+  <ion-list *ngIf="recipes.length > 0">
+    <app-recipe-item  *ngFor='let r of recipes'
                         [recipe]='r'>
     </app-recipe-item>
   </ion-list>
-  <ion-item *ngIf="recipeService.getNumberOfRecipes() === 0">
+  <ion-item *ngIf="recipes.length === 0">
     <div>
       <h3>An empty cookbook fills no stomach</h3>
       <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>

@@ -11,14 +11,20 @@
 </ion-header>
 <ion-content>
 
-  <ion-item lines='full'>
-    <ion-input placeholder='Name' type='text'
-               [(ngModel)]='labelName' [required]="true"></ion-input>
-  </ion-item>
+
 
 
   <ion-item lines='full'>
     <ion-grid class='ion-padding-top'>
+      <ion-row>
+        <ion-item lines='full'>
+          <ion-input placeholder='Name' type='text'
+                     [(ngModel)]='labelName' [required]="true"></ion-input>
+        </ion-item>
+      </ion-row>
+      <ion-row>
+        <ion-item-divider/>
+      </ion-row>
       <ion-row>
         <ion-label>Color</ion-label>
       </ion-row>
@@ -28,6 +34,12 @@
             <ion-label [color]='color'>{{color}}</ion-label>
           </ion-chip>
         </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-item-divider/>
+      </ion-row>
+      <ion-row>
+        <ion-label>Type</ion-label>
       </ion-row>
       <ion-row>
         <ion-col size='4' *ngFor='let labelType of labelTypes' class='ion-text-center'>

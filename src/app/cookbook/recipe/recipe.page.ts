@@ -101,10 +101,6 @@ export class RecipePage implements OnInit {
 
   }
 
-  // private getSelectedLabels(): Label[] {
-  //   return this.selectedLabels;
-  // }
-
   async addIngredient() {
     await this.presentInputModal('add an ingredient','ingredient')
   }

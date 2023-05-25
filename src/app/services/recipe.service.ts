@@ -10,8 +10,9 @@ import {
   doc,
   DocumentReference,
   Firestore,
-  query, updateDoc, where
+  query, setDoc, updateDoc, where
 } from '@angular/fire/firestore';
+import {FamilyService} from './family.service';
 
 
 @Injectable({
@@ -19,7 +20,7 @@ import {
 })
 export class RecipeService {
 
-  constructor(private firestore:Firestore) {
+  constructor(private firestore:Firestore, private familyService:FamilyService) {
     // this.newRecipe('recipe 1',['100 gr boter', '2 kilo aardappelen'],
     //   30,30,['schil de aardappelen', 'kook in een pot met ruim water voor 20 minuten', 'giet af', 'bak de aardappelen 10 minuten in de boter']
     // ,'gebakken aardappelen')
@@ -35,7 +36,6 @@ export class RecipeService {
   #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
     return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
   }
-
   getAllRecepies() {
     return collectionData<Recipe>(
       query<Recipe>(
@@ -44,8 +44,6 @@ export class RecipeService {
       {idField: 'id'}
     ) ;
   }
-
-  //get recepyBy methodes zijn voor in de toekomst een filter op recepten te bouwen
   getRecipeById(id: string){
     return collectionData<Recipe>(
       query<Recipe>(
@@ -64,36 +62,34 @@ export class RecipeService {
       {idField: 'id'}
     );
   }
-
   async newRecipe(name: string, ingredients: string[],prepTime: number, cookingTime: number,
-            instructions:string[], description: string, labels: Label[] = [],photoUrl?:string) {
+            instructions:string[], description: string, labels: Label[] = [], photoUrl?:string) {
     const newRecipe ={
       name,
-      id: UUID.UUID(),
+      id: '',
       ingredients,
       prepTime,
       cookingTime,
       instructions,
       description,
       labels,
-      photoUrl
+      photoUrl,
+      familyId: this.familyService.currentFamilyId
     };
-    await addDoc(
+    const docRef=await addDoc(
       this.#getCollectionRef<Recipe>('recipes'),
       newRecipe
-    )
+    );
+    newRecipe.id=docRef.id
+    await setDoc(docRef, newRecipe)
 
   }
-
  async updateRecipe(id: string, recipe: Recipe){
     await updateDoc(this.#getDocumentRef('recipes',id), recipe)
  }
-
-
   async deleteRecipe(id: string){
     await deleteDoc(this.#getDocumentRef('recipes', id));
   }
-
   getNumberOfRecipes() {
     const recipes = this.getAllRecepies();
     let numberOfRecipes = 0;
@@ -104,7 +100,6 @@ export class RecipeService {
     })
     return numberOfRecipes;
   }
-
   labelIsInUse(id: string) {
     const recipes = this.getAllRecepies();
     let result = false
@@ -118,5 +113,14 @@ export class RecipeService {
       }
     )
     return result;
+  }
+  getRecipesByFamilyId() {
+    return collectionData<Recipe>(
+      query<Recipe>(
+        this.#getCollectionRef('recipes'),
+        where('familyId','==', this.familyService.currentFamilyId)
+      ),
+      {idField: 'id'}
+    ) ;
   }
 }
