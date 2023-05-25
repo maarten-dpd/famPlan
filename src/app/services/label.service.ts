@@ -23,12 +23,6 @@ export class LabelService {
 
   constructor(private recipeService: RecipeService, private activityService: ActivityService,
               private firestore:Firestore) {
-    // this.#labels.push({name: 'eenvoudig', color: Color.danger, id: '0', type: Type.recipe});
-    // this.#labels.push({name: 'gezond', color: Color.primary, id: '1', type: Type.recipe});
-    // this.#labels.push({name: 'Werk', color: Color.secondary, id: '2', type:Type.activity});
-    // this.#labels.push({name: 'Plezant voor iedereen', color: Color.success, id:'3',type: Type.activity})
-    //
-    // this.#id = 4;
   }
 
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {

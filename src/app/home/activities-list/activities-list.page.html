@@ -13,30 +13,34 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list *ngIf="activityList.length>0" lines="full">
-    <app-activity-item  *ngFor='let a of activityService.getActivitiesByDate(date)'
-                        [activity]='a'>
-    </app-activity-item>
-
-
-  </ion-list>
-  <ion-item *ngIf="activityList.length===0" class="ion-text-center">
-    <ion-grid>
-      <ion-row class="ion-text-center, ion-justify-content-center">
-        <h3>No activities planned</h3>
-      </ion-row>
-      <ion-row class="ion-text-center, ion-justify-content-center">
-        <h4>Have a lazy day</h4>
-      </ion-row>
-      <ion-row class="ion-text-center, ion-justify-content-center">
-        <h4>or</h4>
-      </ion-row>
-      <ion-row class="ion-text-center, ion-justify-content-center">
-        <ion-button [routerLink]="['/home','activities-list','activity']">add an activity</ion-button>
-      </ion-row>
-    </ion-grid>
-  </ion-item>
-
+  <ion-grid>
+    <ion-row>
+      <ion-list *ngIf="activityList.length>0" lines="full">
+        <app-activity-item  *ngFor='let a of activityList'
+                            [activity]='a'>
+        </app-activity-item>
+        <ion-item-divider/>
+      </ion-list>
+    </ion-row>
+    <ion-row>
+      <ion-item *ngIf="activityList.length===0" class="ion-text-center">
+        <ion-grid>
+          <ion-row class="ion-text-center, ion-justify-content-center">
+            <h3>No activities planned</h3>
+          </ion-row>
+          <ion-row class="ion-text-center, ion-justify-content-center">
+            <h4>Have a lazy day</h4>
+          </ion-row>
+          <ion-row class="ion-text-center, ion-justify-content-center">
+            <h4>or</h4>
+          </ion-row>
+          <ion-row class="ion-text-center, ion-justify-content-center">
+            <ion-button [routerLink]="['/home','activities-list','activity']">add an activity</ion-button>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-row>
+  </ion-grid>
   <ion-fab *ngIf="activityList.length>0" slot="fixed" vertical="bottom" horizontal="center">
     <ion-fab-button [routerLink]="['/home','activities-list','activity']">
       <ion-icon name="add"></ion-icon>

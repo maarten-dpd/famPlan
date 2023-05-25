@@ -8,6 +8,13 @@ import {provideFirebaseApp, initializeApp} from '@angular/fire/app';
 import {environment} from '../environments/environment';
 import {getAuth, provideAuth} from '@angular/fire/auth';
 import {enableMultiTabIndexedDbPersistence, getFirestore, provideFirestore} from '@angular/fire/firestore';
+import {ActivityService} from './services/activity.service';
+import {FamilyService} from './services/family.service';
+import {AuthService} from './services/auth.service';
+import {LabelService} from './services/label.service';
+import {PhotoService} from './services/photo.service';
+import {PlanningService} from './services/planning.service';
+import {RecipeService} from './services/recipe.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +28,14 @@ import {enableMultiTabIndexedDbPersistence, getFirestore, provideFirestore} from
       return firestore;
     })
   ],
-  providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+    ActivityService,
+    FamilyService,
+    AuthService,
+    LabelService,
+    PhotoService,
+    PlanningService,
+    RecipeService],
   bootstrap: [AppComponent],
   exports: [
   ]

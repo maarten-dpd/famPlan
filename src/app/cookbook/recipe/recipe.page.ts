@@ -34,13 +34,11 @@ export class RecipePage implements OnInit {
   ngOnInit() {
     this.setData();
   }
-
   setData(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
       this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
     }
-
     if (this.id === null) {
       return;
     }
@@ -63,8 +61,7 @@ export class RecipePage implements OnInit {
 
 
   }
-
-   handleCreateAndUpdate(): void {
+  handleCreateAndUpdate(): void {
     if (this.id) {
       this.updateRecipe();
     } else {
@@ -72,12 +69,10 @@ export class RecipePage implements OnInit {
     }
     this.navController.back();
   }
-
   private createRecipe(): void {
     this.recipeService.newRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
       this.instructions, this.description, this.selectedLabels,this.recipePhotoUrl);
   }
-
   private updateRecipe(): void {
     if(this.id){
       const recipeToUpdate :Recipe = {
@@ -100,7 +95,6 @@ export class RecipePage implements OnInit {
 
 
   }
-
   async addIngredient() {
     await this.presentInputModal('add an ingredient','ingredient')
   }
@@ -133,17 +127,14 @@ export class RecipePage implements OnInit {
 
 
   }
-
   putPhotoIn() {
     this.photoService.selectOrTakePhoto().then(photo =>{
       this.recipePhotoUrl = photo.dataUrl;
     })
   }
-
   isSelected(label: Label) {
     return this.selectedLabels.some(l=>l.id === label.id);
   }
-
   changeLabelSelection(label: Label) {
     if(this.isSelected(label)){
       const index = this.selectedLabels.findIndex(l=>l.id === label.id);
@@ -154,6 +145,5 @@ export class RecipePage implements OnInit {
       this.selectedLabels.push(label);
     }
   }
-
-    protected readonly Number = Number;
+  protected readonly Number = Number;
 }

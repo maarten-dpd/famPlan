@@ -25,7 +25,6 @@ export class LabelsPage implements OnInit {
 
   ngOnInit() {
     this.#labelSub = this.labelService.getAllLabels().subscribe( res =>{
-      console.log(res);
       this.labels = res;
       this.cdr.detectChanges();
     })

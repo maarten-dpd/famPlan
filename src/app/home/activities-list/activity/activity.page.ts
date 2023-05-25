@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {NavController} from '@ionic/angular';
 import {Label} from '../../../../datatypes/label';
 import {FamilyMember} from '../../../../datatypes/familyMember';
+import {Activity} from '../../../../datatypes/activity';
 
 @Component({
   selector: 'app-activity',
@@ -33,81 +34,66 @@ export class ActivityPage implements OnInit {
       this.yearValues.push(year);
     }
   }
-
   ngOnInit() {
     this.setData();
   }
-
   handleCreateAndUpdate() {
-    /*console.log('entered handle create and update')*/
     if (this.id) {
-      /*console.log('choose to update')*/
       this.updateActivity();
     } else {
-      /*console.log('choose to create')*/
       this.createActivity();
     }
     this.navController.back();
   }
-
   private setData() : void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
     if(this.id===null){
       return;
     }
-    /*console.log(this.id);*/
-    const activity = this.activityService.getActivity(this.id);
-    /*console.log(activity)*/
-    if(activity){
-      this.dateToParse = new Date(activity.date).toISOString();
-      this.activityName = activity.name;
-      this.location = activity.location;
-      this.date = this.dateToParse;
-      this.description = activity.description;
-      this.selectedLabels = activity.labels;
-      this.selectedParticipants = activity.participants;
-    }
-
+    const activity = this.activityService.getActivityById(this.id);
+    console.log(activity);
+    this.dateToParse = new Date(activity.date).toISOString();
+    // this.activityName = activity.name;
+    // this.location = activity.location;
+    // this.date = this.dateToParse;
+    // this.description = activity.description;
+    // this.selectedLabels = activity.labels;
+    // this.selectedParticipants = activity.participants;
   }
-
   private updateActivity() {
-    /*console.log('updating with following data: ' + this.id + 'name: ' + this.activityName + 'date: ' + this.dateToParse + 'location: ' + this.location)
-    console.log('participants: ' + this.getSelectedParticipants() + 'labels: ' + this.getSelectedLabels())*/
     let convertedDate = new Date(this.dateToParse).toString()
-    this.activityService.updateActivity({
-      id:this.id,
-      name: this.activityName,
-      date:convertedDate,
-      location:this.location,
-      description:this.description,
-      participants:this.selectedParticipants,
-      labels: this.selectedLabels
-
-    })
+    if(this.id){
+      const activityToUpdate : Activity ={
+        id:this.id,
+        name: this.activityName,
+        date:convertedDate,
+        location:this.location,
+        description:this.description,
+        participants:this.selectedParticipants,
+        labels: this.selectedLabels
+      }
+      this.activityService.updateActivity(this.id,activityToUpdate);
+    }
+    else{
+      console.log('activity has no id field and can not be deleted')
+      //replace by modal to give user warning
+    }
   }
-
   private createActivity() {
     this.date = new Date(this.dateToParse).toString();
-    /*console.log ('date: ');
-    console.log(this.date);
-    console.log('date To parse: ');
-    console.log(this.dateToParse)*/
     this.activityService.newActivity(this.activityName, this.selectedParticipants,
       this.selectedLabels, this.description, this.location, this.date)
   }
-
-  // private getSelectedParticipants():FamilyMember[] {
-  //   return this.participants.filter((f, i) => this.selectedParticipants[i]);
-  // }
-  //
-  // private getSelectedLabels():Label[] {
-  //   return this.labels.filter((l, i) => this.selectedLabels[i]);
-  // }
-
+  checkDeleteLabel(id: string | undefined) {
+    if(id){
+      this.labelService.deleteLabel(id)
+    }else{
+      //show modal with error
+    }
+  }
   isSelectedParticipant(participant: FamilyMember) {
     return this.selectedParticipants.some(p=>p.id === participant.id);
   }
-
   changeParticipantSelection(participant: FamilyMember) {
     if(this.isSelectedParticipant(participant)){
       const index = this.selectedParticipants.findIndex(p=>p.id === participant.id);
@@ -118,11 +104,9 @@ export class ActivityPage implements OnInit {
       this.selectedParticipants.push(participant);
     }
   }
-
   isSelectedLabel(label: Label) {
     return this.selectedLabels.some(l=>l.id === label.id);
   }
-
   changeLabelSelection(label: Label) {
     if(this.isSelectedLabel(label)){
       const index = this.selectedLabels.findIndex(l=>l.id === label.id);
@@ -133,6 +117,5 @@ export class ActivityPage implements OnInit {
       this.selectedLabels.push(label);
     }
   }
-
     protected readonly Number = Number;
 }

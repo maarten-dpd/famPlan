@@ -41,8 +41,6 @@ export class HomePage {
     this.currentWeekDays.length = 0;
     this.getCurrentWeek(this.startDate)
     this.checkWeekSpansMonth();
-    console.log('list of activities');
-    console.log(this.activityService.getAllActivities());
   }
   addDays(date: Date, days: number): Date{
     date.setDate(date.getDate()+days);

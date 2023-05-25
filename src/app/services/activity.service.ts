@@ -1,115 +1,121 @@
-import {Injectable} from '@angular/core';
+import {ApplicationRef, ChangeDetectorRef, Injectable} from '@angular/core';
 import {Label} from '../../datatypes/label';
 import {Activity} from '../../datatypes/activity';
 import {FamilyMember} from '../../datatypes/familyMember';
-import {UUID} from 'angular2-uuid';
+import {
+  addDoc,
+  collection, collectionData,
+  CollectionReference,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  Firestore, query, setDoc, updateDoc, where
+} from '@angular/fire/firestore';
+import {FamilyService} from './family.service';
+import {Subscription} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivityService {
+  private count: number = 0;
 
-  #activityList: Activity[] = [];
+  #activitySub!: Subscription;
+  #activity: Activity[] = [];
 
-  constructor() {
-    let b=0;
-    let date = new Date();
-    let activityName = 'activity '+ b;
-    let activityDate = date;
-    for (let i = 0; i<20;i++){
-      activityDate = this.addDays(date,i)
-     /* console.log('date after adding days' + date)*/
-      let dateForActivity = activityDate.toString()
-      for(let j = 0;j<2;j++){
-        this.newActivity(activityName,[],[],'een activiteit met uitleg','ergens',dateForActivity)
-      }
-     /* console.log ('lijst na poging ' + i);
-      console.log(this.getAllActivities());*/
-      b++;
-      activityName = 'activity ' + b;
-      /*console.log (activityName);*/
-    }
-
+  constructor(private firestore:Firestore,
+              private familyService:FamilyService,
+              private ref: ApplicationRef) {
+    this.#activitySub = this.getAllActivities().subscribe(res=>{
+      this.#activity = res;
+      this.count++;
+      this.ref.tick()
+    })
   }
-
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  }
+  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
+  }
   //crud operations methods
-  deleteActivity(id: string) {
-    console.log('activity service delete activity entered')
-    this.#activityList = this.#activityList.filter(a => a.id !== id);
+  async deleteActivity(id: string) {
+    await deleteDoc(this.#getDocumentRef('activities', id));
   }
-  newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],
-              description: string, location: string, date:string): void {
-    this.#activityList.push({
+  async newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],
+              description: string, location: string, date:string) {
+    const newActivity={
       name,
-      id : UUID.UUID(),
+      id : '',
       date,
       description,
       location,
       participants,
-      labels
-    });
-
+      labels,
+      familyId: this.familyService.currentFamilyId
+    };
+    const docRef = await addDoc(
+      this.#getCollectionRef<Activity>('activities'),
+      newActivity
+    );
+    newActivity.id = docRef.id
+   await setDoc(docRef, newActivity);
   }
-  updateActivity(updatedActivity: {
-                                    date: string;
-                                    name: string;
-                                    location: string;
-                                    description:string;
-                                    participants:FamilyMember[];
-                                    labels: Label[];
-                                    id: string | null }): void {
-      const activity = this.#activityList.find(a => a.id === updatedActivity.id);
-      if (activity === undefined) {
-        console.error('Trying to update a nonexistent activity.');
-        return;
-      }
-      Object.assign(activity, updatedActivity);
+  async updateActivity(id: string, activity:Activity){
+    await updateDoc(this.#getDocumentRef('activities', id),activity)
     }
-
   //get data methods
-  getAllActivities(): Activity[] {
-    return this.#activityList;
+  private getAllActivities() {
+    return collectionData<Activity>(
+      query<Activity>(
+        this.#getCollectionRef('activities')
+      )
+    )
   }
-  getActivity(id: string): Activity | undefined {
-    return this.#activityList.find(a => a.id === id);
+  getAllActivitiesForCurrentFamily() {
+   let activitiesForCurrentFamily = this.#activity
+     .filter(a=>a.familyId === this.familyService.currentFamilyId);
+   return activitiesForCurrentFamily;
   }
-  getActivitiesByDate(date: string):Activity[] {
-    return this.#activityList.filter(a =>a.date.substring(0,10) === date.substring(0,10));
+  getActivityById(id: string) {
+    let activitiesById = this.#activity
+      .filter(a =>a.id === id);
+    return activitiesById[0];
+    // return collectionData<Activity>(
+    //   query<Activity>(
+    //     this.#getCollectionRef('activities'),
+    //     where('id', '==', id)
+    //   )
+    // )
   }
-  getNumberOfActivitiesOnDate(date: string): number {
-    let activitiesOnDate = this.getActivitiesByDate(date);
-    /*    console.log('date')
-        console.log(date)
-        console.log('found activity')
-        console.log(activitiesOnDate)*/
-    return activitiesOnDate.length;
+  getActivitiesByDateForCurrentFamily(date: string) {
+    let activitiesByDateForCurrentFamily = this.getAllActivitiesForCurrentFamily()
+      .filter(a=>a.date.substring(0,10) === date.substring(0,10));
+    return activitiesByDateForCurrentFamily;
+    // return collectionData<Activity>(
+    //   query<Activity>(
+    //     this.#getCollectionRef('activities'),
+    //     where('date', '==', date.substring(0,10))
+    //   )
+    // )
   }
-
+  getNumberOfActivitiesOnDate(date: string) {
+    return this.getActivitiesByDateForCurrentFamily(date).length;
+  }
   //misc methods
-  //add days method is used in the constructor to create a set of test activities
-  addDays(date: Date, days: number): Date{
-    date.setDate(date.getDate()+days);
-    return date;
+  labelIsInUse(id: string) {
+    const activities = this.getAllActivities();
+    let result = false
+    activities.subscribe(activities =>{
+        for (const activity of activities){
+          const labelUsed = activity.labels.some(label =>label.id === id);
+          if(labelUsed){
+            result = true;
+          }
+        }
+      }
+    )
+    return result;
   }
-  deleteLabelFromActivity(labelId: string) {
-
-    this.#activityList.forEach(a => a.labels = a.labels.filter(l => l.id !== labelId));
-  }
-
-  //methods for future use
-
-  /*getFilteredActivities(filter: activityFilter): Activity[] {
-    return this.getAllActivities()
-      .filter(a => ActivityService.activityMatchesFilter(a, filter));
-  }*/
- /* getActivitiesByLabel(labelId: number) {
-    return this.#activityList.filter(a => a.labels.some(l => l.id === labelId));
-  }*/
-/*  getActivityByName(name: string) {
-    return this.#activityList.find(a => a.name === name);
-  }*/
-  /* private static activityMatchesFilter(activity: Activity, filter: activityFilter): boolean {
-    return activityFilter.all === filter;
-  }*/
 
 }

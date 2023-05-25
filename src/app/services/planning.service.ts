@@ -51,15 +51,6 @@ export class PlanningService {
       ),
       {idField: 'id'}
     );
-    /*console.log('date passed to function:');
-    console.log(date);
-    console.log('substring of date passed to function');
-    console.log(date.substring(0,15));
-
-      this.#plannedMenus.forEach((item:PlannedMenu)=>{
-        console.log('substring of date in plannedmenus array');
-        console.log(item.date.substring(0,15));
-      })*/
   }
   async removeMenuForDate(date: string) {
     const plannedMenus = this.getMenuForDate(date);
