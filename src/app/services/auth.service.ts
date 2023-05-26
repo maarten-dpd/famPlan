@@ -13,7 +13,6 @@ import { GoogleAuthProvider,  User} from 'firebase/auth';
 import {Capacitor} from '@capacitor/core';
 import {BehaviorSubject} from 'rxjs';
 import {FamilyService} from './family.service';
-import {Firestore} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +26,6 @@ export class AuthService {
   constructor(private auth: Auth,
               private router: Router,
               public familyService:FamilyService,
-              private fireStore:Firestore
               ) {
     this.auth.onAuthStateChanged((user: User | null) => {
 
