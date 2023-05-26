@@ -120,11 +120,7 @@ export class RecipePage implements OnInit {
         }
       }
     });
-    console.log('the ingredients now are');
-    console.log(this.ingredients);
     return await modal.present();
-
-
   }
   putPhotoIn() {
     this.photoService.selectOrTakePhoto().then(photo =>{

@@ -7,12 +7,14 @@ import {
   getAuth,
   signInWithCredential, signInWithEmailAndPassword,
   signOut,
-  Unsubscribe
+  Unsubscribe, updateProfile
 } from '@angular/fire/auth';
 import { GoogleAuthProvider,  User} from 'firebase/auth';
 import {Capacitor} from '@capacitor/core';
 import {BehaviorSubject} from 'rxjs';
 import {FamilyService} from './family.service';
+import {InformationModalPageComponent} from '../shared/information-modal-page/information-modal-page.component';
+import {ModalController} from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +27,8 @@ export class AuthService {
 
   constructor(private auth: Auth,
               private router: Router,
-              public familyService:FamilyService,
+              private familyService:FamilyService,
+              private modalController:ModalController
               ) {
     this.auth.onAuthStateChanged((user: User | null) => {
 
@@ -86,29 +89,40 @@ export class AuthService {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        // ...
+        //Set Display Name
+        updateProfile(user,{
+          displayName:displayName
+        }).then(()=>{
+          console.log('display name set')
+        })
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // ..
+        this.presentInformationModal(errorMessage,errorCode);
       });
-
   }
   signIn(email:string, password:string){
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        // ...
-      })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        this.presentInformationModal(errorMessage,errorCode);
       });
   }
   getCurrentUserId(){
     return this.currentUser.value?.uid;
+  }
+  async presentInformationModal(information:string[], infoType:string){
+    const modal=await this.modalController.create({
+      component: InformationModalPageComponent,
+      componentProps:{
+        information:information,
+        infoType: infoType
+      },
+    });
+    modal.onDidDismiss().then();
+    return await modal.present();
   }
 }

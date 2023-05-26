@@ -9,6 +9,7 @@ import {RecipeItemComponent} from './recipe-item/recipe-item.component';
 import {StringInputModalPageComponent} from './string-input-modal-page/string-input-modal-page.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ConfirmOrCancelModalPageComponent} from './confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
+import {InformationModalPageComponent} from './information-modal-page/information-modal-page.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {ConfirmOrCancelModalPageComponent} from './confirm-or-cancel-modal-page/
     DayCardComponent,
     RecipeItemComponent,
     StringInputModalPageComponent,
-    ConfirmOrCancelModalPageComponent
+    ConfirmOrCancelModalPageComponent,
+    InformationModalPageComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +34,8 @@ import {ConfirmOrCancelModalPageComponent} from './confirm-or-cancel-modal-page/
     DayCardComponent,
     RecipeItemComponent,
     StringInputModalPageComponent,
-    ConfirmOrCancelModalPageComponent
+    ConfirmOrCancelModalPageComponent,
+    InformationModalPageComponent
   ]
 })
 export class SharedModule { }
