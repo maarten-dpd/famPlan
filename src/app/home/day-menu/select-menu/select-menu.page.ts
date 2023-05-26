@@ -5,7 +5,7 @@ import {PlanningService} from '../../../services/planning.service';
 import {ModalController, NavController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {ConfirmOrCancelModalPageComponent} from '../../../shared/confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
-import {firstValueFrom, Subscription, take} from 'rxjs';
+import {firstValueFrom, Subscription} from 'rxjs';
 import {PlannedMenu} from '../../../../datatypes/plannedMenu';
 
 @Component({
@@ -88,7 +88,7 @@ export class SelectMenuPage implements OnInit {
       this.recipes = res;
       this.cdr.detectChanges();
     })
-    this.#plannedMenuSub = this.planningService.getAllPlannedMenus().subscribe(res=>{
+    this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res=>{
       this.plannedMenus = res;
       this.cdr.detectChanges();
     })

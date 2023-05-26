@@ -41,7 +41,7 @@ export class DayMenuPage implements OnInit {
     }
     else{
       this.date = new Date(day);
-      this.#plannedMenuSub = this.planningService.getAllPlannedMenus().subscribe(res => {
+      this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res => {
         this.plannedMenus = res;
         this.plannedMenu = this.plannedMenus
           .filter(p => p.date.substring(0, 15) === this.date.toString().substring(0, 15))

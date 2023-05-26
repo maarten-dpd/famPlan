@@ -8,7 +8,6 @@ import {
   query, setDoc, updateDoc, where
 } from '@angular/fire/firestore';
 import { firstValueFrom, Observable, take} from 'rxjs';
-import {AuthService} from './auth.service';
 import {Family} from '../../datatypes/family';
 
 @Injectable({
@@ -27,20 +26,25 @@ export class FamilyService {
 
   //crud operation methods
   async createFamilyMember(firstName: string, lastName: string, email: string, userId:string){
-    const newFamilyMember ={
-      firstName:firstName,
-      lastName: lastName,
-      email:email,
-      userId: userId,
-      familyId: this.currentFamilyId,
-      id: ''
-    };
-    const docRef = await addDoc(
-      this.#getCollectionRef<FamilyMember>('familyMembers'),
-      newFamilyMember
-    );
-    newFamilyMember.id = docRef.id
-    await setDoc(docRef, newFamilyMember)
+    if(this.currentFamilyId){
+      const newFamilyMember ={
+        firstName:firstName,
+        lastName: lastName,
+        email:email,
+        userId: userId,
+        familyId: this.currentFamilyId,
+        id: ''
+      };
+      const docRef = await addDoc(
+        this.#getCollectionRef<FamilyMember>('familyMembers'),
+        newFamilyMember
+      );
+      newFamilyMember.id = docRef.id
+      await setDoc(docRef, newFamilyMember)
+    }
+    else{
+      console.log('no current familyId, could not create member');
+    }
   }
   async updateFamilyMember(id:string, familyMember: FamilyMember){
     await updateDoc(this.#getDocumentRef('familyMembers',id),familyMember)

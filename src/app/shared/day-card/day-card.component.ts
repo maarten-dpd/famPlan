@@ -34,7 +34,7 @@ export class DayCardComponent  implements OnInit {
 
  ngOnInit() {
 
-   this.#plannedMenuSub = this.planningService.getAllPlannedMenus().subscribe(res => {
+   this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res => {
      this.plannedMenus = res;
      this.plannedMenu = this.plannedMenus
        .filter(p => p.date.substring(0, 15) === this.day.toString().substring(0, 15))
