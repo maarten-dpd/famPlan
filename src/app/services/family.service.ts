@@ -25,7 +25,7 @@ export class FamilyService {
   }
 
   //crud operation methods
-  async createFamilyMember(firstName: string, lastName: string, email: string, userId:string){
+  async createFamilyMember(firstName: string, lastName: string, email: string, userId:string, familyId?:string){
     if(this.currentFamilyId){
       const newFamilyMember ={
         firstName:firstName,
@@ -33,6 +33,22 @@ export class FamilyService {
         email:email,
         userId: userId,
         familyId: this.currentFamilyId,
+        id: ''
+      };
+      const docRef = await addDoc(
+        this.#getCollectionRef<FamilyMember>('familyMembers'),
+        newFamilyMember
+      );
+      newFamilyMember.id = docRef.id
+      await setDoc(docRef, newFamilyMember)
+    }
+    else if(familyId){
+      const newFamilyMember ={
+        firstName:firstName,
+        lastName: lastName,
+        email:email,
+        userId: userId,
+        familyId: familyId,
         id: ''
       };
       const docRef = await addDoc(
@@ -54,15 +70,28 @@ export class FamilyService {
   }
   async createFamily(familyName:string){
     const newFamily={
-      familyName: familyName,
+      name: familyName,
       id:''
     };
     const docRef=await addDoc(
       this.#getCollectionRef('families'),
       newFamily
     );
-    newFamily.id = docRef.id
-    await setDoc(docRef, newFamily)
+    newFamily.id = docRef.id;
+    await setDoc(docRef, newFamily);
+  }
+  async createFamilyAndReturnNewFamilyId(familyName:string){
+    const newFamily={
+      name: familyName,
+      id:''
+    };
+    const docRef=await addDoc(
+      this.#getCollectionRef('families'),
+      newFamily
+    );
+    newFamily.id = docRef.id;
+    await setDoc(docRef, newFamily);
+    return newFamily.id;
   }
   async updateFamily(id:string, family:Family){
     await updateDoc(this.#getDocumentRef('families',id),family)
@@ -80,7 +109,7 @@ export class FamilyService {
     }
   }
   async setCurrentFamily(){
-    const tempCurrentFamily = await firstValueFrom((this.getCurrentFamilyByFamilyId().pipe(take(1))))
+    const tempCurrentFamily = await firstValueFrom((this.getAllFamilies().pipe(take(1))))
     this.currentFamily=tempCurrentFamily.filter(f=>f.id===this.currentFamilyId);
   }
 
@@ -94,17 +123,17 @@ export class FamilyService {
       {idField: 'id'}
     )
   }
-  getCurrentFamilyByFamilyId():Observable<Family[]>{
+  getAllFamilies():Observable<Family[]>{
     return collectionData<Family>(
       query<Family>(
         this.#getCollectionRef('families'),
-        // where (documentId(),'==',this.currentFamilyId)
       ),
       {idField: 'id'}
     )
   }
   getFamilyName(): string {
     if(this.currentFamily){
+      console.log(this.currentFamily[0]);
       return this.currentFamily[0].name;
     }
     else{

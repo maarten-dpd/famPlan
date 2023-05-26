@@ -1,6 +1,6 @@
 export interface IFamily{
   id: string;
-name: string;
+  name: string;
 }
 
 export class Family{

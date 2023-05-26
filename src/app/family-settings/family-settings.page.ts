@@ -10,15 +10,15 @@ import {Subscription} from 'rxjs';
 })
 export class FamilySettingsPage implements OnInit {
   fabIsVisible = true;
-  familyName = this.familySettingsService.getFamilyName();
+  familyName = this.familyService.getFamilyName();
   #familymemberSub!:Subscription;
   familyMembers: FamilyMember[]=[];
 
-  constructor(public familySettingsService: FamilyService,
+  constructor(public familyService: FamilyService,
               private cdr: ChangeDetectorRef) {  }
 
   ngOnInit() {
-    this.#familymemberSub = this.familySettingsService.getFamilyMembersByFamilyId()
+    this.#familymemberSub = this.familyService.getFamilyMembersByFamilyId()
       .subscribe((res=>{
           this.familyMembers = res;
           this.cdr.detectChanges();

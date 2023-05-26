@@ -83,7 +83,8 @@ export class AuthService {
       await this.router.navigate(['/login']);
     }
   }
-  signUp(email:string, password:string, displayName: string){
+  signUp(email:string, password:string, firstName: string, lastName: string, familyId: string){
+    const displayName = firstName + ' ' + lastName;
     const auth = getAuth()
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -94,6 +95,10 @@ export class AuthService {
           displayName:displayName
         }).then(()=>{
           console.log('display name set')
+        }).then(()=>{
+          this.familyService.createFamilyMember(firstName,lastName,email,user.uid,familyId);
+        }).then(()=>{
+          this.familyService.setCurrentAttributes(user.uid);
         })
       })
       .catch((error) => {
