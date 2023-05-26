@@ -1,14 +1,11 @@
-import {Label} from './label';
-import {FamilyMember} from './familyMember';
-
 export interface IActivity {
   id: string;
   name:string;
   date: string;
   location: string;
   description: string;
-  participants: FamilyMember[];
-  labels:Label[];
+  participants: string[];
+  selectedLabels:string[];
   familyId: string;
 }
 
@@ -19,8 +16,8 @@ export class Activity {
   date!:string;
   location!:string;
   description!:string;
-  participants:FamilyMember[] = [];
-  labels:Label[]=[];
+  participants:string[] = [];
+  selectedLabels:string[]=[];
   familyId?:string;
 
   constructor(obj:IActivity) {

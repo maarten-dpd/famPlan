@@ -55,33 +55,33 @@
         <ion-list-header>
           Participants
         </ion-list-header>
-        <ion-item *ngFor='let p of participants'>
+        <ion-item *ngFor='let f of familyMembers'>
           <ion-checkbox
             slot='start'
-            [(ngModel)]='selectedParticipants[Number(p.id)]'
-            [checked]="isSelectedParticipant(p)"
-            (ionChange)="changeParticipantSelection(p)"></ion-checkbox>
-          <ion-label>{{p.firstName}} {{p.lastName}}</ion-label>
+            [ngModel]="isFamilyMemberSelected(f)"
+            (ionChange)="changeParticipantSelection(f)">
+          </ion-checkbox>
+          <ion-label>{{f.firstName}} {{f.lastName}}</ion-label>
         </ion-item>
       </ion-list>
       <ion-item-divider/>
     </ion-row>
-    <ion-row>
-      <ion-list lines="none">
-        <ion-list-header>
-          Labels
-        </ion-list-header>
-        <ion-item *ngFor='let label of labels | async'>
-          <ion-checkbox
-            slot='start'
-            [color]='label.color'
-            [(ngModel)]='selectedLabels[Number(label.id)]'
-            [checked]="isSelectedLabel(label)"
-            (ionChange)="changeLabelSelection(label)">
-          </ion-checkbox>
-          <ion-label [color]='label.color'>{{label.name}}</ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-row>
+<!--    <ion-row>-->
+<!--      <ion-list lines="none">-->
+<!--        <ion-list-header>-->
+<!--          Labels-->
+<!--        </ion-list-header>-->
+<!--        <ion-item *ngFor='let label of labels | async'>-->
+<!--          <ion-checkbox-->
+<!--            slot='start'-->
+<!--            [color]='label.color'-->
+<!--            [(ngModel)]='selectedLabels[Number(label.id)]'-->
+<!--            [checked]="isSelectedLabel(label)"-->
+<!--            (ionChange)="changeLabelSelection(label)">-->
+<!--          </ion-checkbox>-->
+<!--          <ion-label [color]='label.color'>{{label.name}}</ion-label>-->
+<!--        </ion-item>-->
+<!--      </ion-list>-->
+<!--    </ion-row>-->
   </ion-grid>
 </ion-content>

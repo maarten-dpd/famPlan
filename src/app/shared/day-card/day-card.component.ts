@@ -4,7 +4,7 @@ import {PlanningService} from '../../services/planning.service';
 import {PlannedMenu} from '../../../datatypes/plannedMenu';
 import {Recipe} from '../../../datatypes/recipe';
 import {RecipeService} from '../../services/recipe.service';
-import {firstValueFrom, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {FamilyService} from '../../services/family.service';
 
 @Component({
@@ -43,20 +43,20 @@ export class DayCardComponent  implements OnInit {
     this.plannedMenusFilteredOnDate = this.plannedMenus
       .filter(p => p.date.substring(0, 15) === this.day.toString().substring(0, 15))
     if(this.plannedMenusFilteredOnDate.length>0){
-      console.log('na filtering op datum bevat PlannedMenufilteredondate');
-      console.log(this.plannedMenusFilteredOnDate);
+      // console.log('na filtering op datum bevat PlannedMenufilteredondate');
+      // console.log(this.plannedMenusFilteredOnDate);
     }
 
     this.plannedMenusFilteredOnDateAndFamilyId = this.plannedMenusFilteredOnDate
       .filter(p=>p.familyId === this.familyService.currentFamilyId)
     if(this.plannedMenusFilteredOnDateAndFamilyId.length>0){
-      console.log('na filtering van PlannedMenufilteredondate op family id ' + this.familyService.currentFamilyId + ' bevat plannedmenufilteredondateandfamilyid ')
-      console.log(this.plannedMenusFilteredOnDateAndFamilyId);
+      // console.log('na filtering van PlannedMenufilteredondate op family id ' + this.familyService.currentFamilyId + ' bevat plannedmenufilteredondateandfamilyid ')
+      // console.log(this.plannedMenusFilteredOnDateAndFamilyId);
     }
 
     if(this.plannedMenusFilteredOnDateAndFamilyId.length>0){
-      console.log('het 1ste element in plannedmenufilteredonDateAndFamilyId = ')
-      console.log(this.plannedMenusFilteredOnDateAndFamilyId[0]);
+      // console.log('het 1ste element in plannedmenufilteredonDateAndFamilyId = ')
+      // console.log(this.plannedMenusFilteredOnDateAndFamilyId[0]);
       this.recipeId = this.plannedMenusFilteredOnDateAndFamilyId[0].recipeId;
       this.menuplanned = true;
     }

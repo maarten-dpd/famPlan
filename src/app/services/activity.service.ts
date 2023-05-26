@@ -1,7 +1,5 @@
-import {ApplicationRef, ChangeDetectorRef, Injectable} from '@angular/core';
-import {Label} from '../../datatypes/label';
+import {ApplicationRef,  Injectable} from '@angular/core';
 import {Activity} from '../../datatypes/activity';
-import {FamilyMember} from '../../datatypes/familyMember';
 import {
   addDoc,
   collection, collectionData,
@@ -9,7 +7,7 @@ import {
   deleteDoc,
   doc,
   DocumentReference,
-  Firestore, query, setDoc, updateDoc, where
+  Firestore, query, setDoc, updateDoc
 } from '@angular/fire/firestore';
 import {FamilyService} from './family.service';
 import {Subscription} from 'rxjs';
@@ -32,18 +30,11 @@ export class ActivityService {
       this.ref.tick()
     })
   }
-  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
-    return collection(this.firestore, collectionName) as CollectionReference<T>;
-  }
-  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
-    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
-  }
+
   //crud operations methods
-  async deleteActivity(id: string) {
-    await deleteDoc(this.#getDocumentRef('activities', id));
-  }
-  async newActivity(name: string,  participants:FamilyMember[] = [], labels: Label[] = [],
-              description: string, location: string, date:string) {
+
+  async createActivity(name: string, participants:string[] = [], selectedLabels: string[] = [],
+                       description: string, location: string, date:string) {
     const newActivity={
       name,
       id : '',
@@ -51,7 +42,7 @@ export class ActivityService {
       description,
       location,
       participants,
-      labels,
+      selectedLabels,
       familyId: this.familyService.currentFamilyId
     };
     const docRef = await addDoc(
@@ -64,6 +55,10 @@ export class ActivityService {
   async updateActivity(id: string, activity:Activity){
     await updateDoc(this.#getDocumentRef('activities', id),activity)
     }
+  async deleteActivity(id: string) {
+    await deleteDoc(this.#getDocumentRef('activities', id));
+  }
+
   //get data methods
   private getAllActivities() {
     return collectionData<Activity>(
@@ -73,9 +68,8 @@ export class ActivityService {
     )
   }
   getAllActivitiesForCurrentFamily() {
-   let activitiesForCurrentFamily = this.#activity
+   return this.#activity
      .filter(a=>a.familyId === this.familyService.currentFamilyId);
-   return activitiesForCurrentFamily;
   }
   getActivityById(id: string) {
     let activitiesById = this.#activity
@@ -89,26 +83,26 @@ export class ActivityService {
     // )
   }
   getActivitiesByDateForCurrentFamily(date: string) {
-    let activitiesByDateForCurrentFamily = this.getAllActivitiesForCurrentFamily()
+    return this.getAllActivitiesForCurrentFamily()
       .filter(a=>a.date.substring(0,10) === date.substring(0,10));
-    return activitiesByDateForCurrentFamily;
-    // return collectionData<Activity>(
-    //   query<Activity>(
-    //     this.#getCollectionRef('activities'),
-    //     where('date', '==', date.substring(0,10))
-    //   )
-    // )
   }
   getNumberOfActivitiesOnDate(date: string) {
     return this.getActivitiesByDateForCurrentFamily(date).length;
   }
+
   //misc methods
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  }
+  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
+  }
   labelIsInUse(id: string) {
     const activities = this.getAllActivities();
     let result = false
     activities.subscribe(activities =>{
         for (const activity of activities){
-          const labelUsed = activity.labels.some(label =>label.id === id);
+          const labelUsed = activity.selectedLabels.some(label =>label === id);
           if(labelUsed){
             result = true;
           }

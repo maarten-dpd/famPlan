@@ -4,6 +4,9 @@ import {ActivityService} from '../../services/activity.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmOrCancelModalPageComponent} from '../confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
 import {ModalController} from '@ionic/angular';
+import {Subscription} from 'rxjs';
+import {FamilyMember} from '../../../datatypes/familyMember';
+import {FamilyService} from '../../services/family.service';
 
 @Component({
   selector: 'app-activity-item',
@@ -13,10 +16,35 @@ import {ModalController} from '@ionic/angular';
 export class ActivityItemComponent  implements OnInit {
 
   @Input() activity: Activity | undefined;
-  constructor(public activityService: ActivityService, public activatedRoute: ActivatedRoute,
-  public router:Router,public modalController: ModalController) { }
 
-  ngOnInit() {}
+  #familyMemberSub!:Subscription
+  familyMembers:FamilyMember[]=[]
+  participants:FamilyMember[]=[]
+  participantIds:string[]=[]
+  constructor(public activityService: ActivityService,
+              public activatedRoute: ActivatedRoute,
+              public router:Router,
+              public familyService: FamilyService,
+              public modalController: ModalController) { }
+
+  ngOnInit() {
+    if(this.activity) {
+      this.participantIds = this.activity.participants
+    }
+    this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe(res=>{
+      this.familyMembers=res;
+      console.log(this.familyMembers)
+      console.log(this.participantIds)
+      this.participants = this.familyMembers.filter(p=>this.participantIds.includes(p.id))
+      console.log(this.participants)
+    })
+
+  }
+  ngOnDestroy(){
+    if(this.#familyMemberSub){
+      this.#familyMemberSub.unsubscribe()
+    }
+  }
 
   async deleteActivity(id: string) {
     console.log('delete activity clicked')
