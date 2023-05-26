@@ -12,6 +12,7 @@ import {
 import { GoogleAuthProvider,  User} from 'firebase/auth';
 import {Capacitor} from '@capacitor/core';
 import {BehaviorSubject} from 'rxjs';
+import {FamilyService} from './family.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class AuthService {
 
   constructor(private auth: Auth,
               private router: Router,
+              public familyService:FamilyService
               ) {
     this.auth.onAuthStateChanged((user: User | null) => {
 
@@ -68,8 +70,11 @@ export class AuthService {
     const isAuthenticated = user !== null;
 
     if (isAuthenticated) {
+      this.familyService.setCurrentAttributes(this.currentUser.value?.uid)
       await this.router.navigate(['/home']);
+
     } else {
+      this.familyService.resetFamilyService()
       await this.router.navigate(['/login']);
     }
   }

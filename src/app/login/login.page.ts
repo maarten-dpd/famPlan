@@ -32,7 +32,6 @@ export class LoginPage implements OnInit {
       this.authService.signIn(this.email,this.password);
     }
     this.authService.signIn(this.email,this.password);
-    this.familyService.setFamilyService();
     this.clearFieldsAfterSubmit();
   }
 

@@ -16,14 +16,13 @@ import {Family} from '../../datatypes/family';
 })
 export class FamilyService {
 
-  currentUserId: string | undefined = this.authService.getCurrentUserId();
+  currentUserId: string | undefined;
   currentFamilyId!: string;
   currentFamilyMember!:FamilyMember |undefined;
-  currentFamily!:Family |undefined;
+  currentFamily!:Family[] |undefined;
 
-  constructor(private firestore:Firestore,
-              private authService:AuthService) {
-    this.setFamilyService()
+  constructor(private firestore:Firestore) {
+
   }
 
   //crud operation methods
@@ -82,9 +81,9 @@ export class FamilyService {
   }
   async setCurrentFamily(){
     const tempCurrentFamily = await firstValueFrom((this.getCurrentFamilyByFamilyId().pipe(take(1))))
-    this.currentFamily=tempCurrentFamily[0];
+    this.currentFamily=tempCurrentFamily.filter(f=>f.id===this.currentFamilyId);
     console.log('the current Family = ');
-    console.log(this.currentFamily.name)
+    console.log(this.currentFamily[0].name)
   }
 
   //get data methods
@@ -108,7 +107,7 @@ export class FamilyService {
   }
   getFamilyName(): string {
     if(this.currentFamily){
-      return this.currentFamily.name;
+      return this.currentFamily[0].name;
     }
     else{
       return 'name was not found'
@@ -153,18 +152,22 @@ export class FamilyService {
     this.currentFamilyId = '';
     this.currentFamily = undefined;
   }
-
-  setFamilyService() {
-    this.setCurrentFamilyMember()
-      .then(()=>{
-        this.setCurrentFamilyId()}
-      )
-      .then(()=>{
-        this.setCurrentFamily()}
-      )
+  setCurrentAttributes(userId:string|undefined) {
+    if(userId){
+      this.currentUserId = userId;
+      this.setCurrentFamilyMember()
+        .then(()=>{
+          this.setCurrentFamilyId()}
+        )
+        .then(()=>{
+          this.setCurrentFamily()}
+        )
+      }
+    else{
+      console.log('something went wrong with the login')
+      //change by information modal
+    }
   }
-
-
 }
 
 
