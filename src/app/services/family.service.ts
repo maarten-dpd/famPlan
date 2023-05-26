@@ -73,21 +73,15 @@ export class FamilyService {
   async setCurrentFamilyMember(){
     const tempCurrentFamilyMember = await firstValueFrom(this.getCurrentFamilyMemberByUserId().pipe(take(1)))
     this.currentFamilyMember = tempCurrentFamilyMember[0];
-    console.log('the current logged in familyMember = ');
-    console.log(this.currentFamilyMember.firstName + this.currentFamilyMember.lastName)
   }
   private setCurrentFamilyId() {
     if(this.currentFamilyMember){
       this.currentFamilyId= this.currentFamilyMember.familyId;
-      console.log('the current FamilyID = ');
-      console.log(this.currentFamilyId)
     }
   }
   async setCurrentFamily(){
     const tempCurrentFamily = await firstValueFrom((this.getCurrentFamilyByFamilyId().pipe(take(1))))
     this.currentFamily=tempCurrentFamily.filter(f=>f.id===this.currentFamilyId);
-    console.log('the current Family = ');
-    console.log(this.currentFamily[0].name)
   }
 
   //get data methods

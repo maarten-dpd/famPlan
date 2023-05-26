@@ -5,6 +5,7 @@ import {PlannedMenu} from '../../../datatypes/plannedMenu';
 import {Recipe} from '../../../datatypes/recipe';
 import {RecipeService} from '../../services/recipe.service';
 import {Subscription} from 'rxjs';
+import {FamilyService} from '../../services/family.service';
 
 @Component({
   selector: 'app-day-card',
@@ -28,6 +29,7 @@ export class DayCardComponent  implements OnInit {
   constructor(public activityService:ActivityService,
               public planningService: PlanningService,
               public recipeService: RecipeService,
+              public familyService: FamilyService,
               private cdr:ChangeDetectorRef
 ) {
   }
@@ -38,6 +40,10 @@ export class DayCardComponent  implements OnInit {
      this.plannedMenus = res;
      this.plannedMenu = this.plannedMenus
        .filter(p => p.date.substring(0, 15) === this.day.toString().substring(0, 15))
+     console.log(this.plannedMenu);
+     this.plannedMenu.filter(p=>p.familyId === this.familyService.currentFamilyId)
+     console.log(this.familyService.currentFamilyId);
+     console.log(this.plannedMenu);
      if(this.plannedMenu.length>0){
        this.recipeId = this.plannedMenu[0].recipeId;
        this.menuplanned = true;

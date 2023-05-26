@@ -54,24 +54,12 @@ export class PlanningService {
 
   //get data methods
   getAllPlannedMenusForFamily() {
-    if(this.familyService.currentFamilyId){
-      return collectionData<PlannedMenu>(
-        query<PlannedMenu>(
-          this.#getCollectionRef('plannedMenus'),
-          where('familyId','==', this.familyService.currentFamilyId)
-        ),
-        {idField: 'id'}
-      );
-    }
-    else{
       return collectionData<PlannedMenu>(
         query<PlannedMenu>(
           this.#getCollectionRef('plannedMenus'),
         ),
         {idField: 'id'}
       );
-    }
-
   }
 
   //Misc methods
