@@ -72,7 +72,7 @@ export class SelectMenuPage implements OnInit {
       menuToUpdate.recipeId = r.id;
       this.planningService.updatePlannedMenu(menuToUpdate.id,menuToUpdate);
     }
-    //otherwise create a new plannedMenu
+    //otherwise create a new plannedMenusFilteredOnDate
     else{
       this.planningService.createPlannedMenu(r.id, d.toString());
     }

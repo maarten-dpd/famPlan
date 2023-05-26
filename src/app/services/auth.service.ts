@@ -13,6 +13,7 @@ import { GoogleAuthProvider,  User} from 'firebase/auth';
 import {Capacitor} from '@capacitor/core';
 import {BehaviorSubject} from 'rxjs';
 import {FamilyService} from './family.service';
+import {Firestore} from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class AuthService {
 
   constructor(private auth: Auth,
               private router: Router,
-              public familyService:FamilyService
+              public familyService:FamilyService,
+              private fireStore:Firestore
               ) {
     this.auth.onAuthStateChanged((user: User | null) => {
 
@@ -46,10 +48,12 @@ export class AuthService {
   }
   async signOut(): Promise<void> {
     await FirebaseAuthentication.signOut().then(()=>{
+      this.router.navigate(['/'])
     });
 
     if (Capacitor.isNativePlatform()) {
       await signOut(this.auth).then(()=>{
+        // this.router.navigate(['/'])
       });
     }
   }

@@ -20,13 +20,6 @@ import {FamilyService} from './family.service';
 export class RecipeService {
 
   constructor(private firestore:Firestore, private familyService:FamilyService) {
-    // this.createRecipe('recipe 1',['100 gr boter', '2 kilo aardappelen'],
-    //   30,30,['schil de aardappelen', 'kook in een pot met ruim water voor 20 minuten', 'giet af', 'bak de aardappelen 10 minuten in de boter']
-    // ,'gebakken aardappelen')
-    // this.createRecipe('recipe 2',['0.5liter frit vet', '2 kilo aardappelen', '2 grote biefstukken', '150 gr boter'],
-    //   20,25,['schil de aardappelen', 'snijd ze in frietjes',
-    //     'kook in een pot met ruim water voor 20 minuten','maak een koekenpan super warm','bak de biefstuk aan beide kanten','giet de aardappelen af', 'frituur de aardappelen 5 minuten']
-    //   ,'patatfriet')
   }
 
   //crud operations
