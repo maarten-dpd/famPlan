@@ -8,15 +8,19 @@ import {Subscription} from 'rxjs';
   templateUrl: './family-settings.page.html',
   styleUrls: ['./family-settings.page.scss'],
 })
+
 export class FamilySettingsPage implements OnInit {
+//attributes
   fabIsVisible = true;
   familyName = this.familyService.getFamilyName();
   #familymemberSub!:Subscription;
   familyMembers: FamilyMember[]=[];
 
+//constructor
   constructor(public familyService: FamilyService,
               private cdr: ChangeDetectorRef) {  }
 
+//On Init/destroy
   ngOnInit() {
     this.#familymemberSub = this.familyService.getFamilyMembersByFamilyId()
       .subscribe((res=>{

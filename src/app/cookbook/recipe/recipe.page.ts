@@ -8,14 +8,15 @@ import {PhotoService} from '../../services/photo.service';
 import {StringInputModalPageComponent} from '../../shared/string-input-modal-page/string-input-modal-page.component';
 import {Recipe} from '../../../datatypes/recipe';
 import {Subscription} from 'rxjs';
-import {Foto} from '../../../datatypes/foto';
 
 @Component({
   selector: 'app-recipe',
   templateUrl: './recipe.page.html',
   styleUrls: ['./recipe.page.scss'],
 })
+
 export class RecipePage implements OnInit {
+ //attributes
   recipeName: string = '';
   recipePhotoId: string  = '';
   prepTime: number = 0;
@@ -28,12 +29,9 @@ export class RecipePage implements OnInit {
   instructions: string[] =[];
   id: string | null ='';
   fromMenuSelector: string | null = '';
-  photos: Foto[]=[];
-  recipePhoto?: Foto;
-  recipePhotoSource: string = '';
-  recipeHasPhoto:boolean=false;
-  recipeImageBlob!:Blob;
   recipePhotoUrl: string = '';
+
+ //constructor
   constructor(public navController: NavController,
               public recipeService: RecipeService,
               public activatedRoute: ActivatedRoute,
@@ -42,6 +40,8 @@ export class RecipePage implements OnInit {
               private actionSheetCtrl: ActionSheetController,
               private modalController: ModalController,
               private cdr:ChangeDetectorRef) {}
+
+ //init/destroy/setData
   ngOnInit() {
     this.setData();
   }
@@ -80,6 +80,8 @@ export class RecipePage implements OnInit {
       }
     });
   }
+
+ //update and create
   handleCreateAndUpdate(): void {
     if (this.id) {
       this.updateRecipe();
@@ -119,6 +121,8 @@ export class RecipePage implements OnInit {
       //replace by modal to give user warning
     }
   }
+
+ //functionality to input ingredients/instructions
   async addIngredient() {
     await this.presentInputModal('add an ingredient','ingredient')
   }
@@ -147,25 +151,15 @@ export class RecipePage implements OnInit {
     });
     return await modal.present();
   }
-  async putPhotoIn() {
-    console.log('calling photo service')
-    await this.photoService.takePhoto().then((res)=>{
-      console.log('take photo finished');
-      this.recipePhotoId = res;
-      this.photoService.getPhotoById(this.recipePhotoId).subscribe((res)=>{
-        if(res && res.length>0){
-          this.recipePhoto = res[0];
-          this.recipeHasPhoto = true;
-        }
-      })
-    })
-  }
+
+ //functionality to take a picture, this calls the photo service and gets a url back
   async takePictureOfFood(){
     this.photoService.getPhotoSaveInStorageReturnUrl().then((res)=>{
-      console.log(res);
         if(typeof res === 'string' ) this.recipePhotoUrl = res;
     })
   }
+
+ //functionality to handle labels
   isSelectedLabel(label: Label) {
     return this.selectedLabels.some(l=>l === label.id);
   }

@@ -30,16 +30,19 @@
       <ion-icon name='add' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-  <ion-list *ngIf="recipes.length > 0">
-    <app-recipe-item  *ngFor='let r of recipes'
+  <ion-grid>
+    <ion-row>
+      <ion-list *ngIf="recipes.length > 0">
+        <app-recipe-item  *ngFor='let r of recipes'
                         [recipe]='r'>
-    </app-recipe-item>
-  </ion-list>
-  <ion-item *ngIf="recipes.length === 0">
-    <div>
-      <h3>An empty cookbook fills no stomach</h3>
-      <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>
-    </div>
-  </ion-item>
+        </app-recipe-item>
+      </ion-list>
+      <ion-item *ngIf="recipes.length === 0">
+        <div>
+          <h3>An empty cookbook fills no stomach</h3>
+          <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>
+        </div>
+      </ion-item>
+    </ion-row>
+  </ion-grid>
 </ion-content>

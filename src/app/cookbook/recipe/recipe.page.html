@@ -26,15 +26,10 @@
     </ion-item>
   </ion-row>
   <ion-row>
-    <ion-img *ngIf="recipePhotoUrl" [src]="recipePhotoUrl"/>
     <ion-item *ngIf="recipePhotoId">
-      <ion-list>
-        <ion-item>
-          <ion-img [src]="recipePhotoSource"></ion-img>
-        </ion-item>
-      </ion-list>
+      <ion-img *ngIf="recipePhotoUrl" [src]="recipePhotoUrl"/>
       <ion-item-divider/>
-      <ion-button (click)="putPhotoIn()">change photo</ion-button>
+      <ion-button (click)="takePictureOfFood()">change photo</ion-button>
     </ion-item>
     <ion-item *ngIf="!recipePhotoId">
       <ion-button (click)="takePictureOfFood()">add photo</ion-button>

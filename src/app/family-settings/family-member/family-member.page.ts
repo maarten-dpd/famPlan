@@ -9,16 +9,21 @@ import {FamilyMember} from '../../../datatypes/familyMember';
   templateUrl: './family-member.page.html',
   styleUrls: ['./family-member.page.scss'],
 })
+
 export class FamilyMemberPage implements OnInit {
+//attributes
   firstName: string = '';
   lastName: string = '';
   email: string = '';
   userId: string ='';
   id:string | null='';
 
+//constructor
   constructor(public familyService: FamilyService,
               public activatedRoute:ActivatedRoute,
               public navController: NavController) { }
+
+//on init/destroy/setData
   ngOnInit() {
     this.setData();
   }
@@ -41,6 +46,8 @@ export class FamilyMemberPage implements OnInit {
       })
     }
   }
+
+//create and update
   handleCreateAndUpdate() {
     if (this.id) {
       this.updateFamilyMember();
@@ -50,7 +57,9 @@ export class FamilyMemberPage implements OnInit {
     this.navController.back();
   }
   private createFamilyMember() {
-    this.familyService.createFamilyMember(this.firstName, this.lastName, this.email, this.userId);
+    this.familyService.createFamilyMember(this.firstName, this.lastName, this.email, this.userId).then(()=>{
+      console.log('family member created')
+    });
   }
   private updateFamilyMember() {
     if(this.id){
@@ -62,10 +71,12 @@ export class FamilyMemberPage implements OnInit {
         userId:this.userId,
         familyId:this.familyService.currentFamilyId
       }
-      this.familyService.updateFamilyMember(this.id,familyMemberToUpdate)
+      this.familyService.updateFamilyMember(this.id,familyMemberToUpdate).then(()=>{
+        console.log('family member updated')
+      })
     }
     else{
-      console.log('FamilyMember has no id field and can not be deleted')
+      console.log('FamilyMember has no id field and can not be updated')
       //replace by modal to give user warning
     }
   }

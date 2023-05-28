@@ -4,7 +4,6 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-
     <ion-buttons slot="end">
       <ion-button (click)="handleCreateAndUpdate()">
         <ion-icon slot="icon-only" name="checkmark"></ion-icon>
@@ -14,24 +13,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-  <ion-item lines="full">
-    <ion-label position="floating">Firstname</ion-label>
-    <ion-input type="text" class="ion-margin-top"
-               [(ngModel)]='firstName'></ion-input>
-  </ion-item>
-
-  <ion-item lines="full">
-    <ion-label position="floating">Lastname</ion-label>
-    <ion-textarea cols="20" rows="4" [autoGrow]="true"
-                  [(ngModel)]='lastName'>
-    </ion-textarea>
-  </ion-item>
-  <ion-item lines="full">
-    <ion-label position="floating">email</ion-label>
-    <ion-textarea cols="20" rows="4" [autoGrow]="true"
-                  [(ngModel)]='email'>
-    </ion-textarea>
-  </ion-item>
-
+  <ion-grid>
+    <ion-row>
+      <ion-item lines="full">
+        <ion-label position="floating">Firstname</ion-label>
+        <ion-input type="text" [(ngModel)]='firstName'></ion-input>
+      </ion-item>
+    </ion-row>
+    <ion-row>
+      <ion-label position="floating">Lastname</ion-label>
+      <ion-input [(ngModel)]='lastName'></ion-input>
+    </ion-row>
+    <ion-row>
+      <ion-item lines="full">
+        <ion-label position="floating">email</ion-label>
+        <ion-input type="email" [(ngModel)]='email'></ion-input>
+      </ion-item>
+    </ion-row>
+  </ion-grid>
 </ion-content>
