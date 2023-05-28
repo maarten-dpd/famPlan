@@ -1,82 +1,209 @@
 import {Injectable} from '@angular/core';
-import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
-import {Directory, Filesystem} from '@capacitor/filesystem';
+import {Camera, PermissionStatus, Photo, CameraResultType, CameraSource} from '@capacitor/camera';
+import {Filesystem} from '@capacitor/filesystem';
 import {ActionSheetController} from '@ionic/angular';
-
+import {
+  addDoc,
+  collection, collectionData,
+  CollectionReference,
+  doc,
+  DocumentReference,
+  Firestore, query,
+  setDoc, where
+} from '@angular/fire/firestore';
+import {Preferences} from '@capacitor/preferences';
+import {Capacitor} from '@capacitor/core';
+import {Foto} from '../../datatypes/foto';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PhotoService {
-  photoObject: {dataUrl: string} = {dataUrl: ''};
-  constructor(private actionSheetCtrl: ActionSheetController) { }
+  // photoObject: {dataUrl: string} = {dataUrl: ''};
+  readonly #photos: Photo[]=[];
+  readonly #key = 'photos';
 
-  async selectOrTakePhoto(): Promise<{dataUrl:string | undefined}>{
-    let takePhotoSelected = false;
-    const buttons = [
-      {
-        text: 'Take picture',
-        icon: 'camera',
-        handler: () => {
-          takePhotoSelected = true;
-          return true;
-        }
-      },
-      {
-        text:'choose picture',
-        icon: 'image',
-        handler: ()=>{
-          takePhotoSelected=false;
-          return true;
-        }
-      },
-      {
-        text:'cancel',
-        role:'cancel'
-      }
-    ];
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Select or take Photo',
-      buttons: buttons
-    })
-    await actionSheet.present();
-    if(takePhotoSelected){
-      return this.takePhoto();
+  #photoURIs:string[] = [];
+  #permissionGranted: PermissionStatus={camera:'prompt', photos:'prompt'};
+  constructor(private actionSheetCtrl: ActionSheetController,
+              private fireStore:Firestore) { this.#loadData()}
+
+  getPhotos(){
+    return this.#photos;
+  }
+  getPhotoById(photoId:string){
+    return collectionData<Foto>(
+      query<Foto>(
+        this.#getCollectionRef('photos'),
+        where('id','==',photoId)
+      ),
+      {idField: 'id'}
+    )
+  }
+  async #retrievePhotoURIs(): Promise<void> {
+    const uris = await Preferences.get({key: this.#key});
+    if (typeof uris.value === 'string') {
+      this.#photoURIs = uris ? JSON.parse(uris.value) : [];
     }
-    else{
-      return this.choosePhoto();
-    }
-    return new Promise<{ dataUrl: string }>((resolve, reject) => {
-      actionSheet.onDidDismiss().then(() => {
-        resolve(this.photoObject);
-      });
+  }
+
+  async #persistPhotoURIs(): Promise<void> {
+    await Preferences.set({
+      key: this.#key,
+      value: JSON.stringify(this.#photoURIs)
     });
-
+    console.log(Preferences)
   }
-  async takePhoto(){
-    const capturedPhoto = await Camera.getPhoto({resultType: CameraResultType.DataUrl,
-    source:CameraSource.Camera});
-    if (capturedPhoto.dataUrl != null) {
-      this.photoObject.dataUrl = capturedPhoto.dataUrl;
+  async #requestPermissions(): Promise<void> {
+    try {
+      this.#permissionGranted = await Camera.requestPermissions({permissions: ['photos', 'camera']});
+    } catch (error) {
+      console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
     }
-      return {dataUrl: capturedPhoto.dataUrl}
   }
 
-  async choosePhoto(): Promise<{ dataUrl: string }> {
+  async #retrievePermissions(): Promise<void> {
+    try {
+      this.#permissionGranted = await Camera.checkPermissions();
+    } catch (error) {
+      console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
+    }
+  }
+  #haveCameraPermission(): boolean {
+    return this.#permissionGranted.camera === 'granted';
+  }
+
+  #havePhotosPermission(): boolean {
+    return this.#permissionGranted.photos === 'granted';
+  }
+  #determinePhotoSource(): CameraSource {
+    if (this.#havePhotosPermission() && this.#haveCameraPermission()) {
+      return CameraSource.Prompt;
+    } else {
+      return this.#havePhotosPermission() ?
+        CameraSource.Photos : CameraSource.Camera;
+    }
+  }
+  async #takePhotoNative() {
     const image = await Camera.getPhoto({
-      source: CameraSource.Photos,
-      resultType: CameraResultType.Uri,
+      quality: 90,
+      resultType: CameraResultType.Base64,
+      saveToGallery: this.#havePhotosPermission(),
+      source: this.#determinePhotoSource()
     });
-
-    if(!image.path){
-      throw new Error('Unable to get file path');
-    }
-    const file = await Filesystem.readFile({
-      path: image.path,
-      directory: Directory.Data,
-    });
-
-    return { dataUrl: `data:image/jpeg;base64,${file.data}` };
+    return await this.#saveImageToFileSystem(image);
   }
+  async #takePhotoPWA() {
+    console.log('take photo pwa execute')
+    const image = await Camera.getPhoto({
+      quality: 90,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Camera
+    });
+    console.log (image)
+    return await this.#saveImageToFileSystem(image);
+  }
+  async #saveImageToFileSystem(photo: Photo){
+    console.log('saveImageToFileSystem entered')
+    let newPhotoId = '';
+    if (!photo.base64String) {
+      throw new Error(`Can't write the photo to the filesystem because there is no base64 data.`)
+    }
+    await this.createPhotoAndReturnNewPhotoId(photo).then((res)=>{
+      console.log(res);
+      newPhotoId = res;
+    })
+    return newPhotoId;
+    // const fileName = `${new Date().getTime()}.${photo.format}`;
+    // const savedFile = await Filesystem.writeFile({
+    //   path: fileName,
+    //   data: photo.base64String,
+    //   directory: Directory.Data
+    // });
+    // console.log(savedFile)
+    // return savedFile.uri;
+  }
+  async createPhotoAndReturnNewPhotoId(photo: Photo){
+    const newPhoto ={
+      photo: photo.base64String,
+      id:''
+    };
+    const docRef = await addDoc(
+      this.#getCollectionRef<Foto>('photos'),
+      newPhoto
+    );
+    newPhoto.id=docRef.id;
+    await setDoc(docRef, newPhoto);
+    return newPhoto.id;
+  }
+  async takePhoto() {
+    let newPhotoId = '';
+    if (!this.#haveCameraPermission() || !this.#havePhotosPermission()) {
+      await this.#requestPermissions();
+    }
+
+    if (Capacitor.isNativePlatform()) {
+      console.log('takePhotoNative entered')
+      await this.#takePhotoNative().then((res)=>{
+        newPhotoId = res;
+      });
+    } else {
+      console.log('takePhotoPWA entered')
+      await this.#takePhotoPWA().then((res)=>{
+        newPhotoId=res;
+      });
+    }
+    await this.#persistPhotoURIs();
+    console.log('photourispersisted')
+    return newPhotoId;
+  }
+  async #loadPhotos(): Promise<void> {
+    if (Capacitor.isNativePlatform()) {
+      await this.#loadPhotosNative();
+    } else {
+      await this.#loadPhotosPWA();
+    }
+  }
+  #getPhotoFormat(uri: string): string {
+    const splitUri = uri.split('.');
+    return splitUri[splitUri.length - 1];
+  }
+  async #loadPhotosNative(): Promise<void> {
+    for (const uri of this.#photoURIs) {
+      this.#photos.push({
+        path: uri,
+        format: this.#getPhotoFormat(uri),
+        webPath: Capacitor.convertFileSrc(uri),
+        saved: this.#havePhotosPermission()
+      });
+    }
+  }
+  async #loadPhotosPWA(): Promise<void> {
+    for (const uri of this.#photoURIs) {
+
+      const data = await Filesystem.readFile({
+        path: uri
+      });
+
+      const format = this.#getPhotoFormat(uri);
+      this.#photos.push({
+        dataUrl: `data:image/${format};base64,${data.data}`,
+        format,
+        path: uri,
+        saved: false
+      });
+    }
+  }
+  async #loadData(): Promise<void> {
+    await this.#retrievePhotoURIs();
+    await this.#retrievePermissions();
+    await this.#loadPhotos();
+  }
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.fireStore, collectionName) as CollectionReference<T>;
+  }
+  // #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+  //   return doc(this.fireStore, `${collectionName}/${id}`) as DocumentReference<T>;
+  // }
 }

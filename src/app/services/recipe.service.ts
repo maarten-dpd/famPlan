@@ -23,7 +23,7 @@ export class RecipeService {
 
   //crud operations
   async createRecipe(name: string, ingredients: string[], prepTime: number, cookingTime: number,
-                     instructions:string[], description: string, selectedLabels: string[] = [], photoUrl?:string) {
+                     instructions:string[], description: string, selectedLabels: string[] = [], photoId?:string) {
     const newRecipe ={
       name,
       id: '',
@@ -33,7 +33,7 @@ export class RecipeService {
       instructions,
       description,
       selectedLabels,
-      photoUrl,
+      photoId,
       familyId: this.familyService.currentFamilyId
     };
     const docRef=await addDoc(

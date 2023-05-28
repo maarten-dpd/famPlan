@@ -8,6 +8,7 @@ import {PhotoService} from '../../services/photo.service';
 import {StringInputModalPageComponent} from '../../shared/string-input-modal-page/string-input-modal-page.component';
 import {Recipe} from '../../../datatypes/recipe';
 import {Subscription} from 'rxjs';
+import {Foto} from '../../../datatypes/foto';
 
 @Component({
   selector: 'app-recipe',
@@ -16,7 +17,7 @@ import {Subscription} from 'rxjs';
 })
 export class RecipePage implements OnInit {
   recipeName: string = '';
-  recipePhotoUrl: string | undefined = '';
+  recipePhotoId: string  = '';
   prepTime: number = 0;
   cookingTime: number = 0;
   description: string = '';
@@ -27,7 +28,9 @@ export class RecipePage implements OnInit {
   instructions: string[] =[];
   id: string | null ='';
   fromMenuSelector: string | null = '';
-
+  #photoSub!:Subscription;
+  photos: Foto[]=[];
+  recipePhoto: Foto[]=[];
   constructor(public navController: NavController,
               public recipeService: RecipeService,
               public activatedRoute: ActivatedRoute,
@@ -50,6 +53,14 @@ export class RecipePage implements OnInit {
       this.labels.sort();
       this.cdr.detectChanges();
     })
+    this.#photoSub = this.photoService.getPhotoById(this.recipePhotoId).subscribe(res=>{
+      console.log(this.recipePhotoId)
+      console.log('result of getPhotoById')
+      console.log(res)
+      this.photos = res;
+      this.recipePhoto = this.photos.filter(f=>f.id === this.recipePhotoId);
+      this.cdr.detectChanges();
+    })
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
       this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
@@ -68,8 +79,8 @@ export class RecipePage implements OnInit {
         this.instructions = recipe.instructions;
         this.description = recipe.description;
         this.selectedLabels = recipe.selectedLabels;
-        if (recipe.photoUrl != null) {
-          this.recipePhotoUrl = recipe.photoUrl;
+        if (recipe.photoId != null) {
+          this.recipePhotoId = recipe.photoId;
         }
       }
     }) ;
@@ -86,7 +97,9 @@ export class RecipePage implements OnInit {
   }
   private createRecipe(): void {
     this.recipeService.createRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
-      this.instructions, this.description, this.selectedLabels,this.recipePhotoUrl);
+      this.instructions, this.description, this.selectedLabels,this.recipePhotoId).then(()=>{
+        console.log('recipe created')
+    });
   }
   private updateRecipe(): void {
     if(this.id){
@@ -99,9 +112,11 @@ export class RecipePage implements OnInit {
         ingredients: this.ingredients,
         instructions:this.instructions,
         selectedLabels: this.selectedLabels,
-        photoUrl:this.recipePhotoUrl
+        photoId:this.recipePhotoId
       }
-      this.recipeService.updateRecipe(this.id,recipeToUpdate);
+      this.recipeService.updateRecipe(this.id,recipeToUpdate).then(()=>{
+        console.log('recipe updated')
+      });
     }
     else{
       console.log('recipe has no id field and can not be deleted')
@@ -138,9 +153,13 @@ export class RecipePage implements OnInit {
     });
     return await modal.present();
   }
-  putPhotoIn() {
-    this.photoService.selectOrTakePhoto().then(photo =>{
-      this.recipePhotoUrl = photo.dataUrl;
+  async putPhotoIn() {
+    console.log('calling photo service')
+    await this.photoService.takePhoto().then((res)=>{
+      console.log('take photo finished');
+      this.recipePhotoId = res;
+      console.log(this.recipePhotoId)
+      console.log(this.recipePhoto)
     })
   }
   isSelected(label: Label) {

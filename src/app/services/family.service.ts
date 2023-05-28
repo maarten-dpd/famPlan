@@ -133,7 +133,6 @@ export class FamilyService {
   }
   getFamilyName(): string {
     if(this.currentFamily){
-      console.log(this.currentFamily[0]);
       return this.currentFamily[0].name;
     }
     else{
