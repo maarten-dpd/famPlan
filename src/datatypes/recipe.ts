@@ -7,7 +7,7 @@ export interface IRecepy{
   instructions: string[];
   description: string;
   selectedLabels: string[];
-  photoId: string;
+  photoUrl: string;
   familyId:string;
 }
 
@@ -21,7 +21,7 @@ export class Recipe {
   instructions!: string[];
   description!: string;
   selectedLabels:string[]=[];
-  photoId?: string;
+  photoUrl?: string;
   familyId?:string;
 
   constructor(obj: IRecepy) {

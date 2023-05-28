@@ -15,18 +15,24 @@ import {LabelService} from './services/label.service';
 import {PhotoService} from './services/photo.service';
 import {PlanningService} from './services/planning.service';
 import {RecipeService} from './services/recipe.service';
+import {getStorage, provideStorage} from '@angular/fire/storage';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents:[],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
-  provideFirebaseApp(()=>initializeApp(environment.firebaseConfig)),
-  provideAuth(()=>getAuth()),
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    provideFirebaseApp(()=>initializeApp(environment.firebaseConfig)),
+    provideAuth(()=>getAuth()),
+    provideStorage(()=>getStorage()),
     provideFirestore(()=>{
       const firestore = getFirestore();
       enableMultiTabIndexedDbPersistence(firestore);
       return firestore;
     })
+
   ],
   providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     ActivityService,

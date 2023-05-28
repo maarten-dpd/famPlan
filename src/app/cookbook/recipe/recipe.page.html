@@ -25,15 +25,21 @@
                  [(ngModel)]='recipeName'></ion-input>
     </ion-item>
   </ion-row>
-<!--  <ion-row>-->
-<!--    <ion-item *ngIf="recipePhotoUrl">-->
-<!--      <ion-img [src]="recipePhotoUrl"></ion-img>-->
-<!--      <ion-button (click)="putPhotoIn()">change foto</ion-button>-->
-<!--    </ion-item>-->
-    <ion-item (click)="putPhotoIn()">
-      add photo
+  <ion-row>
+    <ion-img *ngIf="recipePhotoUrl" [src]="recipePhotoUrl"/>
+    <ion-item *ngIf="recipePhotoId">
+      <ion-list>
+        <ion-item>
+          <ion-img [src]="recipePhotoSource"></ion-img>
+        </ion-item>
+      </ion-list>
+      <ion-item-divider/>
+      <ion-button (click)="putPhotoIn()">change photo</ion-button>
     </ion-item>
-<!--  </ion-row>-->
+    <ion-item *ngIf="!recipePhotoId">
+      <ion-button (click)="takePictureOfFood()">add photo</ion-button>
+    </ion-item>
+  </ion-row>
   <ion-row>
     <ion-item lines="full">
       <ion-label position="floating">Preparation time</ion-label>
@@ -88,14 +94,14 @@
       <ion-list-header>
         Labels
       </ion-list-header>
-      <ion-item *ngFor='let label of labels'>
+      <ion-item *ngFor='let l of labels'>
         <ion-checkbox
           slot='start'
-          [color]='label.color'
-          [ngModel]='isSelected(label)'
-          (ionChange)="changeLabelSelection(label)">
+          [color]='l.color'
+          [ngModel]='isSelectedLabel(l)'
+          (ionChange)="changeLabelSelection(l)">
         </ion-checkbox>
-        <ion-label [color]='label.color'>{{label.name}}</ion-label>
+        <ion-label [color]='l.color'>{{l.name}}</ion-label>
       </ion-item>
     </ion-list>
   </ion-row>

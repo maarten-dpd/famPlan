@@ -28,9 +28,12 @@ export class RecipePage implements OnInit {
   instructions: string[] =[];
   id: string | null ='';
   fromMenuSelector: string | null = '';
-  #photoSub!:Subscription;
   photos: Foto[]=[];
-  recipePhoto: Foto[]=[];
+  recipePhoto?: Foto;
+  recipePhotoSource: string = '';
+  recipeHasPhoto:boolean=false;
+  recipeImageBlob!:Blob;
+  recipePhotoUrl: string = '';
   constructor(public navController: NavController,
               public recipeService: RecipeService,
               public activatedRoute: ActivatedRoute,
@@ -53,14 +56,6 @@ export class RecipePage implements OnInit {
       this.labels.sort();
       this.cdr.detectChanges();
     })
-    this.#photoSub = this.photoService.getPhotoById(this.recipePhotoId).subscribe(res=>{
-      console.log(this.recipePhotoId)
-      console.log('result of getPhotoById')
-      console.log(res)
-      this.photos = res;
-      this.recipePhoto = this.photos.filter(f=>f.id === this.recipePhotoId);
-      this.cdr.detectChanges();
-    })
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
       this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
@@ -79,13 +74,11 @@ export class RecipePage implements OnInit {
         this.instructions = recipe.instructions;
         this.description = recipe.description;
         this.selectedLabels = recipe.selectedLabels;
-        if (recipe.photoId != null) {
-          this.recipePhotoId = recipe.photoId;
+        if(recipe.photoUrl){
+          this.recipePhotoUrl = recipe.photoUrl;
         }
       }
-    }) ;
-
-
+    });
   }
   handleCreateAndUpdate(): void {
     if (this.id) {
@@ -97,7 +90,7 @@ export class RecipePage implements OnInit {
   }
   private createRecipe(): void {
     this.recipeService.createRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
-      this.instructions, this.description, this.selectedLabels,this.recipePhotoId).then(()=>{
+      this.instructions, this.description, this.selectedLabels,this.recipePhotoUrl).then(()=>{
         console.log('recipe created')
     });
   }
@@ -112,18 +105,19 @@ export class RecipePage implements OnInit {
         ingredients: this.ingredients,
         instructions:this.instructions,
         selectedLabels: this.selectedLabels,
-        photoId:this.recipePhotoId
+        photoUrl:this.recipePhotoUrl
       }
+      console.log(recipeToUpdate)
       this.recipeService.updateRecipe(this.id,recipeToUpdate).then(()=>{
         console.log('recipe updated')
+      }).then(()=>{
+        this.navController.back()
       });
     }
     else{
-      console.log('recipe has no id field and can not be deleted')
+      console.log('recipe has no id field and can not be updated')
       //replace by modal to give user warning
     }
-
-
   }
   async addIngredient() {
     await this.presentInputModal('add an ingredient','ingredient')
@@ -158,15 +152,25 @@ export class RecipePage implements OnInit {
     await this.photoService.takePhoto().then((res)=>{
       console.log('take photo finished');
       this.recipePhotoId = res;
-      console.log(this.recipePhotoId)
-      console.log(this.recipePhoto)
+      this.photoService.getPhotoById(this.recipePhotoId).subscribe((res)=>{
+        if(res && res.length>0){
+          this.recipePhoto = res[0];
+          this.recipeHasPhoto = true;
+        }
+      })
     })
   }
-  isSelected(label: Label) {
+  async takePictureOfFood(){
+    this.photoService.getPhotoSaveInStorageReturnUrl().then((res)=>{
+      console.log(res);
+        if(typeof res === 'string' ) this.recipePhotoUrl = res;
+    })
+  }
+  isSelectedLabel(label: Label) {
     return this.selectedLabels.some(l=>l === label.id);
   }
   changeLabelSelection(label: Label) {
-    if(this.isSelected(label)){
+    if(this.isSelectedLabel(label)){
       const index = this.selectedLabels.findIndex(l=>l === label.id);
       if (index !== -1){
         this.selectedLabels.splice(index, 1);
@@ -176,4 +180,5 @@ export class RecipePage implements OnInit {
     }
   }
   protected readonly Number = Number;
+
 }

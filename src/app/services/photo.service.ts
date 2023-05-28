@@ -1,20 +1,22 @@
 import {Injectable} from '@angular/core';
-import {Camera, PermissionStatus, Photo, CameraResultType, CameraSource} from '@capacitor/camera';
+import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@capacitor/camera';
 import {Filesystem} from '@capacitor/filesystem';
 import {ActionSheetController} from '@ionic/angular';
 import {
   addDoc,
-  collection, collectionData,
+  collection,
+  collectionData,
   CollectionReference,
-  doc,
-  DocumentReference,
-  Firestore, query,
-  setDoc, where
+  Firestore,
+  query,
+  setDoc,
+  where
 } from '@angular/fire/firestore';
 import {Preferences} from '@capacitor/preferences';
 import {Capacitor} from '@capacitor/core';
 import {Foto} from '../../datatypes/foto';
-
+import {decode} from 'base64-arraybuffer';
+import {getDownloadURL, ref, Storage, uploadBytes} from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -27,11 +29,9 @@ export class PhotoService {
   #photoURIs:string[] = [];
   #permissionGranted: PermissionStatus={camera:'prompt', photos:'prompt'};
   constructor(private actionSheetCtrl: ActionSheetController,
-              private fireStore:Firestore) { this.#loadData()}
+              private fireStore:Firestore,
+              private storage:Storage) { }
 
-  getPhotos(){
-    return this.#photos;
-  }
   getPhotoById(photoId:string){
     return collectionData<Foto>(
       query<Foto>(
@@ -41,6 +41,33 @@ export class PhotoService {
       {idField: 'id'}
     )
   }
+
+  async getPhotoSaveInStorageReturnUrl(): Promise<string | undefined> {
+    try {
+      const photo = await Camera.getPhoto({
+        resultType: CameraResultType.Base64
+      });
+
+      if (photo.base64String != null) {
+        const blob = new Blob([new Uint8Array(decode(photo.base64String))], {
+          type: `image/${photo.format}`
+        });
+
+        const fileName = `${new Date().getTime()}.${photo.format}`;
+        const storageRef = ref(this.storage, `photos/${fileName}`);
+        await uploadBytes(storageRef, blob);
+        const photoUrl = await getDownloadURL(storageRef);
+
+        return photoUrl;
+      }
+
+      return undefined;
+    } catch (error) {
+      console.error('Error getting and saving photo:', error);
+      return undefined;
+    }
+  }
+
   async #retrievePhotoURIs(): Promise<void> {
     const uris = await Preferences.get({key: this.#key});
     if (typeof uris.value === 'string') {
@@ -101,6 +128,7 @@ export class PhotoService {
       resultType: CameraResultType.Base64,
       source: CameraSource.Camera
     });
+
     console.log (image)
     return await this.#saveImageToFileSystem(image);
   }
@@ -127,6 +155,7 @@ export class PhotoService {
   async createPhotoAndReturnNewPhotoId(photo: Photo){
     const newPhoto ={
       photo: photo.base64String,
+      format: photo.format,
       id:''
     };
     const docRef = await addDoc(

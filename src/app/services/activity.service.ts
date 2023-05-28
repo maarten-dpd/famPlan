@@ -12,9 +12,11 @@ import {
 import {FamilyService} from './family.service';
 import {Subscription} from 'rxjs';
 
-@Injectable({
+@Injectable(
+  {
   providedIn: 'root'
-})
+}
+)
 export class ActivityService {
   private count: number = 0;
 
