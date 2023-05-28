@@ -21,6 +21,7 @@ export class FamilySettingsPage implements OnInit {
     this.#familymemberSub = this.familyService.getFamilyMembersByFamilyId()
       .subscribe((res=>{
           this.familyMembers = res;
+          this.familyMembers.sort();
           this.cdr.detectChanges();
         })
       )

@@ -1,5 +1,3 @@
-import {Label} from './label';
-
 export interface IRecepy{
   name: string;
   id: string;
@@ -8,7 +6,7 @@ export interface IRecepy{
   cookingTime: number;
   instructions: string[];
   description: string;
-  labels: Label[];
+  selectedLabels: string[];
   photoUrl: string;
   familyId:string;
 }
@@ -22,7 +20,7 @@ export class Recipe {
   cookingTime!: number;
   instructions!: string[];
   description!: string;
-  labels:Label[]=[];
+  selectedLabels:string[]=[];
   photoUrl?: string;
   familyId?:string;
 

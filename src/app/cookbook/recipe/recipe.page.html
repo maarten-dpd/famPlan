@@ -88,12 +88,11 @@
       <ion-list-header>
         Labels
       </ion-list-header>
-      <ion-item *ngFor='let label of labels | async'>
+      <ion-item *ngFor='let label of labels'>
         <ion-checkbox
           slot='start'
           [color]='label.color'
-          [(ngModel)]='selectedLabels[Number(label.id)]'
-          [checked]="isSelected(label)"
+          [ngModel]='isSelected(label)'
           (ionChange)="changeLabelSelection(label)">
         </ion-checkbox>
         <ion-label [color]='label.color'>{{label.name}}</ion-label>

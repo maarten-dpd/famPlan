@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, ModalController, NavController} from '@ionic/angular';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
@@ -7,6 +7,7 @@ import {Label} from '../../../datatypes/label';
 import {PhotoService} from '../../services/photo.service';
 import {StringInputModalPageComponent} from '../../shared/string-input-modal-page/string-input-modal-page.component';
 import {Recipe} from '../../../datatypes/recipe';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-recipe',
@@ -19,21 +20,36 @@ export class RecipePage implements OnInit {
   prepTime: number = 0;
   cookingTime: number = 0;
   description: string = '';
-  labels= this.labelService.getLabelsByType('recipe');
-  selectedLabels: Label[] = [];
+  #labelSub!:Subscription;
+  labels:Label[]=[];
+  selectedLabels: string[] = [];
   ingredients: string[] = [];
   instructions: string[] =[];
   id: string | null ='';
   fromMenuSelector: string | null = '';
 
-  constructor(public navController: NavController, public recipeService: RecipeService,
-              public activatedRoute: ActivatedRoute, public labelService: LabelService,
-              public photoService: PhotoService, private actionSheetCtrl: ActionSheetController,
-              private modalController: ModalController) {}
+  constructor(public navController: NavController,
+              public recipeService: RecipeService,
+              public activatedRoute: ActivatedRoute,
+              public labelService: LabelService,
+              public photoService: PhotoService,
+              private actionSheetCtrl: ActionSheetController,
+              private modalController: ModalController,
+              private cdr:ChangeDetectorRef) {}
   ngOnInit() {
     this.setData();
   }
+  ngOnDestroy(){
+    if(this.#labelSub){
+      this.#labelSub.unsubscribe();
+    }
+  }
   private setData(): void {
+    this.#labelSub = this.labelService.getLabelsByType('recipe').subscribe(res=>{
+      this.labels = res;
+      this.labels.sort();
+      this.cdr.detectChanges();
+    })
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
       this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
@@ -51,7 +67,7 @@ export class RecipePage implements OnInit {
         this.ingredients = recipe.ingredients;
         this.instructions = recipe.instructions;
         this.description = recipe.description;
-        this.selectedLabels = recipe.labels;
+        this.selectedLabels = recipe.selectedLabels;
         if (recipe.photoUrl != null) {
           this.recipePhotoUrl = recipe.photoUrl;
         }
@@ -82,7 +98,7 @@ export class RecipePage implements OnInit {
         prepTime: this.prepTime,
         ingredients: this.ingredients,
         instructions:this.instructions,
-        labels: this.selectedLabels,
+        selectedLabels: this.selectedLabels,
         photoUrl:this.recipePhotoUrl
       }
       this.recipeService.updateRecipe(this.id,recipeToUpdate);
@@ -128,16 +144,16 @@ export class RecipePage implements OnInit {
     })
   }
   isSelected(label: Label) {
-    return this.selectedLabels.some(l=>l.id === label.id);
+    return this.selectedLabels.some(l=>l === label.id);
   }
   changeLabelSelection(label: Label) {
     if(this.isSelected(label)){
-      const index = this.selectedLabels.findIndex(l=>l.id === label.id);
+      const index = this.selectedLabels.findIndex(l=>l === label.id);
       if (index !== -1){
         this.selectedLabels.splice(index, 1);
       }
     } else {
-      this.selectedLabels.push(label);
+      this.selectedLabels.push(label.id);
     }
   }
   protected readonly Number = Number;

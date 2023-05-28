@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FamilyService} from '../../../services/family.service';
 import {LabelService} from '../../../services/label.service';
 import {ActivityService} from '../../../services/activity.service';
@@ -34,7 +34,8 @@ export class ActivityPage implements OnInit {
               public labelService: LabelService,
               public activityService: ActivityService,
               public activatedRoute : ActivatedRoute,
-              public navController: NavController) {
+              public navController: NavController,
+              private cdr:ChangeDetectorRef) {
     const currentYear:number = (new Date().getFullYear());
     for (let year = currentYear; year<(currentYear + 100); year++){
       this.yearValues.push(year);
@@ -62,9 +63,13 @@ export class ActivityPage implements OnInit {
   private setData() : void {
     this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe((res)=>{
       this.familyMembers = res;
+      this.familyMembers.sort();
+      this.cdr.detectChanges();
     })
     this.#labelSub = this.labelService.getLabelsByType('activity').subscribe(res=>{
       this.labels = res;
+      this.labels.sort();
+      this.cdr.detectChanges();
     })
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
     if(this.id===null){
@@ -124,11 +129,9 @@ export class ActivityPage implements OnInit {
     }
   }
   isSelectedLabel(label: Label) {
-    console.log(label);
     return this.selectedLabels.some(l=>l === label.id);
   }
   changeLabelSelection(label: Label) {
-    console.log(label);
     if(this.isSelectedLabel(label)){
       const index = this.selectedLabels.findIndex(l=>l === label.id);
       if (index !== -1){
@@ -139,7 +142,4 @@ export class ActivityPage implements OnInit {
     }
   }
     protected readonly Number = Number;
-  isSelectedFamilyMember(familyMember: FamilyMember) {
-    return this.selectedParticipants.some(p=>p===familyMember.id)
-  }
 }

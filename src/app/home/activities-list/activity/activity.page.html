@@ -58,7 +58,7 @@
         <ion-item *ngFor='let f of familyMembers'>
           <ion-checkbox
             slot='start'
-            [ngModel]="isSelectedFamilyMember(f)"
+            [ngModel]="isSelectedParticipant(f)"
             (ionChange)="changeParticipantSelection(f)">
           </ion-checkbox>
           <ion-label>{{f.firstName}} {{f.lastName}}</ion-label>

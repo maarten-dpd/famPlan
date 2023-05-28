@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Recipe} from '../../datatypes/recipe';
-import {Label} from '../../datatypes/label';
 import {
   addDoc,
   collection,
@@ -24,7 +23,7 @@ export class RecipeService {
 
   //crud operations
   async createRecipe(name: string, ingredients: string[], prepTime: number, cookingTime: number,
-                     instructions:string[], description: string, labels: Label[] = [], photoUrl?:string) {
+                     instructions:string[], description: string, selectedLabels: string[] = [], photoUrl?:string) {
     const newRecipe ={
       name,
       id: '',
@@ -33,7 +32,7 @@ export class RecipeService {
       cookingTime,
       instructions,
       description,
-      labels,
+      selectedLabels,
       photoUrl,
       familyId: this.familyService.currentFamilyId
     };
@@ -105,7 +104,7 @@ export class RecipeService {
     let result = false
     recipes.subscribe(recipes =>{
       for (const recipe of recipes){
-        const labelUsed = recipe.labels.some(label =>label.id === id);
+        const labelUsed = recipe.selectedLabels.some(label =>label === id);
         if(labelUsed){
           result = true;
         }

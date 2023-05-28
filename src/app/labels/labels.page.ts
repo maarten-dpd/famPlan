@@ -16,6 +16,8 @@ export class LabelsPage implements OnInit {
   fabIsVisible = true;
   #labelSub! : Subscription;
   labels: Label[] = [];
+  recipeLabels: Label[]=[];
+  activityLabels: Label[]=[];
 
   constructor(
     public labelService: LabelService,
@@ -26,6 +28,9 @@ export class LabelsPage implements OnInit {
   ngOnInit() {
     this.#labelSub = this.labelService.getAllLabels().subscribe( res =>{
       this.labels = res;
+      this.labels.sort();
+      this.recipeLabels = this.labels.filter(l=>l.type === 'recipe');
+      this.activityLabels = this.labels.filter(l=>l.type === 'activity')
       this.cdr.detectChanges();
     })
 console.log(this.labels);
