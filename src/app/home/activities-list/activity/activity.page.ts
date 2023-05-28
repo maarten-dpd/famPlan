@@ -25,7 +25,8 @@ export class ActivityPage implements OnInit {
   familyMembers: FamilyMember[]=[];
   participants: FamilyMember[]=[];
   selectedParticipants: string[] = [];
-  // labels = this.labelService.getLabelsByType('activity');
+  #labelSub!:Subscription;
+  labels: Label[]=[];
   selectedLabels: string[] =[];
   yearValues: number[] = []
 
@@ -44,7 +45,10 @@ export class ActivityPage implements OnInit {
   }
   ngOnDestroy(){
     if(this.#familyMemberSub){
-      this.#familyMemberSub.unsubscribe()
+      this.#familyMemberSub.unsubscribe();
+    }
+    if(this.#labelSub){
+      this.#labelSub.unsubscribe();
     }
   }
   handleCreateAndUpdate() {
@@ -59,6 +63,9 @@ export class ActivityPage implements OnInit {
     this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe((res)=>{
       this.familyMembers = res;
     })
+    this.#labelSub = this.labelService.getLabelsByType('activity').subscribe(res=>{
+      this.labels = res;
+    })
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
     if(this.id===null){
       return;
@@ -69,8 +76,7 @@ export class ActivityPage implements OnInit {
     this.location = activity.location;
     this.date = this.dateToParse;
     this.description = activity.description;
-    // this.selectedLabels = activity.labels;
-
+    this.selectedLabels = activity.selectedLabels;
     this.selectedParticipants = activity.participants;
   }
   private updateActivity() {
@@ -117,21 +123,23 @@ export class ActivityPage implements OnInit {
       this.selectedParticipants.push(familyMember.id);
     }
   }
-  // isSelectedLabel(label: Label) {
-  //   return this.selectedLabels.some(l=>l.id === label.id);
-  // }
-  // changeLabelSelection(label: Label) {
-  //   if(this.isSelectedLabel(label)){
-  //     const index = this.selectedLabels.findIndex(l=>l.id === label.id);
-  //     if (index !== -1){
-  //       this.selectedLabels.splice(index, 1);
-  //     }
-  //   } else {
-  //     this.selectedLabels.push(label);
-  //   }
-  // }
+  isSelectedLabel(label: Label) {
+    console.log(label);
+    return this.selectedLabels.some(l=>l === label.id);
+  }
+  changeLabelSelection(label: Label) {
+    console.log(label);
+    if(this.isSelectedLabel(label)){
+      const index = this.selectedLabels.findIndex(l=>l === label.id);
+      if (index !== -1){
+        this.selectedLabels.splice(index, 1);
+      }
+    } else {
+      this.selectedLabels.push(label.id);
+    }
+  }
     protected readonly Number = Number;
-  isFamilyMemberSelected(familyMember: FamilyMember) {
+  isSelectedFamilyMember(familyMember: FamilyMember) {
     return this.selectedParticipants.some(p=>p===familyMember.id)
   }
 }

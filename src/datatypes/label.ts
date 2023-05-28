@@ -19,5 +19,5 @@ export interface Label {
   name: string;
   color?: string;
   type?: string;
-  id?: string;
+  id: string;
 }
