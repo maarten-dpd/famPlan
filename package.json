@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "android": "ionic build --prod && pnpm exec cap sync android && pnpm exec cap open android"
+    "android": "ionic build --prod && pnpm exec cap sync android && pnpm exec cap open android",
+    "android-resources": "capacitor-assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --logoSplashScale 0.5  --android\n"
   },
   "private": true,
   "dependencies": {

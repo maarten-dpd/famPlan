@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('C:\\Users\\maart\\Documents\\2_school\\famPlan\\key.jks')
-            storePassword 'famPlan2!'
-            keyAlias 'famPlan'
-            keyPassword 'famPlan2!'
-        }
-    }
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.deen.maarten.famPlan"
@@ -27,11 +19,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-          signingConfig signingConfigs.debug
         }
-      debug {
-        signingConfig signingConfigs.debug
-      }
     }
 }
 
