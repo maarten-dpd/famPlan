@@ -21,45 +21,23 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
-    <ion-fab-button [routerLink]="['/family-settings','family-member']">
-      <ion-icon name='add' ></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
   <ion-grid>
-    <ion-row>
+    <ion-row id="familyName">
       <ion-col>
         <ion-item>
-          <ion-label>Family Name</ion-label>
+          <ion-label>{{familyName}}</ion-label>
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item lines="full">
-          <ion-input type="text" class="ion-margin-top"
-                     [(ngModel)]='familyName'></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item-divider/>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item lines="full">
-          <ion-label>
+    <ion-row id="familyMembers" class="bgBright">
+      <ion-col class="bgBright txtDark">
+        <ion-item lines="full" class="bgBright txtDark">
+          <ion-label class="bgBright txtDark">
             Family Members
           </ion-label>
         </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
         <ion-item *ngFor='let fm of familyMembers'>
-          <ion-label [routerLink]="['/family-settings','family-member',fm.id]">
+          <ion-label>
             {{fm.firstName}} {{fm.lastName}}
           </ion-label>
         </ion-item>

@@ -4,12 +4,12 @@ import {FamilyMember} from '../../datatypes/familyMember';
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-family-settings',
-  templateUrl: './family-settings.page.html',
-  styleUrls: ['./family-settings.page.scss'],
+  selector: 'app-familyOverview',
+  templateUrl: './familyOverview.page.html',
+  styleUrls: ['./familyOverview.page.scss'],
 })
 
-export class FamilySettingsPage implements OnInit {
+export class FamilyOverviewPage implements OnInit {
 //attributes
   fabIsVisible = true;
   familyName = this.familyService.getFamilyName();

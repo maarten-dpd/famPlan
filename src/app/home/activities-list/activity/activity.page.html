@@ -20,67 +20,77 @@
 <ion-content [fullscreen]="true">
   <ion-grid>
     <ion-row>
-      <ion-item lines="full">
-        <ion-label position="floating">Activity name</ion-label>
-        <ion-input type="text" class="ion-margin-top"
-                   [(ngModel)]='activityName'></ion-input>
-      </ion-item>
-    </ion-row>
-    <ion-row>
-      <ion-item lines="full">
-        <ion-label position="floating">Location</ion-label>
-        <ion-input type="text" class="ion-margin-top"
-                   [(ngModel)]='location'></ion-input>
-      </ion-item>
-    </ion-row>
-    <ion-row>
-      <ion-item lines="full">
-        <ion-label position="floating">Description</ion-label>
-        <ion-textarea cols="20" rows="4" [autoGrow]="true"
-                      [(ngModel)]='description'>
-        </ion-textarea>
-      </ion-item>
-    </ion-row>
-    <ion-row>
-      <ion-item-divider></ion-item-divider>
-      <div class="ion-align-items-center">
-        <ion-datetime firstDayOfWeek="1" [yearValues]="yearValues"
-                      [(ngModel)]='dateToParse' presentation="date">
-        </ion-datetime>
-      </div>
-      <ion-item-divider/>
-    </ion-row>
-    <ion-row>
-      <ion-list lines="none">
-        <ion-list-header>
-          Participants
-        </ion-list-header>
-        <ion-item *ngFor='let f of familyMembers'>
-          <ion-checkbox
-            slot='start'
-            [ngModel]="isSelectedParticipant(f)"
-            (ionChange)="changeParticipantSelection(f)">
-          </ion-checkbox>
-          <ion-label>{{f.firstName}} {{f.lastName}}</ion-label>
+      <ion-col>
+        <ion-item lines="full">
+          <ion-label position="floating">Activity name</ion-label>
+          <ion-input type="text" class="ion-margin-top"
+                     [(ngModel)]='activityName'></ion-input>
         </ion-item>
-      </ion-list>
-      <ion-item-divider/>
+      </ion-col>
     </ion-row>
     <ion-row>
-      <ion-list lines="none">
-        <ion-list-header>
-          Labels
-        </ion-list-header>
-        <ion-item *ngFor='let l of labels'>
-          <ion-checkbox
-            slot='start'
-            [color]='l.color'
-            [ngModel]='isSelectedLabel(l)'
-            (ionChange)="changeLabelSelection(l)">
-          </ion-checkbox>
-          <ion-label [color]='l.color'>{{l.name}}</ion-label>
+      <ion-col>
+        <ion-item lines="full">
+          <ion-label position="floating">Location</ion-label>
+          <ion-input type="text" class="ion-margin-top"
+                     [(ngModel)]='location'></ion-input>
         </ion-item>
-      </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item lines="full">
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea cols="20" rows="4" [autoGrow]="true"
+                        [(ngModel)]='description'>
+          </ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div class="ion-align-items-center">
+          <ion-datetime firstDayOfWeek="1" [yearValues]="yearValues"
+                        [(ngModel)]='dateToParse' presentation="date">
+          </ion-datetime>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list lines="none">
+          <ion-list-header>
+            Participants
+          </ion-list-header>
+          <ion-item *ngFor='let f of familyMembers'>
+            <ion-checkbox
+              slot='start'
+              [ngModel]="isSelectedParticipant(f)"
+              (ionChange)="changeParticipantSelection(f)">
+            </ion-checkbox>
+            <ion-label>{{f.firstName}} {{f.lastName}}</ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-item-divider/>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list lines="none">
+          <ion-list-header>
+            Labels
+          </ion-list-header>
+          <ion-item *ngFor='let l of labels'>
+            <ion-checkbox
+              slot='start'
+              [color]='l.color'
+              [ngModel]='isSelectedLabel(l)'
+              (ionChange)="changeLabelSelection(l)">
+            </ion-checkbox>
+            <ion-label [color]='l.color'>{{l.name}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

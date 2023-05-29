@@ -32,15 +32,17 @@ export class LabelService {
     return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
   }
   //crud operation methods
-  async deleteLabel(id: string): Promise<void> {
+  async deleteLabel(id: string) {
+    let labelDeleted = false
     if(!this.recipeService.labelIsInUse(id)){
       await deleteDoc(this.#getDocumentRef('labels', id));
+      labelDeleted = true;
     }
-    else{
-      console.log('label cant be deleted')
-      //create code to show information modal with ok button - create modal in shared components
+    else if(!this.activityService.labelIsInUse(id)){
+      await deleteDoc(this.#getDocumentRef('labels', id));
+      labelDeleted=true;
     }
-
+      return labelDeleted;
   }
   async createLabel(name: string, color: string, type: string): Promise<void>  {
    const newLabel = {

@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FamilySettingsPageRoutingModule } from './family-settings-routing.module';
+import { FamilySettingsPageRoutingModule } from './familyOverview-routing.module';
 
-import { FamilySettingsPage } from './family-settings.page';
+import { FamilyOverviewPage } from './familyOverview.page';
 
 @NgModule({
   imports: [
@@ -15,6 +15,6 @@ import { FamilySettingsPage } from './family-settings.page';
     IonicModule,
     FamilySettingsPageRoutingModule
   ],
-  declarations: [FamilySettingsPage]
+  declarations: [FamilyOverviewPage]
 })
 export class FamilySettingsPageModule {}

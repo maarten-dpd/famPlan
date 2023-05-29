@@ -3,7 +3,6 @@ export interface IFamilyMember{
   lastName:string;
   id: string;
   email: string;
-  photoUrl:string;
   userId:string;
   familyId:string;
 }
@@ -14,11 +13,8 @@ export class FamilyMember{
   lastName!:string;
   id!: string;
   email!: string;
-  photoUrl?:string;
   userId?:string;
   familyId!:string;
-
-
 
   constructor(obj: IFamilyMember) {
     Object.assign(this,obj);
