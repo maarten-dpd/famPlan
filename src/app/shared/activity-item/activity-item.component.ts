@@ -13,6 +13,7 @@ import {FamilyService} from '../../services/family.service';
   templateUrl: './activity-item.component.html',
   styleUrls: ['./activity-item.component.scss'],
 })
+
 export class ActivityItemComponent  implements OnInit {
 
   @Input() activity: Activity | undefined;
@@ -21,6 +22,7 @@ export class ActivityItemComponent  implements OnInit {
   familyMembers:FamilyMember[]=[]
   participants:FamilyMember[]=[]
   participantIds:string[]=[]
+
   constructor(public activityService: ActivityService,
               public activatedRoute: ActivatedRoute,
               public router:Router,
@@ -49,7 +51,6 @@ export class ActivityItemComponent  implements OnInit {
   async deleteActivity(id: string) {
     console.log('delete activity clicked')
     await this.presentConfirmOrCancelModal(id);
-
   }
   async presentConfirmOrCancelModal(id: string){
     console.log('present modal confirm or cancel')

@@ -12,6 +12,7 @@ import {FamilyService} from '../../services/family.service';
   templateUrl: './day-card.component.html',
   styleUrls: ['./day-card.component.scss'],
 })
+
 export class DayCardComponent  implements OnInit {
 
   @Input() day:Date = new Date();
@@ -26,7 +27,6 @@ export class DayCardComponent  implements OnInit {
   #recipeSub!:Subscription;
   menuplanned = false;
 
-
   constructor(public activityService:ActivityService,
               public planningService: PlanningService,
               public recipeService: RecipeService,
@@ -36,27 +36,17 @@ export class DayCardComponent  implements OnInit {
   }
 
  async ngOnInit() {
-
-
   this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res => {
     this.plannedMenus = res;
     this.plannedMenusFilteredOnDate = this.plannedMenus
       .filter(p => p.date.substring(0, 15) === this.day.toString().substring(0, 15))
     if(this.plannedMenusFilteredOnDate.length>0){
-      // console.log('na filtering op datum bevat PlannedMenufilteredondate');
-      // console.log(this.plannedMenusFilteredOnDate);
     }
-
     this.plannedMenusFilteredOnDateAndFamilyId = this.plannedMenusFilteredOnDate
       .filter(p=>p.familyId === this.familyService.currentFamilyId)
     if(this.plannedMenusFilteredOnDateAndFamilyId.length>0){
-      // console.log('na filtering van PlannedMenufilteredondate op family id ' + this.familyService.currentFamilyId + ' bevat plannedmenufilteredondateandfamilyid ')
-      // console.log(this.plannedMenusFilteredOnDateAndFamilyId);
     }
-
     if(this.plannedMenusFilteredOnDateAndFamilyId.length>0){
-      // console.log('het 1ste element in plannedmenufilteredonDateAndFamilyId = ')
-      // console.log(this.plannedMenusFilteredOnDateAndFamilyId[0]);
       this.recipeId = this.plannedMenusFilteredOnDateAndFamilyId[0].recipeId;
       this.menuplanned = true;
     }
@@ -69,8 +59,6 @@ export class DayCardComponent  implements OnInit {
     })
     this.cdr.detectChanges()
   })
-
-
  }
  ngOnDestroy(){
     if(this.#plannedMenuSub){
