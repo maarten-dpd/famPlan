@@ -16,6 +16,7 @@
              [scrollEvents]='true'
              (ionScrollStart)="logScrollStart()"
              (ionScrollEnd)="logScrollEnd()">
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">cookbook</ion-title>
@@ -41,10 +42,11 @@
       </ion-row>
   </ion-grid>
 
-  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
+  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='center' slot='fixed'>
 
     <ion-fab-button [routerLink]="['recipe']">
       <ion-icon name='add' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
 </ion-content>

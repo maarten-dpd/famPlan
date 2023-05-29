@@ -26,6 +26,7 @@ export class ActivityService {
   constructor(private firestore:Firestore,
               private familyService:FamilyService,
               private ref: ApplicationRef) {
+    //subscribe to observable of all activities
     this.#activitySub = this.getAllActivities().subscribe(res=>{
       this.#activity = res;
       this.count++;
@@ -33,8 +34,7 @@ export class ActivityService {
     })
   }
 
-  //crud operations methods
-
+//crud operations methods
   async createActivity(name: string, participants:string[] = [], selectedLabels: string[] = [],
                        description: string, location: string, date:string) {
     const newActivity={
@@ -61,7 +61,7 @@ export class ActivityService {
     await deleteDoc(this.#getDocumentRef('activities', id));
   }
 
-  //get data methods
+//get data methods
   private getAllActivities() {
     return collectionData<Activity>(
       query<Activity>(
@@ -69,6 +69,7 @@ export class ActivityService {
       )
     )
   }
+  //in this service all methods are filtering on the observable that is kept in the service
   getAllActivitiesForCurrentFamily() {
    return this.#activity
      .filter(a=>a.familyId === this.familyService.currentFamilyId);
@@ -92,7 +93,7 @@ export class ActivityService {
     return this.getActivitiesByDateForCurrentFamily(date).length;
   }
 
-  //misc methods
+//misc methods
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
     return collection(this.firestore, collectionName) as CollectionReference<T>;
   }

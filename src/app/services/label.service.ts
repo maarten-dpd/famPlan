@@ -19,19 +19,29 @@ import {Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class LabelService {
 
   constructor(private recipeService: RecipeService, private activityService: ActivityService,
               private firestore:Firestore) {
   }
 
-  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
-    return collection(this.firestore, collectionName) as CollectionReference<T>;
+//crud operations
+  async createLabel(name: string, color: string, type: string): Promise<void>  {
+    const newLabel = {
+      name: name,
+      color:color,
+      type:type,
+      id:''
+    };
+
+    const docRef = await addDoc(
+      this.#getCollectionRef<Label>('labels'),
+      newLabel
+    );
+    newLabel.id = docRef.id
+    await setDoc(docRef, newLabel);
   }
-  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
-    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
-  }
-  //crud operation methods
   async deleteLabel(id: string) {
     let labelDeleted = false
     if(!this.recipeService.labelIsInUse(id)){
@@ -42,25 +52,10 @@ export class LabelService {
       await deleteDoc(this.#getDocumentRef('labels', id));
       labelDeleted=true;
     }
-      return labelDeleted;
-  }
-  async createLabel(name: string, color: string, type: string): Promise<void>  {
-   const newLabel = {
-     name: name,
-     color:color,
-     type:type,
-     id:''
-   };
-
-   const docRef = await addDoc(
-     this.#getCollectionRef<Label>('labels'),
-     newLabel
-  );
-   newLabel.id = docRef.id
-    await setDoc(docRef, newLabel);
+    return labelDeleted;
   }
 
-  //get data methods
+//get data methods
   getAllLabels():Observable<Label[]> {
     return collectionData<Label>(
       query<Label>(
@@ -79,10 +74,12 @@ export class LabelService {
     );
   }
 
-  //misc methods
+//misc methods
+  #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
+    return collection(this.firestore, collectionName) as CollectionReference<T>;
+  }
+  #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
+    return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
+  }
 
-  //methods for later use
-  /*getLabelById(id: number): Label | undefined {
-    return this.getAllLabels().find(l => l.id === id);
-  }*/
 }

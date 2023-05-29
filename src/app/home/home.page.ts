@@ -8,30 +8,44 @@ import {PlanningService} from '../services/planning.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
 
+export class HomePage {
+//attributes
   familyName: string = '';
   startDate = new Date() ;
   currentWeekDays: Date[] = [];
   weekSpansMonth: boolean = false;
 
-
+//constructor
   constructor(public familyService: FamilyService,public activityService: ActivityService,
               public planningService:PlanningService) {
-
     this.familyName = familyService.getFamilyName()
+    //create a week to display
     for(let i = 0;i<7;i++){
         let result = new Date(this.startDate);
         result.setDate(result.getDate() + i);
         this.currentWeekDays.push(result);
     }
+    //set parameter to true if week spans two different months - this is to adapt the title
     if(this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth()){
       this.weekSpansMonth = true;
     }
   }
 
-  changeWeek(type: string) {
+//operations to create the week
+  getCurrentWeek(date: Date){
+    for(let i = 0;i<7;i++){
+      let result = new Date(date);
+      result.setDate(result.getDate() + i);
+      this.currentWeekDays.push(result);
+    }
+  }
+  checkWeekSpansMonth(){
+    this.weekSpansMonth = this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth();
+  }
 
+//operations to change the week
+  changeWeek(type: string) {
     if (type === "next"){
       this.startDate = this.addDays(this.startDate, 7)
     }
@@ -49,16 +63,6 @@ export class HomePage {
   subtractDays(date: Date, days: number): Date{
     date.setDate(date.getDate()-days);
     return date;
-  }
-  getCurrentWeek(date: Date){
-    for(let i = 0;i<7;i++){
-      let result = new Date(date);
-      result.setDate(result.getDate() + i);
-      this.currentWeekDays.push(result);
-    }
-  }
-  checkWeekSpansMonth(){
-    this.weekSpansMonth = this.currentWeekDays[0].getMonth() !== this.currentWeekDays[6].getMonth();
   }
 
 }

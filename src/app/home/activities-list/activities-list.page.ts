@@ -11,6 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 
 export class ActivitiesListPage implements OnInit {
 //attributes
+  fabIsVisible = true;
   date: string = '';
   activityList: Activity[] = [];
   dateForTitle = new Date();
@@ -36,5 +37,13 @@ export class ActivitiesListPage implements OnInit {
     this.dateForTitle = new Date(day);
     this.date = this.dateForTitle.toString()
     this.activityList = this.activityService.getActivitiesByDateForCurrentFamily(this.date);
+  }
+
+//functionality: hide button on scroll show again after scroll
+  logScrollStart():void {
+    this.fabIsVisible=false
+  }
+  logScrollEnd():void {
+    setTimeout(() => this.fabIsVisible = true, 1500);
   }
 }

@@ -3,7 +3,7 @@ import {FamilyMember} from '../../datatypes/familyMember';
 import {
   addDoc,
   collection, collectionData,
-  CollectionReference, deleteDoc, doc, DocumentReference,
+  CollectionReference, doc, DocumentReference,
   Firestore,
   query, setDoc, updateDoc, where
 } from '@angular/fire/firestore';
@@ -13,6 +13,7 @@ import {Family} from '../../datatypes/family';
 @Injectable({
   providedIn: 'root'
 })
+
 export class FamilyService {
 
   currentUserId: string | undefined;
@@ -24,7 +25,7 @@ export class FamilyService {
 
   }
 
-  //crud operation methods
+//crud operation methods
   async createFamilyMember(firstName: string, lastName: string, email: string, userId:string, familyId?:string){
     if(this.currentFamilyId){
       const newFamilyMember ={
@@ -65,21 +66,6 @@ export class FamilyService {
   async updateFamilyMember(id:string, familyMember: FamilyMember){
     await updateDoc(this.#getDocumentRef('familyMembers',id),familyMember)
   }
-  async deleteFamilyMember(id:string){
-    await deleteDoc(this.#getDocumentRef('familyMembers', id))
-  }
-  async createFamily(familyName:string){
-    const newFamily={
-      name: familyName,
-      id:''
-    };
-    const docRef=await addDoc(
-      this.#getCollectionRef('families'),
-      newFamily
-    );
-    newFamily.id = docRef.id;
-    await setDoc(docRef, newFamily);
-  }
   async createFamilyAndReturnNewFamilyId(familyName:string){
     const newFamily={
       name: familyName,
@@ -96,9 +82,8 @@ export class FamilyService {
   async updateFamily(id:string, family:Family){
     await updateDoc(this.#getDocumentRef('families',id),family)
   }
-  //because of the impact and spread of familyId in other collections there is no deleteFamily
 
-  //set data methods
+// set data methods
   async setCurrentFamilyMember(){
     const tempCurrentFamilyMember = await firstValueFrom(this.getCurrentFamilyMemberByUserId().pipe(take(1)))
     this.currentFamilyMember = tempCurrentFamilyMember[0];
@@ -113,7 +98,7 @@ export class FamilyService {
     this.currentFamily=tempCurrentFamily.filter(f=>f.id===this.currentFamilyId);
   }
 
-  //get data methods
+//get data methods
   getCurrentFamilyMemberByUserId():Observable<FamilyMember[]>{
     return collectionData<FamilyMember>(
       query<FamilyMember>(
@@ -140,14 +125,6 @@ export class FamilyService {
       return 'name was not found'
     }
   }
-  getFamilyMembers(): Observable<FamilyMember[]> {
-    return collectionData<FamilyMember>(
-      query<FamilyMember>(
-        this.#getCollectionRef('familyMembers')
-      ),
-      {idField: 'id'}
-    );
-  }
   getFamilyMembersByFamilyId(): Observable<FamilyMember[]> {
     return collectionData<FamilyMember>(
       query<FamilyMember>(
@@ -157,17 +134,8 @@ export class FamilyService {
       { idField: 'id' }
     );
   }
-  getFamilymemberById(id: string) {
-    return collectionData<FamilyMember>(
-      query<FamilyMember>(
-        this.#getCollectionRef('familyMembers'),
-        where ('userId','==', id)
-      ),
-      {idField: 'id'}
-    )
-  }
 
-  //Misc methods
+//Misc methods
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
     return collection(this.firestore, collectionName) as CollectionReference<T>;
   }

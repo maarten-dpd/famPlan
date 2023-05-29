@@ -12,7 +12,9 @@ import {RecipeService} from '../../services/recipe.service';
   templateUrl: './day-menu.page.html',
   styleUrls: ['./day-menu.page.scss'],
 })
+
 export class DayMenuPage implements OnInit {
+//attributes
   familyName: string = '';
   date: Date = new Date();
   menu: Recipe | undefined;
@@ -24,15 +26,25 @@ export class DayMenuPage implements OnInit {
   recipe:Recipe[]=[]
   #recipeSub!:Subscription;
 
+//constructor
   constructor(public planningService:PlanningService,
               public familyService: FamilyService,
               public activatedRoute:ActivatedRoute,
               public recipeService: RecipeService,
               private cdr:ChangeDetectorRef) {
-    // this.familyName = familyService.getFamilyName();
   }
+
+//OnInit/destroy/setData
   ngOnInit() {
     this.setData()
+  }
+  ngOnDestroy(){
+    if(this.#recipeSub){
+      this.#recipeSub.unsubscribe();
+    }
+    if(this.#plannedMenuSub){
+      this.#plannedMenuSub.unsubscribe()
+    }
   }
   setData(){
     const day = this.activatedRoute.snapshot.paramMap.get('day');
@@ -53,7 +65,6 @@ export class DayMenuPage implements OnInit {
           if(this.recipeId){
             this.recipe = this.recipes
               .filter(r=>r.id === this.recipeId)
-            console.log(this.recipe)
           }
         })
         this.cdr.detectChanges()

@@ -13,38 +13,41 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-item-group class="justify-content-center text-center">
-        <ion-item *ngFor="let r of recipes">
-          <ion-grid>
-            <ion-row>
-              <ion-col></ion-col>
-              <ion-col>
-                <ion-button size="large" expand = "block"
-                            [color]="currentPlannedMenu ? 'primary' :'alert'"
-                            (click)="changeMenu(r)">
-                  {{r.name}}
-                </ion-button>
-              </ion-col>
-              <ion-col></ion-col>
-            </ion-row>
-          </ion-grid>
 
-        </ion-item>
-      </ion-item-group>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+  <ion-grid>
+    <ion-row id="recipeSelectionList">
+      <ion-col>
+        <ion-item-group class="justify-content-center text-center">
+          <ion-item *ngFor="let r of recipes">
+            <ion-grid>
+              <ion-row>
+                <ion-col></ion-col>
+                <ion-col>
+                  <ion-button size="large" expand = "block"
+                              [color]="currentPlannedMenu ? 'primary' :'alert'"
+                              (click)="changeMenu(r)">
+                    {{r.name}}
+                  </ion-button>
+                </ion-col>
+                <ion-col></ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-item-group>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>
+
 <ion-footer>
+
   <ion-grid>
-    <ion-row>
+    <ion-row id="linkToCookbookButton">
       <ion-col class="ion-justify-content-center ion-text-center">
         <ion-button [routerLink]="'/cookbook'" fill="outline" class="ion-text-center">add a recipe in the cookbook</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
+
 </ion-footer>

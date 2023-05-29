@@ -7,17 +7,18 @@
 <ion-content class="ion-align-items-stretch">
 
   <ion-grid>
-    <ion-row>
+    <ion-row id="googleLogInButton">
       <ion-col offsetXs="0" offsetSm="3" offsetMd="4" sizeXs="12" sizeSm="6" sizeMd="4">
-
         <ion-item class="ion-margin-vertical" color="light" (click)="signIn(1)">
           <div slot="start">
             <ion-icon size="large" name="logo-google"></ion-icon>
           </div>
           <ion-label>Login with Google</ion-label>
         </ion-item>
-
-
+      </ion-col>
+    </ion-row>
+    <ion-row id="signInForm">
+      <ion-col offsetXs="0" offsetSm="3" offsetMd="4" sizeXs="12" sizeSm="6" sizeMd="4">
         <form (ngSubmit)="signIn(2)">
           <ion-item>
             <ion-label position="floating">Email</ion-label>
@@ -31,7 +32,10 @@
 
           <ion-button type="submit" expand="block">Sign In</ion-button>
         </form>
-
+      </ion-col>
+    </ion-row>
+    <ion-row id="signUpForm">
+      <ion-col offsetXs="0" offsetSm="3" offsetMd="4" sizeXs="12" sizeSm="6" sizeMd="4">
         <form (ngSubmit)="signUp()">
           <ion-item>
             <ion-label position="floating">Email</ion-label>
@@ -59,7 +63,6 @@
 
       </ion-col>
     </ion-row>
-
   </ion-grid>
 
 </ion-content>
