@@ -15,7 +15,6 @@ export class InformationModalPageComponent {
   async confirm(){
     await this.closeModal()
   }
-
   async closeModal(){
     await this.modalController.dismiss();
   }

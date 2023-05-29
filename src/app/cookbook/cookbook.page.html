@@ -16,6 +16,7 @@
              [scrollEvents]='true'
              (ionScrollStart)="logScrollStart()"
              (ionScrollEnd)="logScrollEnd()">
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">cookbook</ion-title>
@@ -24,22 +25,28 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
+
+  <ion-grid>
+    <ion-row id="cookbookRecipeList" *ngIf="recipes.length > 0">
+          <ion-col>
+            <app-recipe-item  *ngFor='let r of recipes'
+                              [recipe]='r'>
+            </app-recipe-item>
+          </ion-col>
+        </ion-row>
+     <ion-row id="emptyCookbook" *ngIf="recipes.length === 0">
+        <div>
+          <h3>An empty cookbook fills no stomach</h3>
+          <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>
+        </div>
+      </ion-row>
+  </ion-grid>
+
+  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='center' slot='fixed'>
 
     <ion-fab-button [routerLink]="['recipe']">
       <ion-icon name='add' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-list *ngIf="recipes.length > 0">
-    <app-recipe-item  *ngFor='let r of recipes'
-                        [recipe]='r'>
-    </app-recipe-item>
-  </ion-list>
-  <ion-item *ngIf="recipes.length === 0">
-    <div>
-      <h3>An empty cookbook fills no stomach</h3>
-      <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>
-    </div>
-  </ion-item>
 </ion-content>

@@ -3,53 +3,48 @@
     <ion-buttons slot='start'>
       <ion-button (click)='dismissModal(true)'>Cancel</ion-button>
     </ion-buttons>
-    <ion-title>New Label</ion-title>
+    <ion-title class="ion-text-center">New Label</ion-title>
     <ion-buttons slot='end'>
       <ion-button (click)='dismissModal()'>Save</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
 
-
-
-
-  <ion-item lines='full'>
-    <ion-grid class='ion-padding-top'>
-      <ion-row>
+  <ion-grid>
+    <ion-row id="labelNameInput">
+      <ion-col>
         <ion-item lines='full'>
           <ion-input placeholder='Name' type='text'
                      [(ngModel)]='labelName' [required]="true"></ion-input>
         </ion-item>
-      </ion-row>
-      <ion-row>
-        <ion-item-divider/>
-      </ion-row>
-      <ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row id="labelColorLabel">
+      <ion-col>
         <ion-label>Color</ion-label>
-      </ion-row>
-      <ion-row>
-        <ion-col size='4' *ngFor='let color of colors' class='ion-text-center'>
-          <ion-chip [color]='color' [outline]='selectedColor !== color' (click)='selectedColor = color'>
-            <ion-label [color]='color'>{{color}}</ion-label>
-          </ion-chip>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-item-divider/>
-      </ion-row>
-      <ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row id="labelColorOptions">
+      <ion-col size='4' *ngFor='let color of colors' class='ion-text-center'>
+        <ion-chip [color]='color' [outline]='selectedColor !== color' (click)='selectedColor = color'>
+          <ion-label [color]='color'>{{color}}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row id="labelTypeLabel">
+      <ion-col>
         <ion-label>Type</ion-label>
-      </ion-row>
-      <ion-row>
-        <ion-col size='4' *ngFor='let labelType of labelTypes' class='ion-text-center'>
-          <ion-chip (click)="selectLabelType(labelType)">
-            <ion-label>{{labelType}}</ion-label>
-          </ion-chip>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-  </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row id="labelTypeOptions">
+      <ion-col size='4' *ngFor='let labelType of labelTypes' class='ion-text-center'>
+        <ion-chip (click)="selectLabelType(labelType)">
+          <ion-label>{{labelType}}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>

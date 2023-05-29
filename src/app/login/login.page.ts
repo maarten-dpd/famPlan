@@ -13,7 +13,9 @@ import {Subscription} from 'rxjs';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
+
 export class LoginPage implements OnInit {
+//attributes
   isNative = Capacitor.isNativePlatform();
   email: string ='';
   password: string='';
@@ -24,11 +26,13 @@ export class LoginPage implements OnInit {
   #familySub!:Subscription;
   families:Family[]=[]
 
+//constructor
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public familyService:FamilyService
 ) { }
 
+//onInit/destroy
   ngOnInit() {
     this.#familySub = this.familyService.getAllFamilies().subscribe(res=>{
       this.families = res;
@@ -40,19 +44,23 @@ export class LoginPage implements OnInit {
     }
   }
 
+//methods for handling user action
   signIn(type:number) {
+    //check if signIn is clicked on google button or email and password
     if(type===1){
-      this.authService.signInWithGoogle();
+      this.authService.signInWithGoogle().then(()=>{
+        console.log('user authenticated')
+      });
     }
     if(type===2)
     {
       this.authService.signIn(this.email,this.password);
     }
-    this.authService.signIn(this.email,this.password);
     this.clearFieldsAfterSubmit();
   }
   async signUp() {
     let errorInfo: string[] = [];
+    //validation of data - the primitive way
     if(!this.email){
       errorInfo.push('Email is required')
     }
@@ -68,18 +76,23 @@ export class LoginPage implements OnInit {
     if(!this.familyId){
       errorInfo.push('a family must be created or selected')
     }
+    //if valid - continue sign up
     if(errorInfo.length===0){
+      //check if family is selected
       if(this.familyId){
-        console.log('ready to create user and familyMember')
+        //if family is selected - sign up
         this.authService.signUp(this.email,this.password,this.firstName,this.lastName, this.familyId)
         this.clearFieldsAfterSubmit();
       }
     }
     else{
-     await this.presentInformationModal(errorInfo, 'validation errors')
+      //show validation errors
+     await this.presentValidationErrors(errorInfo, 'validation errors')
     }
   }
-  async presentInformationModal(information:string[], infoType:string){
+
+//modals to inform user
+  async presentValidationErrors(information:string[], infoType:string){
     const modal=await this.modalController.create({
       component: InformationModalPageComponent,
       componentProps:{
@@ -90,7 +103,7 @@ export class LoginPage implements OnInit {
     modal.onDidDismiss().then();
     return await modal.present();
   }
-  async presentInputModal(requestedInput: string, type: string){
+  async presentCreateFamilyModal(requestedInput: string, type: string){
     const modal=await this.modalController.create({
       component: StringInputModalPageComponent,
       componentProps:{
@@ -114,6 +127,8 @@ export class LoginPage implements OnInit {
     });
 
   }
+
+//method to clear fields after submission of form
   clearFieldsAfterSubmit(){
     this.firstName='';
     this.lastName='';
@@ -121,9 +136,11 @@ export class LoginPage implements OnInit {
     this.email='';
   }
 
+//method to allow user to create new family before sign up
   async familySelected() {
       if(this.familyId === 'createNewFamily'){
-        await this.presentInputModal('FamilyName','Create')
+        await this.presentCreateFamilyModal('FamilyName','Create')
       }
   }
+
 }

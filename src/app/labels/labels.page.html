@@ -1,9 +1,11 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Labels</ion-title>
-
     <ion-buttons slot='start'>
       <ion-menu-button menuId='side-menu'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons [collapse]="true" slot="end">
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -12,46 +14,56 @@
              (ionScrollStart)="logScrollStart()"
              (ionScrollEnd)="logScrollEnd()">
 
-  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='end' slot='fixed'>
+  <ion-fab *ngIf='fabIsVisible' vertical='bottom' horizontal='center' slot='fixed'>
     <ion-fab-button (click)='presentModal()'>
       <ion-icon name='add' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
+  <ion-grid>
+    <ion-row id="recipeLabelTitle">
+      <ion-col>
+        <ion-title>Recipe Labels</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipeLabelList" *ngFor='let label of recipeLabels, trackBy:trackByLabelId'>
+      <ion-col>
+        <ion-item-sliding >
+          <ion-item-options side='start'>
+            <ion-item-option color='danger' (click)='checkDeleteLabel(label.id)'>
+              <ion-icon slot="icon-only" name='trash'></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
 
-  <ion-list lines='full'>
-    <ion-label>Recipe Labels</ion-label>
-    <ion-item-sliding *ngFor='let label of recipeLabels, trackBy:trackByLabelId'>
+          <ion-item lines='full'>
+            <ion-label [color]='label.color'>
+              {{label.name}}
+            </ion-label>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-col>
+    </ion-row>
+    <ion-row id="activityLabelTitle">
+      <ion-col>
+        <ion-title>Activity Labels</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row id="activityLabelList" *ngFor='let label of activityLabels, trackBy:trackByLabelId'>
+      <ion-col>
+        <ion-item-sliding >
+          <ion-item-options side='start'>
+            <ion-item-option color='danger' (click)='checkDeleteLabel(label.id)'>
+              <ion-icon slot="icon-only" name='trash'></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+          <ion-item lines='full'>
+            <ion-label [color]='label.color'>
+              {{label.name}}
+            </ion-label>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-      <ion-item-options side='start'>
-        <ion-item-option color='danger' (click)='checkDeleteLabel(label.id)'>
-          <ion-icon slot="icon-only" name='trash'></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-
-      <ion-item lines='full'>
-        <ion-label [color]='label.color'>
-          {{label.name}}
-        </ion-label>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
-
-  <ion-list lines='full'>
-    <ion-label>Activity Labels</ion-label>
-    <ion-item-sliding *ngFor='let label of activityLabels, trackBy:trackByLabelId'>
-
-      <ion-item-options side='start'>
-        <ion-item-option color='danger' (click)='checkDeleteLabel(label.id)'>
-          <ion-icon slot="icon-only" name='trash'></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-
-      <ion-item lines='full'>
-        <ion-label [color]='label.color'>
-          {{label.name}}
-        </ion-label>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
 </ion-content>

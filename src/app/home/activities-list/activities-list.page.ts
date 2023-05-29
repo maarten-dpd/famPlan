@@ -2,21 +2,32 @@ import {Component, OnInit} from '@angular/core';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
 import {ActivatedRoute} from '@angular/router';
+
 @Component({
   selector: 'app-activities-list',
   templateUrl: './activities-list.page.html',
   styleUrls: ['./activities-list.page.scss'],
 })
+
 export class ActivitiesListPage implements OnInit {
+//attributes
+  fabIsVisible = true;
   date: string = '';
   activityList: Activity[] = [];
   dateForTitle = new Date();
+
+//constructor
   constructor(public activityService:ActivityService,
               public activatedRoute:ActivatedRoute,
               ) {
   }
+
+//On Init/Destroy/setData
   ngOnInit() {
   this.setData();
+  }
+  ngOnDestroy(){
+
   }
   private setData() {
     const day = this.activatedRoute.snapshot.paramMap.get('day');
@@ -27,8 +38,12 @@ export class ActivitiesListPage implements OnInit {
     this.date = this.dateForTitle.toString()
     this.activityList = this.activityService.getActivitiesByDateForCurrentFamily(this.date);
   }
-  ngOnDestroy(){
 
+//functionality: hide button on scroll show again after scroll
+  logScrollStart():void {
+    this.fabIsVisible=false
   }
-
+  logScrollEnd():void {
+    setTimeout(() => this.fabIsVisible = true, 1500);
+  }
 }

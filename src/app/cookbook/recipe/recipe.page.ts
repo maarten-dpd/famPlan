@@ -8,14 +8,15 @@ import {PhotoService} from '../../services/photo.service';
 import {StringInputModalPageComponent} from '../../shared/string-input-modal-page/string-input-modal-page.component';
 import {Recipe} from '../../../datatypes/recipe';
 import {Subscription} from 'rxjs';
-import {Foto} from '../../../datatypes/foto';
 
 @Component({
   selector: 'app-recipe',
   templateUrl: './recipe.page.html',
   styleUrls: ['./recipe.page.scss'],
 })
+
 export class RecipePage implements OnInit {
+ //attributes
   recipeName: string = '';
   recipePhotoId: string  = '';
   prepTime: number = 0;
@@ -28,9 +29,9 @@ export class RecipePage implements OnInit {
   instructions: string[] =[];
   id: string | null ='';
   fromMenuSelector: string | null = '';
-  #photoSub!:Subscription;
-  photos: Foto[]=[];
-  recipePhoto: Foto[]=[];
+  recipePhotoUrl: string = '';
+
+ //constructor
   constructor(public navController: NavController,
               public recipeService: RecipeService,
               public activatedRoute: ActivatedRoute,
@@ -39,6 +40,8 @@ export class RecipePage implements OnInit {
               private actionSheetCtrl: ActionSheetController,
               private modalController: ModalController,
               private cdr:ChangeDetectorRef) {}
+
+ //init/destroy/setData
   ngOnInit() {
     this.setData();
   }
@@ -51,14 +54,6 @@ export class RecipePage implements OnInit {
     this.#labelSub = this.labelService.getLabelsByType('recipe').subscribe(res=>{
       this.labels = res;
       this.labels.sort();
-      this.cdr.detectChanges();
-    })
-    this.#photoSub = this.photoService.getPhotoById(this.recipePhotoId).subscribe(res=>{
-      console.log(this.recipePhotoId)
-      console.log('result of getPhotoById')
-      console.log(res)
-      this.photos = res;
-      this.recipePhoto = this.photos.filter(f=>f.id === this.recipePhotoId);
       this.cdr.detectChanges();
     })
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -79,14 +74,14 @@ export class RecipePage implements OnInit {
         this.instructions = recipe.instructions;
         this.description = recipe.description;
         this.selectedLabels = recipe.selectedLabels;
-        if (recipe.photoId != null) {
-          this.recipePhotoId = recipe.photoId;
+        if(recipe.photoUrl){
+          this.recipePhotoUrl = recipe.photoUrl;
         }
       }
-    }) ;
-
-
+    });
   }
+
+ //update and create
   handleCreateAndUpdate(): void {
     if (this.id) {
       this.updateRecipe();
@@ -97,7 +92,7 @@ export class RecipePage implements OnInit {
   }
   private createRecipe(): void {
     this.recipeService.createRecipe(this.recipeName,this.ingredients,this.prepTime,this.cookingTime,
-      this.instructions, this.description, this.selectedLabels,this.recipePhotoId).then(()=>{
+      this.instructions, this.description, this.selectedLabels,this.recipePhotoUrl).then(()=>{
         console.log('recipe created')
     });
   }
@@ -112,19 +107,22 @@ export class RecipePage implements OnInit {
         ingredients: this.ingredients,
         instructions:this.instructions,
         selectedLabels: this.selectedLabels,
-        photoId:this.recipePhotoId
+        photoUrl:this.recipePhotoUrl
       }
+      console.log(recipeToUpdate)
       this.recipeService.updateRecipe(this.id,recipeToUpdate).then(()=>{
         console.log('recipe updated')
+      }).then(()=>{
+        this.navController.back()
       });
     }
     else{
-      console.log('recipe has no id field and can not be deleted')
+      console.log('recipe has no id field and can not be updated')
       //replace by modal to give user warning
     }
-
-
   }
+
+ //functionality to input ingredients/instructions
   async addIngredient() {
     await this.presentInputModal('add an ingredient','ingredient')
   }
@@ -153,20 +151,20 @@ export class RecipePage implements OnInit {
     });
     return await modal.present();
   }
-  async putPhotoIn() {
-    console.log('calling photo service')
-    await this.photoService.takePhoto().then((res)=>{
-      console.log('take photo finished');
-      this.recipePhotoId = res;
-      console.log(this.recipePhotoId)
-      console.log(this.recipePhoto)
+
+ //functionality to take a picture, this calls the photo service and gets a url back
+  async takePictureOfFood(){
+    this.photoService.getPhotoSaveInStorageReturnUrl().then((res)=>{
+        if(typeof res === 'string' ) this.recipePhotoUrl = res;
     })
   }
-  isSelected(label: Label) {
+
+ //functionality to handle labels
+  isSelectedLabel(label: Label) {
     return this.selectedLabels.some(l=>l === label.id);
   }
   changeLabelSelection(label: Label) {
-    if(this.isSelected(label)){
+    if(this.isSelectedLabel(label)){
       const index = this.selectedLabels.findIndex(l=>l === label.id);
       if (index !== -1){
         this.selectedLabels.splice(index, 1);
@@ -176,4 +174,5 @@ export class RecipePage implements OnInit {
     }
   }
   protected readonly Number = Number;
+
 }

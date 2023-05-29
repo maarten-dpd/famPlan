@@ -16,88 +16,113 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<ion-grid>
-  <ion-row>
-    <ion-item lines="full">
+  <ion-grid>
+    <ion-row id="recipeName">
+      <ion-col>
+        <ion-item lines="full">
 
-      <ion-label position="floating">Recipe name</ion-label>
-      <ion-input type="text" class="ion-margin-top"
-                 [(ngModel)]='recipeName'></ion-input>
-    </ion-item>
-  </ion-row>
-<!--  <ion-row>-->
-<!--    <ion-item *ngIf="recipePhotoUrl">-->
-<!--      <ion-img [src]="recipePhotoUrl"></ion-img>-->
-<!--      <ion-button (click)="putPhotoIn()">change foto</ion-button>-->
-<!--    </ion-item>-->
-    <ion-item (click)="putPhotoIn()">
-      add photo
-    </ion-item>
-<!--  </ion-row>-->
-  <ion-row>
-    <ion-item lines="full">
-      <ion-label position="floating">Preparation time</ion-label>
-      <ion-input type="text" class="ion-margin-top"
-                 [(ngModel)]='prepTime'></ion-input>
-    </ion-item>
-  </ion-row>
-  <ion-row>
-    <ion-item lines="full">
-      <ion-label position="floating">Cooking Time</ion-label>
-      <ion-input type="text" class="ion-margin-top"
-                 [(ngModel)]='cookingTime'></ion-input>
-    </ion-item>
-  </ion-row>
-  <ion-row>
-    <ion-item lines="full">
-      <ion-label position="floating">Description</ion-label>
-      <ion-textarea cols="20" rows="4" [autoGrow]="true"
-                    [(ngModel)]='description'>
-      </ion-textarea>
-    </ion-item>
-    <ion-item-divider/>
-  </ion-row>
-  <ion-row>
-    <ion-list lines="none">
-      <ion-list-header>
-        Ingredients
-      </ion-list-header>
-      <ion-item *ngFor='let ingredient of ingredients'>
-        <ion-label>{{ingredient}}</ion-label>
-      </ion-item>
-      <ion-button (click)="addIngredient()">
-        add ingredient
-      </ion-button>
-    </ion-list>
-  </ion-row>
-  <ion-row>
-    <ion-list>
-      <ion-list-header>
-        instructions
-      </ion-list-header>
-      <ion-item *ngFor='let instruction of instructions'>
-        <ion-label>{{instruction}}</ion-label>
-      </ion-item>
-      <ion-button (click)="addInstruction()">
-        add instruction
-      </ion-button>
-    </ion-list>
-  </ion-row>
-  <ion-row>
-    <ion-list lines="none">
-      <ion-list-header>
-        Labels
-      </ion-list-header>
-      <ion-item *ngFor='let label of labels'>
-        <ion-checkbox
-          slot='start'
-          [color]='label.color'
-          [ngModel]='isSelected(label)'
-          (ionChange)="changeLabelSelection(label)">
-        </ion-checkbox>
-        <ion-label [color]='label.color'>{{label.name}}</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-row>
-</ion-grid>
+          <ion-label position="floating">Recipe name</ion-label>
+          <ion-input type="text" class="ion-margin-top"
+                     [(ngModel)]='recipeName'></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipePicture">
+      <ion-col>
+        <ion-item *ngIf="recipePhotoId">
+          <ion-img *ngIf="recipePhotoUrl" [src]="recipePhotoUrl"/>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row id="pictureButtons">
+      <ion-col>
+        <ion-button *ngIf="recipePhotoId" (click)="takePictureOfFood()">change photo</ion-button>
+        <ion-button *ngIf="!recipePhotoId" (click)="takePictureOfFood()">add photo</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipePrepTime">
+      <ion-col>
+        <ion-item lines="full">
+          <ion-label position="floating">Preparation time</ion-label>
+          <ion-input type="text" class="ion-margin-top"
+                     [(ngModel)]='prepTime'></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipeCookTime">
+      <ion-col>
+        <ion-item lines="full">
+          <ion-label position="floating">Cooking Time</ion-label>
+          <ion-input type="text" class="ion-margin-top"
+                     [(ngModel)]='cookingTime'></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipeDescription">
+      <ion-col>
+        <ion-item lines="full">
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea cols="20" rows="4" [autoGrow]="true"
+                        [(ngModel)]='description'>
+          </ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipeIngredients">
+      <ion-col>
+        <ion-list lines="none">
+          <ion-list-header>
+            Ingredients
+          </ion-list-header>
+          <ion-item *ngFor='let ingredient of ingredients'>
+            <ion-label>{{ingredient}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row id="ingredientsButton">
+      <ion-col>
+        <ion-button (click)="addIngredient()">
+          add ingredient
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipeInstructions">
+      <ion-col>
+        <ion-list>
+          <ion-list-header>
+            instructions
+          </ion-list-header>
+          <ion-item *ngFor='let instruction of instructions'>
+            <ion-label>{{instruction}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row id="instructionsButton">
+      <ion-col>
+        <ion-button (click)="addInstruction()">
+          add instruction
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row id="recipeLabelSelection">
+      <ion-col>
+        <ion-list lines="none">
+          <ion-list-header>
+            Labels
+          </ion-list-header>
+          <ion-item *ngFor='let l of labels'>
+            <ion-checkbox
+              slot='start'
+              [color]='l.color'
+              [ngModel]='isSelectedLabel(l)'
+              (ionChange)="changeLabelSelection(l)">
+            </ion-checkbox>
+            <ion-label [color]='l.color'>{{l.name}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

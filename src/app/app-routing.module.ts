@@ -29,8 +29,8 @@ const routes: Routes = [
     // data: {authGuardPipe: redirectUnauthorizedToLogin()}
   },
   {
-    path: 'family-settings',
-    loadChildren: () => import('./family-settings/family-settings.module').then( m => m.FamilySettingsPageModule),
+    path: 'familyOverview',
+    loadChildren: () => import('./familyOverview/familyOverview.module').then(m => m.FamilySettingsPageModule),
     ...canActivate(redirectUnauthorizedToLogin)
     // canActivate: [AuthGuard],
     // data: {authGuardPipe: redirectUnauthorizedToLogin()}

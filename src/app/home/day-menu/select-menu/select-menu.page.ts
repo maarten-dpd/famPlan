@@ -13,8 +13,9 @@ import {PlannedMenu} from '../../../../datatypes/plannedMenu';
   templateUrl: './select-menu.page.html',
   styleUrls: ['./select-menu.page.scss'],
 })
-export class SelectMenuPage implements OnInit {
 
+export class SelectMenuPage implements OnInit {
+//attributes
   selectionDate =new Date();
   #recipeSub!: Subscription;
   recipes:Recipe[]=[];
@@ -22,6 +23,7 @@ export class SelectMenuPage implements OnInit {
   plannedMenus:PlannedMenu[]=[];
   currentPlannedMenu! :PlannedMenu;
 
+//constructor
   constructor(public recipeService:RecipeService,
               public planningService:PlanningService,
               private modalController:ModalController,
@@ -30,9 +32,36 @@ export class SelectMenuPage implements OnInit {
               private cdr: ChangeDetectorRef) {
   }
 
+//onInit/destroy/setData
   ngOnInit() {
     this.setData();
   }
+  ngOnDestroy(){
+    if(this.#recipeSub){
+      this.#recipeSub.unsubscribe();
+    }
+    if(this.#plannedMenuSub){
+      this.#plannedMenuSub.unsubscribe();
+    }
+  }
+  private setData() {
+    const day = this.activatedRoute.snapshot.paramMap.get('day');
+    if(day === null){
+      return;
+    }
+    this.selectionDate = new Date(day);
+    this.#recipeSub = this.recipeService.getAllRecepies().subscribe(res=>{
+      this.recipes = res;
+      this.cdr.detectChanges();
+    })
+    this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res=>{
+      this.plannedMenus = res;
+      this.cdr.detectChanges();
+    })
+    this.currentPlannedMenu = this.plannedMenus.filter(p=>p.date === this.selectionDate.toString())[0];
+  }
+
+//change menu by showing modal
   async changeMenu(r:Recipe){
     await this.presentConfirmOrCancelModal(r);
   }
@@ -62,7 +91,6 @@ export class SelectMenuPage implements OnInit {
     });
     return await modal.present();
   }
-
   setMenuForDate(r: Recipe, d: Date) {
     //check if a planned menu with the given date exists
     const menuIsPlannedForDate = this.plannedMenus.some(p=>p.date===d.toString())
@@ -78,20 +106,4 @@ export class SelectMenuPage implements OnInit {
     }
   }
 
-  private setData() {
-    const day = this.activatedRoute.snapshot.paramMap.get('day');
-    if(day === null){
-      return;
-    }
-    this.selectionDate = new Date(day);
-    this.#recipeSub = this.recipeService.getAllRecepies().subscribe(res=>{
-      this.recipes = res;
-      this.cdr.detectChanges();
-    })
-    this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res=>{
-      this.plannedMenus = res;
-      this.cdr.detectChanges();
-    })
-    this.currentPlannedMenu = this.plannedMenus.filter(p=>p.date === this.selectionDate.toString())[0];
-  }
 }

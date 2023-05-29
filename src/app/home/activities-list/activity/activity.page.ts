@@ -15,6 +15,7 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./activity.page.scss'],
 })
 export class ActivityPage implements OnInit {
+//attributes
   activityName: string = '';
   date: string =(new Date().toString());
   dateToParse:string = new Date(this.date).toISOString();
@@ -29,18 +30,23 @@ export class ActivityPage implements OnInit {
   labels: Label[]=[];
   selectedLabels: string[] =[];
   yearValues: number[] = []
+  protected readonly Number = Number;
 
+//constructor
   constructor(public familyService: FamilyService,
               public labelService: LabelService,
               public activityService: ActivityService,
               public activatedRoute : ActivatedRoute,
               public navController: NavController,
               private cdr:ChangeDetectorRef) {
+    //this code is needed to create the calendar to pick a date
     const currentYear:number = (new Date().getFullYear());
     for (let year = currentYear; year<(currentYear + 100); year++){
       this.yearValues.push(year);
     }
   }
+
+//On Init/Destroy/set Data
   ngOnInit() {
     this.setData();
   }
@@ -52,29 +58,25 @@ export class ActivityPage implements OnInit {
       this.#labelSub.unsubscribe();
     }
   }
-  handleCreateAndUpdate() {
-    if (this.id) {
-      this.updateActivity();
-    } else {
-      this.createActivity();
-    }
-    this.navController.back();
-  }
   private setData() : void {
+    //create observable for family members
     this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe((res)=>{
       this.familyMembers = res;
       this.familyMembers.sort();
       this.cdr.detectChanges();
     })
+    //create observable for labels
     this.#labelSub = this.labelService.getLabelsByType('activity').subscribe(res=>{
       this.labels = res;
       this.labels.sort();
       this.cdr.detectChanges();
     })
+    //check if page is needed for update or create
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
     if(this.id===null){
       return;
     }
+    //if not create - load activity the activity observable is in the activity service
     const activity = this.activityService.getActivityById(this.id);
     this.dateToParse = new Date(activity.date).toISOString();
     this.activityName = activity.name;
@@ -83,6 +85,23 @@ export class ActivityPage implements OnInit {
     this.description = activity.description;
     this.selectedLabels = activity.selectedLabels;
     this.selectedParticipants = activity.participants;
+  }
+
+//create and update
+  handleCreateAndUpdate() {
+    if (this.id) {
+      this.updateActivity();
+    } else {
+      this.createActivity();
+    }
+    this.navController.back();
+  }
+  private createActivity() {
+    this.date = new Date(this.dateToParse).toString();
+    this.activityService.createActivity(this.activityName, this.selectedParticipants,
+      this.selectedLabels, this.description, this.location, this.date).then(()=>{
+      console.log('activity created')
+    })
   }
   private updateActivity() {
     let convertedDate = new Date(this.dateToParse).toString()
@@ -96,25 +115,15 @@ export class ActivityPage implements OnInit {
         participants:this.selectedParticipants,
         selectedLabels: this.selectedLabels
       }
-      this.activityService.updateActivity(this.id,activityToUpdate);
+      this.activityService.updateActivity(this.id,activityToUpdate).then(()=>{
+        console.log('activity updated')});
     }
     else{
-      console.log('activity has no id field and can not be deleted')
-      //replace by modal to give user warning
+      console.log('activity has no id field and can not be updated')
     }
   }
-  private createActivity() {
-    this.date = new Date(this.dateToParse).toString();
-    this.activityService.createActivity(this.activityName, this.selectedParticipants,
-      this.selectedLabels, this.description, this.location, this.date)
-  }
-  checkDeleteLabel(id: string | undefined) {
-    if(id){
-      this.labelService.deleteLabel(id)
-    }else{
-      //show modal with error
-    }
-  }
+
+//handle label and participant selection
   isSelectedParticipant(familyMember: FamilyMember) {
     return this.selectedParticipants.some((p) => p === familyMember.id);
   }
@@ -141,5 +150,4 @@ export class ActivityPage implements OnInit {
       this.selectedLabels.push(label.id);
     }
   }
-    protected readonly Number = Number;
 }

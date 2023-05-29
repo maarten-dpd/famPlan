@@ -8,7 +8,7 @@ import {
   CollectionReference, deleteDoc,
   doc,
   DocumentReference,
-  Firestore, query, setDoc, updateDoc, where
+  Firestore, query, setDoc, updateDoc
 } from '@angular/fire/firestore';
 import {firstValueFrom} from 'rxjs';
 import {FamilyService} from './family.service';
@@ -24,7 +24,7 @@ export class PlanningService {
               public familyService:FamilyService) {
   }
 
-  //crud operations
+//crud operations
   async createPlannedMenu(recipeId:string, date: string){
     if(this.familyService.currentFamilyId){
       const newPlannedMenu={
@@ -52,7 +52,7 @@ export class PlanningService {
     await deleteDoc(this.#getDocumentRef('plannedMenus', id));
   }
 
-  //get data methods
+//get data methods
   getAllPlannedMenusForFamily() {
       return collectionData<PlannedMenu>(
         query<PlannedMenu>(
@@ -62,11 +62,12 @@ export class PlanningService {
       );
   }
 
-  //Misc methods
+//Misc methods
   #getCollectionRef<T>(collectionName: string): CollectionReference<T> {
     return collection(this.firestore, collectionName) as CollectionReference<T>;
   }
   #getDocumentRef<T>(collectionName: string, id: string): DocumentReference<T> {
     return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
   }
+
 }

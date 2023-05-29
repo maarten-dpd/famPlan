@@ -13,21 +13,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
   <ion-grid *ngIf="recipe.length>0" class="ion-justify-content-center">
-    <ion-row>
+    <ion-row id="dayMenuRecipeNameAndDescription">
       <ion-col>
         <ion-title class="ion-text-center">{{recipe[0].name}}</ion-title>
-        <ion-item>
+        <ion-item class="ion-margin-top">
           <ion-label [routerLink]="['/cookbook','recipe', recipe[0].id]" class="ion-text-center">
             {{recipe[0].description}}
           </ion-label>
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row id="dayMenuDivider">
       <ion-item-divider></ion-item-divider>
     </ion-row>
-    <ion-row>
+    <ion-row id="dayMenuRecipeHowTo">
       <ion-col>
         <ion-accordion-group>
           <ion-accordion value="first" toggleIcon="caret-down-circle" toggleIconSlot="start">
@@ -69,13 +70,17 @@
       </ion-col>
    </ion-row>
   </ion-grid>
+
 </ion-content>
+
 <ion-footer>
+
   <ion-grid>
-    <ion-row class="ion-justify-content-center">
+    <ion-row id="changeMenuButton" class="ion-justify-content-center">
       <ion-button fill="outline" [routerLink]="['select-menu', date.toString()]">
         change menu
       </ion-button>
     </ion-row>
   </ion-grid>
+
 </ion-footer>

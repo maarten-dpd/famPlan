@@ -12,18 +12,20 @@ import {
 } from '@angular/fire/firestore';
 import {FamilyService} from './family.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
+
 export class RecipeService {
 
-  constructor(private firestore:Firestore, private familyService:FamilyService) {
+  constructor(private firestore:Firestore,
+              private familyService:FamilyService
+              ) {
   }
 
-  //crud operations
+//crud operations
   async createRecipe(name: string, ingredients: string[], prepTime: number, cookingTime: number,
-                     instructions:string[], description: string, selectedLabels: string[] = [], photoId?:string) {
+                     instructions:string[], description: string, selectedLabels: string[] = [], photoUrl?:string) {
     const newRecipe ={
       name,
       id: '',
@@ -33,16 +35,15 @@ export class RecipeService {
       instructions,
       description,
       selectedLabels,
-      photoId,
+      photoUrl,
       familyId: this.familyService.currentFamilyId
     };
     const docRef=await addDoc(
       this.#getCollectionRef<Recipe>('recipes'),
       newRecipe
     );
-    newRecipe.id=docRef.id
+    newRecipe.id=docRef.id;
     await setDoc(docRef, newRecipe)
-
   }
   async updateRecipe(id: string, recipe: Recipe){
     await updateDoc(this.#getDocumentRef('recipes',id), recipe)
@@ -51,7 +52,7 @@ export class RecipeService {
     await deleteDoc(this.#getDocumentRef('recipes', id));
   }
 
-  //get data methods
+//get data methods
   getAllRecepies() {
     return collectionData<Recipe>(
       query<Recipe>(
@@ -69,25 +70,6 @@ export class RecipeService {
       {idField: 'id'}
     );
   }
-  getRecipeByName(name: string)  {
-    return collectionData<Recipe>(
-      query<Recipe>(
-        this.#getCollectionRef('recipes'),
-        where('name','==',name)
-      ),
-      {idField: 'id'}
-    );
-  }
-  getNumberOfRecipes() {
-    const recipes = this.getAllRecepies();
-    let numberOfRecipes = 0;
-    recipes.subscribe(recipes =>{
-      for(const recipe of recipes){
-        numberOfRecipes++;
-      }
-    })
-    return numberOfRecipes;
-  }
   getRecipesByFamilyId() {
     return collectionData<Recipe>(
       query<Recipe>(
@@ -98,7 +80,7 @@ export class RecipeService {
     ) ;
   }
 
-  //Misc methods
+//Misc methods
   labelIsInUse(id: string) {
     const recipes = this.getAllRecepies();
     let result = false
