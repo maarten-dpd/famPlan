@@ -29,15 +29,15 @@
     </ion-row>
     <ion-row id="recipePicture">
       <ion-col>
-        <ion-item *ngIf="recipePhotoId">
+        <ion-item *ngIf="recipePhotoUrl">
           <ion-img *ngIf="recipePhotoUrl" [src]="recipePhotoUrl"/>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row id="pictureButtons">
       <ion-col>
-        <ion-button *ngIf="recipePhotoId" (click)="takePictureOfFood()">change photo</ion-button>
-        <ion-button *ngIf="!recipePhotoId" (click)="takePictureOfFood()">add photo</ion-button>
+        <ion-button *ngIf="recipePhotoUrl" (click)="takePictureOfFood()">change photo</ion-button>
+        <ion-button *ngIf="!recipePhotoUrl" (click)="takePictureOfFood()">add photo</ion-button>
       </ion-col>
     </ion-row>
     <ion-row id="recipePrepTime">

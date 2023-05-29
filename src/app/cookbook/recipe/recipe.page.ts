@@ -18,7 +18,6 @@ import {Subscription} from 'rxjs';
 export class RecipePage implements OnInit {
  //attributes
   recipeName: string = '';
-  recipePhotoId: string  = '';
   prepTime: number = 0;
   cookingTime: number = 0;
   description: string = '';
@@ -109,7 +108,6 @@ export class RecipePage implements OnInit {
         selectedLabels: this.selectedLabels,
         photoUrl:this.recipePhotoUrl
       }
-      console.log(recipeToUpdate)
       this.recipeService.updateRecipe(this.id,recipeToUpdate).then(()=>{
         console.log('recipe updated')
       }).then(()=>{
@@ -118,7 +116,6 @@ export class RecipePage implements OnInit {
     }
     else{
       console.log('recipe has no id field and can not be updated')
-      //replace by modal to give user warning
     }
   }
 
