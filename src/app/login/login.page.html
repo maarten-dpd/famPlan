@@ -48,11 +48,11 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">firstName</ion-label>
-            <ion-input type="text" [(ngModel)]="firstName" name="password" ></ion-input>
+            <ion-input type="text" [(ngModel)]="firstName" name="firstname" ></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">lastName</ion-label>
-            <ion-input type="text" [(ngModel)]="lastName" name="password" ></ion-input>
+            <ion-input type="text" [(ngModel)]="lastName" name="lastname" ></ion-input>
           </ion-item>
           <ion-select placeholder="Select a family" [(ngModel)]="familyId" name="familyId" (ionChange)="familySelected()">
             <ion-select-option *ngFor="let family of families" [value]="family.id">{{ family.name }}</ion-select-option>

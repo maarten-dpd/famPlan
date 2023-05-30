@@ -5,7 +5,7 @@ android {
       debug {
         storeFile file('C:\\Users\\maart\\Documents\\GitHub\\newfamplan\\key.jks')
         storePassword 'famPlan1!'
-        keyAlias 'famapp'
+        keyAlias 'famplan'
         keyPassword 'famPlan1!'
       }
     }
