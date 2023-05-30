@@ -62,13 +62,13 @@ export class ActivityPage implements OnInit {
     //create observable for family members
     this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe((res)=>{
       this.familyMembers = res;
-      this.familyMembers.sort();
+      this.familyMembers.sort((a,b) => a.firstName.localeCompare(b.firstName));
       this.cdr.detectChanges();
     })
     //create observable for labels
     this.#labelSub = this.labelService.getLabelsByType('activity').subscribe(res=>{
       this.labels = res;
-      this.labels.sort();
+      this.labels.sort((a,b) => a.name.localeCompare(b.name));
       this.cdr.detectChanges();
     })
     //check if page is needed for update or create

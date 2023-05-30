@@ -33,7 +33,9 @@ export class LabelsPage implements OnInit {
       this.labels = res;
       this.labels.sort();
       this.recipeLabels = this.labels.filter(l=>l.type === 'recipe');
-      this.activityLabels = this.labels.filter(l=>l.type === 'activity')
+      this.recipeLabels.sort((a,b) => a.name.localeCompare(b.name));
+      this.activityLabels = this.labels.filter(l=>l.type === 'activity');
+      this.activityLabels.sort((a,b) => a.name.localeCompare(b.name));
       this.cdr.detectChanges();
     })
   }

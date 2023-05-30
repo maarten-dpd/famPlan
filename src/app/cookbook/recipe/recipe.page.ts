@@ -52,7 +52,7 @@ export class RecipePage implements OnInit {
   private setData(): void {
     this.#labelSub = this.labelService.getLabelsByType('recipe').subscribe(res=>{
       this.labels = res;
-      this.labels.sort();
+      this.labels.sort((a,b) => a.name.localeCompare(b.name));
       this.cdr.detectChanges();
     })
     this.id = this.activatedRoute.snapshot.paramMap.get('id');

@@ -25,7 +25,7 @@ export class FamilyOverviewPage implements OnInit {
     this.#familymemberSub = this.familyService.getFamilyMembersByFamilyId()
       .subscribe((res=>{
           this.familyMembers = res;
-          this.familyMembers.sort();
+          this.familyMembers.sort((a,b) => a.firstName.localeCompare(b.firstName));
           this.cdr.detectChanges();
         })
       )
