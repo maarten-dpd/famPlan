@@ -1,9 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RecipeService} from '../../../services/recipe.service';
 import {Recipe} from '../../../../datatypes/recipe';
 import {PlanningService} from '../../../services/planning.service';
 import {ModalController, NavController} from '@ionic/angular';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmOrCancelModalPageComponent} from '../../../shared/confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
 import {firstValueFrom} from 'rxjs';
 import {PlannedMenu} from '../../../../datatypes/plannedMenu';
@@ -19,6 +19,7 @@ export class SelectMenuPage implements OnInit {
   selectionDate =new Date();
   recipes:Recipe[]=[];
   plannedMenus:PlannedMenu[]=[];
+  currentPlannedMenus:PlannedMenu[]=[]
   currentPlannedMenu! :PlannedMenu;
 
 //constructor
@@ -27,8 +28,8 @@ export class SelectMenuPage implements OnInit {
               private modalController:ModalController,
               public navCtrl :NavController,
               public activatedRoute: ActivatedRoute,
-              private cdr: ChangeDetectorRef) {
-  }
+              private router:Router
+  ) {  }
 
 //onInit/destroy/setData
   async ngOnInit() {
@@ -42,14 +43,20 @@ export class SelectMenuPage implements OnInit {
       return;
     }
     this.selectionDate = new Date(day);
+    console.log(this.selectionDate)
     this.recipes = await firstValueFrom(this.recipeService.getAllRecepies())
     this.plannedMenus = await firstValueFrom(this.planningService.getAllPlannedMenusForFamily())
+    console.log(this.plannedMenus)
     if(this.plannedMenus.length>0){
-      this.currentPlannedMenu = this.plannedMenus.filter(p=>p.date === this.selectionDate.toString())[0];
+      this.currentPlannedMenus = this.plannedMenus.filter(p=>p.date.substring(0,15) ===
+        this.selectionDate.toString().substring(0,15));
+      this.currentPlannedMenu = this.currentPlannedMenus[0];
     }
+    console.log(this.currentPlannedMenus)
   }
 
 //change menu by showing modal
+  menuPlanned: any;
   async changeMenu(r:Recipe){
     await this.presentConfirmOrCancelModal(r);
   }
@@ -73,27 +80,30 @@ export class SelectMenuPage implements OnInit {
       if(data){
         if(data.data.answer){
           this.setMenuForDate(r,this.selectionDate);
-          this.navCtrl.navigateRoot('/home');
+          this.router.navigate(['/'])
         }
       }
     });
     return await modal.present();
   }
   setMenuForDate(r: Recipe, d: Date) {
-    //check if a planned menu with the given date exists
-    const menuIsPlannedForDate = this.plannedMenus.some(p=>p.date===d.toString())
+
     //If a menu exists - do an update
-    if(menuIsPlannedForDate){
-      const menuToUpdate = this.plannedMenus.filter(p=>p.date===d.toString())[0];
-      menuToUpdate.recipeId = r.id;
+    if(this.currentPlannedMenu){
+      const menuToUpdate = {
+        date:this.currentPlannedMenu.date,
+        recipeId: r.id,
+        id:this.currentPlannedMenu.id,
+        familyId: this.currentPlannedMenu.familyId
+      }
       this.planningService.updatePlannedMenu(menuToUpdate.id,menuToUpdate).then(()=>{
-        console.log('menu is planned');
+        console.log('menu is updated');
       });
     }
     //otherwise create a new plannedMenusFilteredOnDate
     else{
       this.planningService.createPlannedMenu(r.id, d.toString()).then(()=>{
-        console.log('menu is updated')
+        console.log('menu is planned')
       });
     }
   }
