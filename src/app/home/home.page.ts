@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FamilyService} from '../services/family.service';
 import {ActivityService} from '../services/activity.service';
 import {PlanningService} from '../services/planning.service';
+import {Auth, authState, User, user} from '@angular/fire/auth';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +18,13 @@ export class HomePage {
   currentWeekDays: Date[] = [];
   weekSpansMonth: boolean = false;
 
+
 //constructor
-  constructor(public familyService: FamilyService,public activityService: ActivityService,
-              public planningService:PlanningService) {
+  constructor(public familyService: FamilyService,
+              public activityService: ActivityService,
+              public planningService:PlanningService,
+              ) {
+
     this.familyName = familyService.getFamilyName()
     //create a week to display
     for(let i = 0;i<7;i++){
