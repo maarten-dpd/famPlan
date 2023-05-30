@@ -1,9 +1,7 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {FamilyService} from '../services/family.service';
 import {ActivityService} from '../services/activity.service';
 import {PlanningService} from '../services/planning.service';
-import {Auth, authState, User, user} from '@angular/fire/auth';
-import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-home',

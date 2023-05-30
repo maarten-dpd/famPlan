@@ -35,10 +35,7 @@ export class ActivityItemComponent  implements OnInit {
     }
     this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe(res=>{
       this.familyMembers=res;
-      console.log(this.familyMembers)
-      console.log(this.participantIds)
       this.participants = this.familyMembers.filter(p=>this.participantIds.includes(p.id))
-      console.log(this.participants)
     })
 
   }
@@ -49,11 +46,9 @@ export class ActivityItemComponent  implements OnInit {
   }
 
   async deleteActivity(id: string) {
-    console.log('delete activity clicked')
     await this.presentConfirmOrCancelModal(id);
   }
   async presentConfirmOrCancelModal(id: string){
-    console.log('present modal confirm or cancel')
     const modal = await this.modalController.create({
       component: ConfirmOrCancelModalPageComponent,
       componentProps:{
@@ -62,8 +57,6 @@ export class ActivityItemComponent  implements OnInit {
     });
     modal.onDidDismiss().then((data) =>{
       if(data){
-        console.log('answer: ');
-        console.log(data)
         if(data.data.answer){
           this.activityService.deleteActivity(id);
         }
