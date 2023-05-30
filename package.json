@@ -12,7 +12,7 @@
     "lint": "ng lint",
     "pwa-resources": "pwa-asset-generator ./resources/icon.png ./src/assets/icons -m ./src/manifest.webmanifest -i ./src/index.html",
     "android": "ionic build --prod && pnpm exec cap sync android && pnpm exec cap open android",
-    "android-resources": "capacitor-assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --logoSplashScale 0.5  --android\n"
+    "android-resources": "capacitor-assets generate --iconBackgroundColor #eeeeee  --iconBackgroundColorDark #222222 --splashBackgroundColor #eeeeee --splashBackgroundColorDark #111111 --logoSplashScale 0.5  --android"
   },
   "private": true,
   "dependencies": {

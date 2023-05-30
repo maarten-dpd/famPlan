@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "832543227709-etimjloj3va3h25t674t1v0ironfsuoj.apps.googleusercontent.com",
+          "client_id": "832543227709-4l50o60soddhkfg9mp6a8olpsgt4i3td.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.deen.maarten.famPlan",
-            "certificate_hash": "c84a4fc77faa06ab52b8a371f04afdd31bd2bd71"
+            "certificate_hash": "23fc9e2160831e4d93413e36c16adb3b49e5c5db"
           }
         },
         {
