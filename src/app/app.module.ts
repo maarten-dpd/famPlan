@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {RouteReuseStrategy} from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -16,6 +16,7 @@ import {PhotoService} from './services/photo.service';
 import {PlanningService} from './services/planning.service';
 import {RecipeService} from './services/recipe.service';
 import {getStorage, provideStorage} from '@angular/fire/storage';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,12 @@ import {getStorage, provideStorage} from '@angular/fire/storage';
       const firestore = getFirestore();
       enableMultiTabIndexedDbPersistence(firestore);
       return firestore;
+    }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
     })
 
   ],

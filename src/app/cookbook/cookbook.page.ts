@@ -24,7 +24,7 @@ export class CookbookPage implements OnInit {
 
  //on Init/destroy
   ngOnInit() {
-    this.#recipeSub = this.recipeService.getRecipesByFamilyId().subscribe(res=>{
+    this.#recipeSub = this.recipeService.getAllRecepies().subscribe(res=>{
       this.recipes = res;
       this.cdr.detectChanges()
     })
