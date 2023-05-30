@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Activity} from '../../../datatypes/activity';
 import {ActivityService} from '../../services/activity.service';
 import {ActivatedRoute} from '@angular/router';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-activities-list',
@@ -12,8 +13,9 @@ import {ActivatedRoute} from '@angular/router';
 export class ActivitiesListPage implements OnInit {
 //attributes
   fabIsVisible = true;
-  date: string = '';
+  date: string | null = '';
   activityList: Activity[] = [];
+  activityListForDate: Activity[]=[];
   dateForTitle = new Date();
 
 //constructor
@@ -23,20 +25,21 @@ export class ActivitiesListPage implements OnInit {
   }
 
 //On Init/Destroy/setData
-  ngOnInit() {
-  this.setData();
+  async ngOnInit() {
+  await this.setData();
   }
   ngOnDestroy(){
 
   }
-  private setData() {
-    const day = this.activatedRoute.snapshot.paramMap.get('day');
-    if(day === null){
+  private async setData() {
+    this.date = this.activatedRoute.snapshot.paramMap.get('day');
+    if(this.date === null){
       return;
     }
-    this.dateForTitle = new Date(day);
-    this.date = this.dateForTitle.toString()
-    this.activityList = this.activityService.getActivitiesByDateForCurrentFamily(this.date);
+    console.log(this.date)
+    this.dateForTitle = new Date(this.date);
+    this.activityList = await firstValueFrom(this.activityService.getAllActivitiesForCurrentFamilyFromDatabase());
+    this.activityListForDate = this.activityList.filter(a=>a.date.substring(0,15)===this.date?.substring(0,15));
   }
 
 //functionality: hide button on scroll show again after scroll

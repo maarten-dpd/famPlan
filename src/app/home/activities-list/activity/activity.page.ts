@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FamilyService} from '../../../services/family.service';
 import {LabelService} from '../../../services/label.service';
 import {ActivityService} from '../../../services/activity.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NavController} from '@ionic/angular';
 import {Label} from '../../../../datatypes/label';
 import {FamilyMember} from '../../../../datatypes/familyMember';
@@ -35,8 +35,8 @@ export class ActivityPage implements OnInit {
               public labelService: LabelService,
               public activityService: ActivityService,
               public activatedRoute : ActivatedRoute,
-              public navController: NavController,
-              private cdr:ChangeDetectorRef) {
+              public router: Router
+  ) {
     //this code is needed to create the calendar to pick a date
     const currentYear:number = (new Date().getFullYear());
     for (let year = currentYear; year<(currentYear + 100); year++){
@@ -75,13 +75,15 @@ export class ActivityPage implements OnInit {
   }
 
 //create and update
-  handleCreateAndUpdate() {
+  async handleCreateAndUpdate() {
     if (this.id) {
       this.updateActivity();
     } else {
       this.createActivity();
     }
-    this.navController.back();
+    let dateToNavigate = new Date(this.dateToParse).toString()
+    console.log(dateToNavigate)
+    await this.router.navigate(['/home','activities-list',dateToNavigate]);
   }
   private createActivity() {
     this.date = new Date(this.dateToParse).toString();

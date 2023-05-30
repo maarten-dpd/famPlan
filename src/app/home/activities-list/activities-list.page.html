@@ -28,15 +28,15 @@
 
   <ion-grid>
     <ion-row id="activityList">
-      <ion-col *ngIf="activityList.length>0">
-        <app-activity-item  *ngFor='let a of activityList'
+      <ion-col *ngIf="activityListForDate.length>0">
+        <app-activity-item  *ngFor='let a of activityListForDate'
                               [activity]='a'>
         </app-activity-item>
       </ion-col>
     </ion-row>
     <ion-row  id="emptyActivityList">
       <ion-col>
-        <ion-item *ngIf="activityList.length===0" class="ion-text-center">
+        <ion-item *ngIf="activityListForDate.length===0" class="ion-text-center">
           <ion-grid>
             <ion-row class="ion-text-center, ion-justify-content-center">
               <h3>No activities planned</h3>
@@ -56,7 +56,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-fab id="addActivityFab" *ngIf="activityList.length>0" slot="fixed" vertical="bottom" horizontal="center">
+  <ion-fab id="addActivityFab" *ngIf="activityListForDate.length>0" slot="fixed" vertical="bottom" horizontal="center">
     <ion-fab-button [routerLink]="['/home','activities-list','activity']">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

@@ -59,6 +59,7 @@ export class ActivityItemComponent  implements OnInit {
       if(data){
         if(data.data.answer){
           this.activityService.deleteActivity(id);
+          this.router.navigate(['/home','activities-list',this.activity?.date]);
         }
       }
     });

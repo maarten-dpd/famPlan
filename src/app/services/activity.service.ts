@@ -101,6 +101,15 @@ export class ActivityService {
     //   )
     // )
   }
+  getAllActivitiesForCurrentFamilyFromDatabase(){
+    return collectionData<Activity>(
+      query<Activity>(
+        this.#getCollectionRef('activities'),
+        where('familyId','==',this.familyService.currentFamilyId)
+      ),
+      {idField: 'id'}
+    );
+  }
   getActivitiesByDateForCurrentFamily(date: string) {
     return this.getAllActivitiesForCurrentFamily()
       .filter(a=>a.date.substring(0,10) === date.substring(0,10));
