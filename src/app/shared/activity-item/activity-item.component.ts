@@ -4,9 +4,11 @@ import {ActivityService} from '../../services/activity.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmOrCancelModalPageComponent} from '../confirm-or-cancel-modal-page/confirm-or-cancel-modal-page.component';
 import {ModalController} from '@ionic/angular';
-import {Subscription} from 'rxjs';
+import {firstValueFrom} from 'rxjs';
 import {FamilyMember} from '../../../datatypes/familyMember';
 import {FamilyService} from '../../services/family.service';
+import {Label} from '../../../datatypes/label';
+import {LabelService} from '../../services/label.service';
 
 @Component({
   selector: 'app-activity-item',
@@ -18,31 +20,29 @@ export class ActivityItemComponent  implements OnInit {
 
   @Input() activity: Activity | undefined;
 
-  #familyMemberSub!:Subscription
-  familyMembers:FamilyMember[]=[]
-  participants:FamilyMember[]=[]
-  participantIds:string[]=[]
+  familyMembers:FamilyMember[]=[];
+  participants:FamilyMember[]=[];
+  labels: Label[]=[];
+  selectedLabels: Label[] = [];
+
+
 
   constructor(public activityService: ActivityService,
               public activatedRoute: ActivatedRoute,
               public router:Router,
               public familyService: FamilyService,
+              public labelService: LabelService,
               public modalController: ModalController) { }
 
-  ngOnInit() {
-    if(this.activity) {
-      this.participantIds = this.activity.participants
+  async ngOnInit() {
+    this.familyMembers = await firstValueFrom(this.familyService.getFamilyMembersByFamilyId())
+    this.labels = await firstValueFrom(this.labelService.getLabelsByType('activity'))
+    if (this.activity) {
+      this.participants = this.familyMembers.filter(f=>(this.activity?.participants.includes(f.id)));
+      this.selectedLabels = this.labels.filter(l=>(this.activity?.selectedLabels.includes(l.id)));
     }
-    this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe(res=>{
-      this.familyMembers=res;
-      this.participants = this.familyMembers.filter(p=>this.participantIds.includes(p.id))
-    })
-
   }
   ngOnDestroy(){
-    if(this.#familyMemberSub){
-      this.#familyMemberSub.unsubscribe()
-    }
   }
 
   async deleteActivity(id: string) {

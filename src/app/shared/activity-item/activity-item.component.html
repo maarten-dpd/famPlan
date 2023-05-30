@@ -39,6 +39,9 @@
           <ion-item *ngFor="let f of participants ">
             {{f.firstName}} {{f.lastName}}
           </ion-item>
+          <ion-item *ngFor="let l of selectedLabels">
+            {{l.name}}
+          </ion-item>
         </ion-item-group>
       </ion-list>
     </ion-card-content>

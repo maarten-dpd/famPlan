@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActionSheetController, ModalController, NavController} from '@ionic/angular';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
@@ -7,7 +7,7 @@ import {Label} from '../../../datatypes/label';
 import {PhotoService} from '../../services/photo.service';
 import {StringInputModalPageComponent} from '../../shared/string-input-modal-page/string-input-modal-page.component';
 import {Recipe} from '../../../datatypes/recipe';
-import {Subscription} from 'rxjs';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-recipe',
@@ -21,13 +21,11 @@ export class RecipePage implements OnInit {
   prepTime: number = 0;
   cookingTime: number = 0;
   description: string = '';
-  #labelSub!:Subscription;
   labels:Label[]=[];
   selectedLabels: string[] = [];
   ingredients: string[] = [];
   instructions: string[] =[];
   id: string | null ='';
-  fromMenuSelector: string | null = '';
   recipePhotoUrl: string = '';
 
  //constructor
@@ -38,32 +36,26 @@ export class RecipePage implements OnInit {
               public photoService: PhotoService,
               private actionSheetCtrl: ActionSheetController,
               private modalController: ModalController,
-              private cdr:ChangeDetectorRef) {}
+) {}
 
  //init/destroy/setData
-  ngOnInit() {
-    this.setData();
+  async ngOnInit() {
+   await this.setData();
   }
   ngOnDestroy(){
-    if(this.#labelSub){
-      this.#labelSub.unsubscribe();
-    }
+
   }
-  private setData(): void {
-    this.#labelSub = this.labelService.getLabelsByType('recipe').subscribe(res=>{
-      this.labels = res;
-      this.labels.sort((a,b) => a.name.localeCompare(b.name));
-      this.cdr.detectChanges();
-    })
+  private async setData() {
+
+    this.labels = await firstValueFrom(this.labelService.getLabelsByType('recipe'));
+    this.labels.sort((a,b)=>a.name.localeCompare(b.name));
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
-    if(this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector')){
-      this.fromMenuSelector = this.activatedRoute.snapshot.paramMap.get('isFromMenuSelector');
-    }
+
     if (this.id === null) {
       return;
     }
 
-    this.recipeService.getRecipeById(this.id).subscribe(recipes =>{
+    await this.recipeService.getRecipeById(this.id).subscribe(recipes =>{
       if(recipes && recipes.length >0){
         const recipe = recipes[0];
         this.recipeName = recipe.name;

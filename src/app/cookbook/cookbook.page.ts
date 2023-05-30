@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {RecipeService} from '../services/recipe.service';
-import {Subscription} from 'rxjs';
+import {firstValueFrom, Subscription} from 'rxjs';
 import {Recipe} from '../../datatypes/recipe';
 import {FamilyService} from '../services/family.service';
 
@@ -23,16 +23,10 @@ export class CookbookPage implements OnInit {
               private cdr: ChangeDetectorRef) { }
 
  //on Init/destroy
-  ngOnInit() {
-    this.#recipeSub = this.recipeService.getAllRecepies().subscribe(res=>{
-      this.recipes = res;
-      this.cdr.detectChanges()
-    })
+  async ngOnInit() {
+    this.recipes = await firstValueFrom(this.recipeService.getAllRecepies())
   }
   ngOnDestroy(){
-    if(this.#recipeSub){
-      this.#recipeSub.unsubscribe()
-    }
   }
 
  //functionality: hide button on scroll show again after scroll

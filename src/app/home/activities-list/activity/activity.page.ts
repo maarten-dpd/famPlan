@@ -7,7 +7,7 @@ import {NavController} from '@ionic/angular';
 import {Label} from '../../../../datatypes/label';
 import {FamilyMember} from '../../../../datatypes/familyMember';
 import {Activity} from '../../../../datatypes/activity';
-import {Subscription} from 'rxjs';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-activity',
@@ -22,11 +22,9 @@ export class ActivityPage implements OnInit {
   id: string | null = '';
   description: string = '';
   location: string = '';
-  #familyMemberSub!:Subscription;
   familyMembers: FamilyMember[]=[];
   participants: FamilyMember[]=[];
   selectedParticipants: string[] = [];
-  #labelSub!:Subscription;
   labels: Label[]=[];
   selectedLabels: string[] =[];
   yearValues: number[] = []
@@ -47,44 +45,33 @@ export class ActivityPage implements OnInit {
   }
 
 //On Init/Destroy/set Data
-  ngOnInit() {
-    this.setData();
+  async ngOnInit() {
+    await this.setData();
   }
   ngOnDestroy(){
-    if(this.#familyMemberSub){
-      this.#familyMemberSub.unsubscribe();
-    }
-    if(this.#labelSub){
-      this.#labelSub.unsubscribe();
-    }
   }
-  private setData() : void {
-    //create observable for family members
-    this.#familyMemberSub = this.familyService.getFamilyMembersByFamilyId().subscribe((res)=>{
-      this.familyMembers = res;
-      this.familyMembers.sort((a,b) => a.firstName.localeCompare(b.firstName));
-      this.cdr.detectChanges();
-    })
-    //create observable for labels
-    this.#labelSub = this.labelService.getLabelsByType('activity').subscribe(res=>{
-      this.labels = res;
-      this.labels.sort((a,b) => a.name.localeCompare(b.name));
-      this.cdr.detectChanges();
-    })
+  private async setData() {
+    this.familyMembers = await firstValueFrom(this.familyService.getFamilyMembersByFamilyId());
+    this.labels = await firstValueFrom(this.labelService.getLabelsByType('activity'));
+    this.labels.sort((a,b)=>a.name.localeCompare(b.name));
+
     //check if page is needed for update or create
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
     if(this.id===null){
       return;
     }
-    //if not create - load activity the activity observable is in the activity service
-    const activity = this.activityService.getActivityById(this.id);
-    this.dateToParse = new Date(activity.date).toISOString();
-    this.activityName = activity.name;
-    this.location = activity.location;
-    this.date = this.dateToParse;
-    this.description = activity.description;
-    this.selectedLabels = activity.selectedLabels;
-    this.selectedParticipants = activity.participants;
+    await this.activityService.getActivityByIdFromDb(this.id).subscribe((activities)=>{
+      if(activities && activities.length>0){
+        const activity =activities[0] ;
+        this.dateToParse = new Date(activity.date).toISOString();
+        this.activityName = activity.name;
+        this.location = activity.location;
+        this.date = this.dateToParse;
+        this.description = activity.description;
+        this.selectedLabels = activity.selectedLabels;
+        this.selectedParticipants = activity.participants;
+      }
+    })
   }
 
 //create and update

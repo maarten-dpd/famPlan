@@ -1,7 +1,8 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FamilyService} from '../services/family.service';
 import {FamilyMember} from '../../datatypes/familyMember';
-import {Subscription} from 'rxjs';
+import {firstValueFrom} from 'rxjs';
+
 
 @Component({
   selector: 'app-familyOverview',
@@ -13,7 +14,6 @@ export class FamilyOverviewPage implements OnInit {
 //attributes
   fabIsVisible = true;
   familyName = this.familyService.getFamilyName();
-  #familymemberSub!:Subscription;
   familyMembers: FamilyMember[]=[];
 
 //constructor
@@ -21,18 +21,10 @@ export class FamilyOverviewPage implements OnInit {
               private cdr: ChangeDetectorRef) {  }
 
 //On Init/destroy
-  ngOnInit() {
-    this.#familymemberSub = this.familyService.getFamilyMembersByFamilyId()
-      .subscribe((res=>{
-          this.familyMembers = res;
-          this.familyMembers.sort((a,b) => a.firstName.localeCompare(b.firstName));
-          this.cdr.detectChanges();
-        })
-      )
+  async ngOnInit() {
+    this.familyMembers = await firstValueFrom(this.familyService.getFamilyMembersByFamilyId());
+    this.familyMembers.sort((a,b) => a.firstName.localeCompare(b.firstName));
   }
   ngOnDestroy(){
-    if(this.#familymemberSub){
-      this.#familymemberSub.unsubscribe();
-    }
   }
 }

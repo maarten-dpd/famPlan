@@ -4,19 +4,19 @@
     <ion-card-title class="ion-text-center">{{day | customDate:'dayMonth'}}</ion-card-title>
   </ion-card-header>
   <ion-card-content class="ion-justify-content-center, ion-text-center">
-    <ion-button color="success" *ngIf="activityService.getNumberOfActivitiesOnDate(day.toString())"
+    <ion-button color="success" *ngIf="numberOfActivities>0"
                 size="small" [routerLink]="['/home','activities-list',day.toString()]">
-      {{activityService.getNumberOfActivitiesOnDate(day.toString())}} activities planned
+      {{numberOfActivities}} activities planned
     </ion-button>
-    <ion-button  *ngIf="!activityService.getNumberOfActivitiesOnDate(day.toString())"
+    <ion-button  *ngIf="numberOfActivities === 0"
                  fill="outline" size="small" [routerLink]="['/home','activities-list','activity']">
       add an activity
     </ion-button>
-    <ion-button color = "success" *ngIf="recipe.length>0" size="small"
+    <ion-button color = "success" *ngIf="recipeIsPlanned" size="small"
                 [routerLink]="['/home','day-menu',day.toString()]">
-      {{recipe[0].name}} is for dinner
+      {{recipeName}} is for dinner
     </ion-button>
-    <ion-button *ngIf="!menuplanned" fill="outline" size="small"
+    <ion-button *ngIf="!recipeIsPlanned" fill="outline" size="small"
                 [routerLink]="['/home','day-menu','select-menu', day.toString()]">
       Choose a recepy for diner
     </ion-button>

@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {FamilyService} from '../services/family.service';
 import {ActivityService} from '../services/activity.service';
 import {PlanningService} from '../services/planning.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -11,16 +12,16 @@ import {PlanningService} from '../services/planning.service';
 
 export class HomePage {
 //attributes
-  familyName: string = '';
+  familyName: string = this.familyService.getFamilyName();
   startDate = new Date() ;
   currentWeekDays: Date[] = [];
   weekSpansMonth: boolean = false;
-
 
 //constructor
   constructor(public familyService: FamilyService,
               public activityService: ActivityService,
               public planningService:PlanningService,
+              private authService:AuthService
               ) {
 
     this.familyName = familyService.getFamilyName()
@@ -35,7 +36,9 @@ export class HomePage {
       this.weekSpansMonth = true;
     }
   }
-
+async ngOnInit(){
+    await this.createCurrentWeek();
+}
 //operations to create the week
   getCurrentWeek(date: Date){
     for(let i = 0;i<7;i++){
@@ -69,4 +72,16 @@ export class HomePage {
     return date;
   }
 
+  private async createCurrentWeek() {
+    this.authService.currentUser.subscribe((user)=>{
+      if(user){
+        this.resetCurrentWeekDays();
+        this.getCurrentWeek(this.startDate);
+      }
+    })
+  }
+
+  private resetCurrentWeekDays() {
+    this.currentWeekDays=[];
+  }
 }

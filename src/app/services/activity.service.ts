@@ -5,12 +5,13 @@ import {
   collection, collectionData,
   CollectionReference,
   deleteDoc,
-  doc,
+  doc, docData,
   DocumentReference,
-  Firestore, query, setDoc, updateDoc
+  Firestore, query, setDoc, updateDoc, where
 } from '@angular/fire/firestore';
 import {FamilyService} from './family.service';
 import {Subscription} from 'rxjs';
+import {Recipe} from '../../datatypes/recipe';
 
 @Injectable(
   {
@@ -69,6 +70,21 @@ export class ActivityService {
       )
     )
   }
+  getActivityByIdFromDb(id: string){
+    return collectionData<Activity>(
+      query<Activity>(
+        this.#getCollectionRef('activities'),
+        where('id','==',id)
+      ),
+      {idField: 'id'}
+    );
+  }
+  // getActivityByIdFromDb(id:string){
+  //   return docData<Activity>(
+  //     this.#getDocumentRef('activities',id),
+  //     {idField: 'id'}
+  //   )
+  // }
   //in this service all methods are filtering on the observable that is kept in the service
   getAllActivitiesForCurrentFamily() {
    return this.#activity

@@ -17,8 +17,9 @@ import {FamilyService} from './family.service';
 })
 export class PlanningService {
 
+  plannedMenus = firstValueFrom(this.getAllPlannedMenusForFamily())
   dateForDetail:Date=new Date();
-  recipes= firstValueFrom(this.recipeService.getAllRecepies())
+
   constructor(public recipeService:RecipeService,
               private firestore:Firestore,
               public familyService:FamilyService) {
@@ -70,4 +71,16 @@ export class PlanningService {
     return doc(this.firestore, `${collectionName}/${id}`) as DocumentReference<T>;
   }
 
+  async nameOfRecipePlannedOnDate(date: string) {
+    const plannedMenus = await firstValueFrom(this.getAllPlannedMenusForFamily());
+    const plannedMenusForCurrentFamily = plannedMenus.filter(p=>p.familyId === this.familyService.currentFamilyId)
+    const plannedMenuOnDate = plannedMenusForCurrentFamily.filter(p=>p.date.substring(0,15)===date.substring(0,15));
+    if(plannedMenuOnDate.length>0){
+      const recipeOnDate = await firstValueFrom(this.recipeService.getRecipeById(plannedMenuOnDate[0].recipeId))
+      if(recipeOnDate){
+        return recipeOnDate[0].name;
+      }
+    }
+    return;
+  }
 }

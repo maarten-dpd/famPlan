@@ -1,11 +1,7 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivityService} from '../../services/activity.service';
 import {PlanningService} from '../../services/planning.service';
-import {PlannedMenu} from '../../../datatypes/plannedMenu';
-import {Recipe} from '../../../datatypes/recipe';
-import {RecipeService} from '../../services/recipe.service';
-import {Subscription} from 'rxjs';
-import {FamilyService} from '../../services/family.service';
+
 
 @Component({
   selector: 'app-day-card',
@@ -17,55 +13,21 @@ export class DayCardComponent  implements OnInit {
 
   @Input() day:Date = new Date();
 
-  #plannedMenuSub!:Subscription;
-  plannedMenus: PlannedMenu[]=[];
-  plannedMenusFilteredOnDate:PlannedMenu[] = [];
-  plannedMenusFilteredOnDateAndFamilyId:PlannedMenu[]=[];
-  recipeId:string=''
-  recipes:Recipe[]=[];
-  recipe:Recipe[]=[]
-  #recipeSub!:Subscription;
-  menuplanned = false;
-
+  recipeName:string | undefined ='';
+  numberOfActivities: number=0;
+  recipeIsPlanned:boolean=false;
   constructor(public activityService:ActivityService,
               public planningService: PlanningService,
-              public recipeService: RecipeService,
-              public familyService: FamilyService,
-              private cdr:ChangeDetectorRef
 ) {
   }
 
  async ngOnInit() {
-  this.#plannedMenuSub = this.planningService.getAllPlannedMenusForFamily().subscribe(res => {
-    this.plannedMenus = res;
-    this.plannedMenusFilteredOnDate = this.plannedMenus
-      .filter(p => p.date.substring(0, 15) === this.day.toString().substring(0, 15))
-    if(this.plannedMenusFilteredOnDate.length>0){
+    this.recipeName = await this.planningService.nameOfRecipePlannedOnDate(this.day.toString());
+    if(this.recipeName?.length){
+      this.recipeIsPlanned = true;
     }
-    this.plannedMenusFilteredOnDateAndFamilyId = this.plannedMenusFilteredOnDate
-      .filter(p=>p.familyId === this.familyService.currentFamilyId)
-    if(this.plannedMenusFilteredOnDateAndFamilyId.length>0){
-    }
-    if(this.plannedMenusFilteredOnDateAndFamilyId.length>0){
-      this.recipeId = this.plannedMenusFilteredOnDateAndFamilyId[0].recipeId;
-      this.menuplanned = true;
-    }
-    this.#recipeSub = this.recipeService.getAllRecepies().subscribe((res)=>{
-      this.recipes = res;
-      if(this.recipeId){
-        this.recipe = this.recipes
-          .filter(r=>r.id === this.recipeId)
-      }
-    })
-    this.cdr.detectChanges()
-  })
+    this.numberOfActivities = this.activityService.getNumberOfActivitiesOnDate(this.day.toString())
  }
  ngOnDestroy(){
-    if(this.#plannedMenuSub){
-      this.#plannedMenuSub.unsubscribe()
-    }
-    if(this.#recipeSub){
-      this.#recipeSub.unsubscribe()
-    }
  }
 }
