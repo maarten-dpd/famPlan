@@ -118,7 +118,6 @@ export class FamilyService {
   }
   getFamilyName(): string {
     if(this.currentFamily){
-
       return this.currentFamily[0].name;
     }
     else{

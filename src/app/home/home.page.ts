@@ -3,6 +3,8 @@ import {FamilyService} from '../services/family.service';
 import {ActivityService} from '../services/activity.service';
 import {PlanningService} from '../services/planning.service';
 import {AuthService} from '../services/auth.service';
+import {NavigationEnd, Router} from '@angular/router';
+import {filter} from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +23,8 @@ export class HomePage {
   constructor(public familyService: FamilyService,
               public activityService: ActivityService,
               public planningService:PlanningService,
-              private authService:AuthService
+              private authService:AuthService,
+              private router:Router,
               ) {
 
     this.familyName = familyService.getFamilyName()
@@ -37,6 +40,11 @@ export class HomePage {
     }
   }
 async ngOnInit(){
+    this.router.events
+      .pipe(filter((event)=>event instanceof NavigationEnd)).subscribe(()=>{
+        this.resetCurrentWeekDays();
+        this.getCurrentWeek(this.startDate)
+    })
     await this.createCurrentWeek();
 }
 //operations to create the week

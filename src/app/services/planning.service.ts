@@ -8,7 +8,7 @@ import {
   CollectionReference, deleteDoc,
   doc,
   DocumentReference,
-  Firestore, query, setDoc, updateDoc
+  Firestore, query, setDoc, updateDoc, where
 } from '@angular/fire/firestore';
 import {firstValueFrom} from 'rxjs';
 import {FamilyService} from './family.service';
@@ -58,6 +58,7 @@ export class PlanningService {
       return collectionData<PlannedMenu>(
         query<PlannedMenu>(
           this.#getCollectionRef('plannedMenus'),
+          where('familyId','==',this.familyService.currentFamilyId)
         ),
         {idField: 'id'}
       );
