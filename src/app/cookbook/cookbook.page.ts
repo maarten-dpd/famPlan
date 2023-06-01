@@ -1,8 +1,5 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {RecipeService} from '../services/recipe.service';
-import {firstValueFrom, Subscription} from 'rxjs';
-import {Recipe} from '../../datatypes/recipe';
-import {FamilyService} from '../services/family.service';
 
 @Component({
   selector: 'app-cookbook',
@@ -14,22 +11,19 @@ export class CookbookPage implements OnInit {
 
  //attributes
   fabIsVisible = true;
-  #recipeSub!:Subscription;
-  recipes:Recipe[]=[]
+  recipes=this.recipeService.getAllRecepies()
 
  //constructor
-  constructor(public recipeService: RecipeService,
-              private familyService:FamilyService,
-              private cdr: ChangeDetectorRef) { }
+  constructor(public recipeService: RecipeService
+             ) { }
 
  //on Init/destroy
   async ngOnInit() {
-    this.recipes = await firstValueFrom(this.recipeService.getAllRecepies())
+
   }
   ngOnDestroy(){
   }
 
- //functionality: hide button on scroll show again after scroll
   logScrollStart():void {
     this.fabIsVisible=false
   }

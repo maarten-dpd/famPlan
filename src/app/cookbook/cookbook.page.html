@@ -27,14 +27,14 @@
   </ion-header>
 
   <ion-grid>
-    <ion-row id="cookbookRecipeList" *ngIf="recipes.length > 0">
+    <ion-row id="cookbookRecipeList" *ngIf="(recipes| async)?.length!==0">
           <ion-col>
-            <app-recipe-item  *ngFor='let r of recipes'
+            <app-recipe-item  *ngFor='let r of recipes | async'
                               [recipe]='r'>
             </app-recipe-item>
           </ion-col>
         </ion-row>
-     <ion-row id="emptyCookbook" *ngIf="recipes.length === 0">
+     <ion-row id="emptyCookbook" *ngIf="(recipes| async)?.length===0">
         <div>
           <h3>An empty cookbook fills no stomach</h3>
           <ion-button [routerLink]="['recipe']">add a Recipe</ion-button>
